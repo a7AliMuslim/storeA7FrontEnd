@@ -10,6 +10,7 @@
 
 # production
 /build
+/ExtractedLicenses
 
 # misc
 .DS_Store
@@ -17,6 +18,8 @@
 .env.development.local
 .env.test.local
 .env.production.local
+a7store.rar
+fileWalk1.2.0.py
 
 npm-debug.log*
 yarn-debug.log*
