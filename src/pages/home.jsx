@@ -1,3 +1,4 @@
+//importing react
 import React from 'react';
 import HoverTab from '../components/hoverTab';
 import SSlider from '../components/slider';

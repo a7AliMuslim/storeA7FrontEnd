@@ -1,23 +1,38 @@
+//importing react
 import React from 'react';
+
+
+//for navigation
 import {NavLink ,Link} from 'react-router-dom';
+
+
+//user context
 import {useUserContext} from './userContext.jsx';
-import Catagories from './catagories.jsx';
+
+
+//components to work with
 import SearchBar from './searchBar.jsx';
 import CartDrawer from './cartDrawer';
 import { ShoppingCartIcon } from '@heroicons/react/20/solid'
 import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded';
 import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded';
 
+
+//component function
 function SearchNavbar(){
+    //handles cartDrawer open state
     const [cartDrawerOpener, setCartDrawerOpener]=React.useState(false);
-    const [user, setUser]=React.useState(useUserContext().user || localStorage.getItem('user') || null);
+    
+    //setting user
+    const [user, setUser]=React.useState(useUserContext().user || null);
+    
+    //handles cart drawer
     const cartDrawerHandler=()=>{
         setCartDrawerOpener(!cartDrawerOpener);
     }
+    
     return <div className='flex justify-around w-full'>
-            <div className='basis-1/5 px-8'><Link to='/'><StoreMallDirectoryRoundedIcon className='!size-10'/></Link></div>
-            <div className='flex min-w-max basis-3/5'>
-                <Catagories className=''>Catagories</Catagories>
+            <div className='flex min-w-max basis-4/5'>
                 <SearchBar className='flex-auto'/>
             </div>
 
@@ -33,6 +48,6 @@ function SearchNavbar(){
             </nav>
         </div>
 }
+
+
 export default SearchNavbar;
-//
-//<NavLink className='' to='/cart'>Cart</NavLink>
