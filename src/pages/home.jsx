@@ -1,16 +1,25 @@
 //importing react
 import React from 'react';
+
+
+//importing components to work with
 import HoverTab from '../components/hoverTab';
 import SSlider from '../components/slider';
 import ForYouProducts from '../components/forYouProducts';
+
+//for setting up environment variables
+
+import env from 'react-dotenv'
+
 
 
 
 export default function Home(){
     return<>
-        <div className='flex rounded-md p-8 '>
+        <div className='flex p-8 '>
             <HoverTab/>
             <div className='hero w-3/12 flex-auto h-96'><SSlider className='h-96'/></div>
+            {console.log(env)}
         </div>
         <div>
             <ForYouProducts/>

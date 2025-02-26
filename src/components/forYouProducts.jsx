@@ -7,8 +7,8 @@ import img6 from '../images/steamMount.jpg';
 import ProductCard from './productCard';
 
 export default function ForYouProducts(){
-    return<div className='m-8'>
-            <h1 className='text-3xl font-mono subpixel-antialiased font-semibold text-white'>For you</h1>
+    return<div className='mx-8 my-4'>
+            <h1 className='text-3xl subpixel-antialiased font-semibold text-black px-8 my-4'>For you</h1>
             <div className='flex flex-wrap justify-center'>
                 <ProductCard className='w-48' img={img1} title='image 1' price='2000'/>
                 <ProductCard className='w-48' img={img2} title='image  kjdfkj ksjfn kjsfslk ksjflkdfn lknf lkdn lkds  ' price='2000'/>

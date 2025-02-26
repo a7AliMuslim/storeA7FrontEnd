@@ -43,7 +43,7 @@ export default function Slider(){
   transitionDuration={1500}
   draggable={true}
   centerMode={false}
-  className="rounded-md"
+  className="rounded-r-xl"
   containerClass="container-with-dots"
   dotListClass=""
   draggable
@@ -61,7 +61,7 @@ export default function Slider(){
   rewindWithAnimation={false}
   rtl={false}
   shouldResetAutoplay
-  showDots={true}
+  showDots={false}
   sliderClass=""
   slidesToSlide={1}
   focusOnSelect={true}

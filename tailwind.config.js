@@ -12,6 +12,15 @@ module.exports = {
             'cwhiteBlue':'#CBDCEB',
             'light':'#FFFFFF',
             'dark':'#000000',
+        },
+        animation:{
+            'slide-in':'slideIn 0.2s ease-in-out forwards',
+        },
+        keyframes:{
+            slideIn:{
+                '0%':{transform: ' translateX(-10%)', opacity:'0'},
+                '100%':{transform: ' translateX(0%)', opacity:'1'}
+            },
         }
     },
   },
