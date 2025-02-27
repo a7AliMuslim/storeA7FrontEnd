@@ -36,7 +36,7 @@ function ProductsContainer({filter}){
     }
     const fetchedProductData= async ()=>{
             try{
-                const respons=await axios.post('http://localhost:3002/api/v1/products',{filter,start:1,page:pageNumber});
+                const respons=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products`,{filter,pageNumber,});
                 const productsData=respons.data.result;
                 setProducts(productsData);
                 console.log(productsData);
@@ -47,7 +47,7 @@ function ProductsContainer({filter}){
     useEffect(()=>{
         fetchedProductData();
     },[filter,pageNumber]);
-    return<div className='bg-white/10 flex-auto rounded-md'>
+    return<div className='bg-white/10 basis-5/6 rounded-md'>
             <div className='flex flex-wrap justify-center'>
                        {
                       products?products.map((product)=><ProductCard onClick={cardClickHandler} img={`http://localhost:3002/api/v1/images?imageID=${product.imageIDs[0]}`} productId={product.id} title={product.title} price={product.price}/>):Array.from({length:50}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))

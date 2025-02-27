@@ -8,15 +8,19 @@ function RangeSlider({filterObj}){
         setRangeValue(newRangeValue);
     }
     
-    return (
-        <Slider
-          getAriaLabel={() => 'Price range'}
-          value={rangeValue}
-          onChange={handleChange}
-          valueLabelDisplay="auto"
-          step='5000'
-          max='100000'
-        />
+    return (<div>
+                <p className='py-2'>Price Range</p>
+                <Slider
+                  getAriaLabel={() => 'Price range'}
+                  value={rangeValue}
+                  onChange={handleChange}
+                  valueLabelDisplay="auto"
+                  step='500'
+                  max='100000'
+                  size="small"
+                />
+                <p className='text-sm'>{rangeValue[0]} - {rangeValue[1]} Rs</p>
+        </div>
         )
 }
 export default RangeSlider;

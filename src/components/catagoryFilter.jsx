@@ -4,46 +4,53 @@ import { Checkbox , FormGroup, FormControlLabel} from '@mui/material';
 import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
 
 function CatagoryFilter({filterObj}){
-    const [glovesCheck,setGlovesCheck]=useState(false);
-    const [jacketCheck,setJacketCheck]=useState(false);
-    const [helmetCheck,setHelmetCheck]=useState(false);
+    const [catagory1Check,setCatagory1Check]=useState(false);
+    const [catagory2Check,setCatagory2Check]=useState(false);
+    const [catagory3Check,setCatagory3Check]=useState(false);
+    
+    //fills checked catagories on render and re render
     filterObj.catagory=[];
-    if(glovesCheck){
-        filterObj.catagory.push('gloves');
+    if(catagory1Check){
+        filterObj.catagory.push('catagory1');
     }
-    if(jacketCheck){
-        filterObj.catagory.push('jacket');
+    if(catagory2Check){
+        filterObj.catagory.push('catagory2');
     }
-    if(helmetCheck){
-        filterObj.catagory.push('helmet');
+    if(catagory3Check){
+        filterObj.catagory.push('catagory3');
     }
-    console.log(filterObj.catagory);
+    
+    
     const checkHandler=(event)=>{
-        console.log(event.target);
-        if(event.target.name=='gloves'){
-            setGlovesCheck(!glovesCheck);
+        if(event.target.name=='catagory1'){
+            setCatagory1Check(!catagory1Check);
         }
-        if(event.target.name=='jacket'){
-            setJacketCheck(!jacketCheck);
+        if(event.target.name=='catagory2'){
+            setCatagory2Check(!catagory2Check);
         }
-        if(event.target.name=='helmet'){
-            setHelmetCheck(!helmetCheck);
+        if(event.target.name=='catagory3'){
+            setCatagory3Check(!catagory3Check);
         }
     }
+    
+    
     return (
         <Disclosure as="div" >
+         
           <DisclosureButton className="py-2 group flex w-full items-center justify-between">
               <span>Catagories</span>
-              <PlusIcon className="size-5 fill-white/60 group-data-[hover]:fill-white/50 group-data-[open]:hidden" />
-              <MinusIcon className="size-5 fill-white/60 group-data-[hover]:fill-white/50 [.group:not([data-open])_&]:hidden" />
+              <PlusIcon className="size-5 fill-black/90 group-data-[hover]:fill-black/50 group-data-[open]:hidden" />
+              <MinusIcon className="size-5 fill-black/70 group-data-[hover]:fill-black/50 [.group:not([data-open])_&]:hidden" />
           </DisclosureButton>
+          
           <DisclosurePanel transition className="text-white origin-top transition duration-200 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0">
-            <FormGroup className='ml-8'>
-                <FormControlLabel control={<Checkbox id='gloves' name='gloves' value='gloves' onChange={checkHandler} checked={glovesCheck} />} label="gloves" />
-                <FormControlLabel control={<Checkbox id='jacket' name='jacket' value='jacket' onChange={checkHandler} checked={jacketCheck} />} label="jacket" />
-                <FormControlLabel control={<Checkbox id='helmet' name='helmet' value='helmet' onChange={checkHandler} checked={helmetCheck} />} label="helmet" />
+            <FormGroup className='ml-8 text-black'>
+                <FormControlLabel control={<Checkbox id='catagory1' name='catagory1' value='catagory1' onChange={checkHandler} checked={catagory1Check} />} label="catagory1" />
+                <FormControlLabel control={<Checkbox id='catagory2' name='catagory2' value='catagory2' onChange={checkHandler} checked={catagory2Check} />} label="catagory2" />
+                <FormControlLabel control={<Checkbox id='catagory3' name='catagory3' value='catagory3' onChange={checkHandler} checked={catagory3Check} />} label="catagory3" />
             </FormGroup>
           </DisclosurePanel>
+          
     </Disclosure>
         
     )

@@ -11,9 +11,15 @@ export default function RatingFilter({filterObj}){
             Ratings
         </div>
     
-        <div className='flex ml-8'>
+        
+            
+        <div className='flex justify-center'>
+            <div className={hoverValue==-1?'flex-none w-6 opacity-0':'w-6 flex-none'}>
+                {hoverValue}
+            </div>
+            
             <Rating
-              name="hover-feedback"
+              name="hover-rating"
               value={ratingValue}
               onChange={(event, newValue) => {
                 setRatingValue(newValue);
@@ -24,9 +30,7 @@ export default function RatingFilter({filterObj}){
               emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
               classes='flex-auto'
             />
-            <div className='flex-none'>
-                {hoverValue==-1?'':hoverValue}
-            </div>
+            
     </div>
     </div>
 }

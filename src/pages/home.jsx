@@ -7,11 +7,6 @@ import HoverTab from '../components/hoverTab';
 import SSlider from '../components/slider';
 import ForYouProducts from '../components/forYouProducts';
 
-//for setting up environment variables
-
-import env from 'react-dotenv'
-
-
 
 
 export default function Home(){
@@ -19,7 +14,6 @@ export default function Home(){
         <div className='flex p-8 '>
             <HoverTab/>
             <div className='hero w-3/12 flex-auto h-96'><SSlider className='h-96'/></div>
-            {console.log(env)}
         </div>
         <div>
             <ForYouProducts/>
