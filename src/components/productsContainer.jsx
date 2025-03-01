@@ -37,7 +37,7 @@ function ProductsContainer({filter}){
     const fetchedProductData= async ()=>{
             try{
                 const respons=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products`,{filter,pageNumber,});
-                const productsData=respons.data.result;
+                const productsData=respons.data.slice;
                 setProducts(productsData);
                 console.log(productsData);
             }catch(err){

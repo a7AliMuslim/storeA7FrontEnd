@@ -3,10 +3,10 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Checkbox , FormGroup, FormControlLabel} from '@mui/material';
 import { ChevronDownIcon, MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
 
-function ColorFilter({filterObj}){
-    const [blueCheck,setBlueCheck]=useState(false);
-    const [blackCheck,setBlackCheck]=useState(false);
-    const [orangeCheck,setOrangeCheck]=useState(false);
+function ColorFilter({filterObj, subTag=''}){
+    const [blueCheck,setBlueCheck]=useState(subTag=='blue'?true:false);
+    const [blackCheck,setBlackCheck]=useState(subTag=='black'?true:false);
+    const [orangeCheck,setOrangeCheck]=useState(subTag=='orange'?true:false);
     
     
     filterObj.color=[];
@@ -20,7 +20,7 @@ function ColorFilter({filterObj}){
         filterObj.color.push('orange');
     }
     
-    console.log(filterObj.color)
+    
     const checkHandler=(event)=>{
         if(event.target.name=='blue'){
             setBlueCheck(!blueCheck);
