@@ -7,13 +7,17 @@ import CartCard from './cartCard';
 import { Button,Divider  } from '@mui/material';
 import {add, remove} from '../features/cart/cartSlice.jsx';
 import {useSelector, useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 
 export default function CartDrawer({opener,setOpener}){
+    const navigate=useNavigate();
     const products=[...(cartStore.getState().cart.products)];
     const [change, setChange]=useState(1);
     let subTotalAll=0;
-    //products.subTotal=6000;
-    console.log(products);
+    const goToCheckout=()=>{
+        setOpener(false)
+        navigate('/checkout');
+    }
     const closeHandler=()=>{
         setOpener(false)
     }
@@ -40,7 +44,7 @@ export default function CartDrawer({opener,setOpener}){
                 <p className="">doesn't include shipping charges</p>
             </div>
             <div className='w-full flex flex-col items-center justify-between p-2'>
-                <Button variant="contained" className='w-1/2 h-10'><span>Go to checkout</span></Button>
+                <Button onClick={goToCheckout} variant="contained" className='w-1/2 h-10'><span>Go to checkout</span></Button>
                 <p onClick={closeHandler} className='text-sky-400 text-sx cursor-pointer'>or continue shopping</p>
             </div>
             

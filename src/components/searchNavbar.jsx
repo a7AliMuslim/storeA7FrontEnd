@@ -4,6 +4,7 @@ import React from 'react';
 
 //for navigation
 import {NavLink ,Link} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 
 
 //user context
@@ -21,6 +22,8 @@ import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded
 //component function
 function SearchNavbar(){
     const userData=useUserContext();
+    const location=useLocation();
+    console.log(location);
     //handles cartDrawer open state
     const [cartDrawerOpener, setCartDrawerOpener]=React.useState(false);
     
@@ -46,7 +49,9 @@ function SearchNavbar(){
                 {
                     !user && <><NavLink className='mx-1 flex items-center' to='/login'>Login</NavLink><NavLink className='mx-1 flex items-center'  to='/signup'>Sign up</NavLink></>
                 }
-                <div className='flex items-center' onClick={cartDrawerHandler}>< ShoppingBasketRoundedIcon className='size-5 mx-2 cursor-pointer' /></div>
+                {
+                    location.pathname=='/checkout'?null:<div className='flex items-center' onClick={cartDrawerHandler}>< ShoppingBasketRoundedIcon className='size-5 mx-2 cursor-pointer' /></div>
+                }
                 <CartDrawer opener={cartDrawerOpener} setOpener={setCartDrawerOpener}></CartDrawer>
                 {
                     !!user && <div className='flex items-center justify-evenly w-full'><p>Hi {user}</p> <p onClick={logOutHandler} className='cursor-pointer'>log out</p></div>

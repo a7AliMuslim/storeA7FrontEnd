@@ -75,27 +75,3 @@ export default function CartCard({product, setChange=null, change=null}){
     )
 }
 
-//<div className='basis-1/4 overflow-hidden flex items-center justify-center p-2 '>
-//                <img src={product.mainImage} className='aspect-square rounded-md'/>
-//            </div>
-//            <div className='basis-2/4 p-2 flex justify-between items-center'>
-//               <div className='flex flex-col justify-between h-full aspect-square overflow-hidden py-1'>
-//                   <div className='flex flex-col'>
-//                        <span>{product.title}</span>
-//                        <span>{product.selectedColor}</span>
-//                    </div>
-//                    <div className="flex w-full justify-between">
-//                      <span className=''>Qty{product.cartQuantity}</span>
-//                      <div className='flex'>
-//                          <MinusIcon className="size-5 cursor-pointer" />
-//                          <PlusIcon className="size-5 cursor-pointer" />
-//                      </div>
-//                    </div>
-//                </div>
-//            </div>
-//            <div className='basis-1/4 flex justify-center items-center flex-col'>
-//               <div className='aspect-square w-full flex flex-col items-center justify-between py-1'>
-//                    <span>Rs.{product.subTotal}</span>
-//                    <span className='cursor-pointer'>Remove</span>
-//                </div>
-//            </div>

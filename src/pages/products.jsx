@@ -6,7 +6,7 @@ import {useLocation} from 'react-router-dom';
 
 function Products(){
     const location=useLocation();
-    const [state, setState]=useState(location.state||null);
+    const [state, setState]=useState(location.state||'');
     const [filter, setFilter]=useState('');
     
     return <div className='flex m-8'>

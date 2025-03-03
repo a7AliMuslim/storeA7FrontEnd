@@ -9,10 +9,8 @@ import Button from '@mui/material/Button'
 function FilterSidbar({setFilter, state}){
     const [filterObj, setFilterObj]=useState({objName:'filter'});
     //applies the filter on main filter object, triggers rerender of parent
-    console.log(state);
     const applyFilter=()=>{
         setFilter({...filterObj});
-        console.log(filterObj);
     }
     useEffect(()=>{
         applyFilter();

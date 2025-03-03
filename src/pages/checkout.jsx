@@ -28,6 +28,7 @@ function Checkout(){
     //const products=useSelector((state)=>state.Checkout.products);
     //const Checkout=useSelector((state)=>state.Checkout);
     
+    const [change, setChange]=useState(1);
     const [email,setEmail]=useState(null);
     const [telephone,setTelephone]=useState(null);
     const [cardNumber,setCardNumber]=useState(null);
@@ -46,12 +47,9 @@ function Checkout(){
     const userObj=useUserContext();
     const location=useLocation();
     useEffect(()=>{
-        console.log(products);
+        console.log(document.getElementById('orderSummery'));
         document.getElementById('orderSummery').style.height=getComputedStyle(document.getElementById('deliveryDetails')).height;
     });
-    if(!(userObj.user || userObj.userInStorage())){
-        return <Navigate to='/login' state={{path:location.pathname}}></Navigate>
-    }
     const emailChangeHandler=(event)=>{
         setEmail(event.currentTarget.value);
     }
@@ -117,7 +115,7 @@ function Checkout(){
         submit();
     }
 
-    return (<div className='w-full flex'>
+    return <div className='w-full flex'>
         <div id='deliveryDetails' className='basis-1/2 h-full p-4'>
             <div name='contactInfo' className='w-full py-4'>
                 <p className='text-2xl my-2'>Contact Information</p>
@@ -158,7 +156,7 @@ function Checkout(){
                 </ThemeProvider>
             </div>
         </div>
-        <div id='orderSummery' className='basis-1/2 bg-black/30 h-full p-4'>
+        <div id='orderSummery' className='basis-1/2 bg-black/10 rounded-tr-[8em] h-full p-4'>
            <p className='text-2xl my-4'>Order summery</p>
             <div className='h-2/3 overflow-auto my-4'>
                
@@ -166,7 +164,7 @@ function Checkout(){
                     products?products.map(product=>{
                         subTotalAll=subTotalAll+product.subTotal;
                         console.log(subTotalAll);
-                        return<><CartCard product={product}/><Divider/></>
+                        return<><CartCard product={product} setChange={setChange} change={change}/><Divider/></>
                     }):null
                 }
             </div>
@@ -190,6 +188,6 @@ function Checkout(){
                     <p>Rs.{shippingCost+subTotalAll+taxes}</p>
             </div>
         </div>
-    </div>)
+    </div>
 }
 export default Checkout;

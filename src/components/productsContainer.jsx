@@ -9,11 +9,8 @@ import { Button, ButtonGroup, Skeleton } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
 import {useLocation, useNavigate} from 'react-router-dom';
 
-function getCurrentPage(range,productsPerPage){
-    return Math.ceil(range[0]/productsPerPage);
-    
-}
 
+//input:total number of products without slice applied and number of products on single, output: total pages
 function getTotalPages(prodCount, productsPerPage){
     return Math.ceil(prodCount/productsPerPage);
 }
@@ -26,10 +23,16 @@ function ProductsContainer({filter}){
     const [products, setProducts]=useState(null);
     const [pageNumber, setPageNumber]=useState(1);
     const [totalPages, setTotalPages]=useState(0);
+    //for buttons which load slices of product
     const [pageButtonList, setPageButtonList]=useState([]);
     const [filteredProductCount, setFilteredProductCount]=useState(0);
     const [filteredProductSliceRange, setfilteredProductSliceRange]=useState([0,0])
     const dispatch=useDispatch();
+    
+    //handlers
+    const productPageJump=(event)=>{
+        setPageNumber(Number(event.target.attributes.productpage.value));
+    }
     const pageIncrease=()=>{
         if(pageNumber==totalPages){
             return;
@@ -160,7 +163,7 @@ function ProductsContainer({filter}){
                                         }else if(pageButton==pageNumber){
                                             return <Button disabled className='!text-black !border-black/70 bg-white/70 hover:text-black'>{pageButton}</Button>
                                         }
-                                        return <Button className='text-black !border-black/70 hover:bg-white/70 hover:text-black'>{pageButton}</Button>
+                                        return <Button onClick={productPageJump} productpage={pageButton} className='text-black !border-black/70 hover:bg-white/70 hover:text-black'>{pageButton}</Button>
                                     })
                                 }
                                 
