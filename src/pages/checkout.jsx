@@ -47,7 +47,6 @@ function Checkout(){
     const userObj=useUserContext();
     const location=useLocation();
     useEffect(()=>{
-        console.log(document.getElementById('orderSummery'));
         document.getElementById('orderSummery').style.height=getComputedStyle(document.getElementById('deliveryDetails')).height;
     });
     const emailChangeHandler=(event)=>{

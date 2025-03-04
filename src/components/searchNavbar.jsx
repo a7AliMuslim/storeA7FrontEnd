@@ -20,7 +20,7 @@ import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded
 
 
 //component function
-function SearchNavbar(){
+function SearchNavbar({classes=''}){
     const userData=useUserContext();
     const location=useLocation();
     console.log(location);
@@ -40,7 +40,7 @@ function SearchNavbar(){
         setUser(null);
     }
     
-    return <div className='flex justify-around w-full'>
+    return <div className={`${classes} flex justify-around w-full`}>
             <div className='flex min-w-max basis-4/5'>
                 <SearchBar className='flex-auto'/>
             </div>
