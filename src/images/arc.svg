@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter17"
+       x="-0.067493822"
+       y="-0.062257171"
+       width="1.1319203"
+       height="1.1247157">
+      <feGaussianBlur
+         stdDeviation="3.69061 3.69061"
+         result="blur"
+         id="feGaussianBlur17" />
+    </filter>
+    <mask
+       maskUnits="userSpaceOnUse"
+       id="mask17">
+      <g
+         id="g18">
+        <rect
+           style="font-variation-settings:'wdth' 83.9, 'wght' 300;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:4.9;stroke-linejoin:bevel;stroke-miterlimit:405.7;stroke-dasharray:none;stroke-dashoffset:184.365;stroke-opacity:1"
+           id="rect17"
+           width="222.31238"
+           height="230.48132"
+           x="-9.3359528"
+           y="18.088408" />
+        <path
+           style="font-variation-settings:'wdth' 83.9, 'wght' 300;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:4.9;stroke-linejoin:bevel;stroke-miterlimit:405.7;stroke-dasharray:none;stroke-dashoffset:184.365;stroke-opacity:1;filter:url(#filter17)"
+           d="m 178.5501,59.5167 -34.42633,34.426323 -62.434183,16.337917 -16.337917,44.92927 49.59725,16.92142 14.58742,11.08644 9.33596,25.67387 L 40.844792,217.6444 11.669941,65.935166 159.87819,36.760314 Z"
+           id="path17" />
+      </g>
+    </mask>
+  </defs>
+  <g
+     id="layer1">
+    <path
+       id="path1"
+       mask="url(#mask17)"
+       style="font-variation-settings:'wdth' 83.9, 'wght' 300;fill-opacity:0;stroke:#608bc1;stroke-width:4.9;stroke-linejoin:bevel;stroke-miterlimit:405.7;stroke-dashoffset:184.365"
+       d="m 177.07171,129.82809 a 70,70 0 0 1 -70,70 70,70 0 0 1 -70.000001,-70 70,70 0 0 1 70.000001,-69.999996 70,70 0 0 1 70,69.999996 z" />
+  </g>
+</svg>

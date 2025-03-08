@@ -77,7 +77,7 @@ function Login(){
                             <TextField autoComplete='on' label="Email" name='email' value={email} onChange={emailHandler} inputProps={{'type':'email', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
                         </div>
                         <div className='w-[80%] mb-8'>
-                            <TextField autoComplete='on' label="Password" name='tel' value={password} onChange={passwordHandler} inputProps={{'type':'password', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
+                            <TextField autoComplete='on' label="Password" name='password' value={password} onChange={passwordHandler} inputProps={{'type':'password', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
                         </div>
                 </ThemeProvider>
                 <ThemeProvider theme={themeButton}>
