@@ -5,9 +5,24 @@ import {useUserContext} from '../components/userContext.jsx';
 import {useNavigate} from 'react-router-dom';
 import { TextField, Button, Divider, InputAdornment } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey, indigo, yellow } from '@mui/material/colors';
+import { grey, indigo, yellow, red } from '@mui/material/colors';
 import LoadingIcon from '../components/arrowPath.jsx';
+import PasswordValidator from "password-validator";
 
+const errorIcon=<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+</svg>
+
+const schema = new PasswordValidator();
+schema
+  .is().min(9)    // Minimum length 8
+  .is().max(20)   // Maximum length 20
+  .has().uppercase()  // Must have uppercase letters
+  .has().lowercase()  // Must have lowercase letters
+  .has().digits(1)    // Must have at least 1 digit
+  .has().symbols()    // Must have at least 1 symbol
+  .has().not().spaces()  // No spaces allowed
+  .is().not().oneOf(["123456789", "password"]); // Blacklist common passwords
 
 
 const themeTextfield = createTheme({
@@ -19,7 +34,7 @@ const themeTextfield = createTheme({
         contrastText: grey[100],
     },
     warning:{
-        main:yellow[800],
+        main:red[800],
         light:grey[200],
         dark:grey[900],
         contrastText: grey[900],
@@ -50,6 +65,9 @@ function Signup(){
     const [currentTimerId,setCurrentTimerId]=useState(null);
     const [showLoadingArrow,setShowLoadingArrow]=useState(false);
     const [controller,setController]=useState(new AbortController());
+    const [emailError,setEmailError]=useState(false);
+    const [passwordError,setPasswordError]=useState(false);
+    
     let tempController=null
     const userObj=useUserContext();
     const navigate=useNavigate();
@@ -67,6 +85,7 @@ function Signup(){
     };
     const emailHandler=(event)=>{
         setEmail(event.target.value);
+        setEmailError(false);
     };
     const passwordHandler=(event)=>{
         setPassword(event.target.value);
@@ -115,13 +134,30 @@ function Signup(){
             }
         }
     }
+    const validateEmailLocal=()=>{
+        const emailRegex=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        console.log('email valid: ',emailRegex.test(email));
+        if(emailRegex.test(email)){
+            setEmailError(false);
+            return;
+        }
+        setEmailError(true);
+    }
+    const validatePasswordLocal=()=>{
+        console.log('passwrd valid: ',schema.validate(password));
+        if(schema.validate(password)){
+            setPasswordError(false);
+            return;
+        }
+        setPasswordError(true);
+    }
     
     useEffect(()=>{
         const appContainerHeight=parseInt(getComputedStyle(document.getElementById('app')).height);
         const header1Height=parseInt(getComputedStyle(document.getElementById('header1')).height);
         const header2Height=parseInt(getComputedStyle(document.getElementById('header2')).height);
         document.getElementById('signupContainer').style.height=appContainerHeight-header1Height-header2Height+'px'
-        if(email==''||password.length<9 || userValidated==false){
+        if(emailError||passwordError||userValidated==false){
             setButtonDisabled(true);
         }else{
             setButtonDisabled(false);
@@ -132,13 +168,13 @@ function Signup(){
             <div className='bg-white w-[90%] aspect-video flex flex-col justify-center items-center'>
                 <ThemeProvider theme={themeTextfield}>
                         <div className='w-[80%] my-8'>
-                            <TextField autoComplete='on' color={userNameColor} label="User Name" name='userName' value={userName} onChange={userNameHandler} inputProps={{type:'text', className:'focus:ring-[0px]'}} InputProps={{endAdornment:(<InputAdornment>{showLoadingArrow?<LoadingIcon className='size-5'/>:<LoadingIcon className='size-5 invisible'/>}</InputAdornment>)}} className='w-full'></TextField>
+                            <TextField autoComplete='on' color={userNameColor} label={<span className='flex items-center gap-1'>User Name {userNameColor=='warning'?errorIcon:null}</span>} name='userName' value={userName} onChange={userNameHandler} inputProps={{type:'text', className:'focus:ring-[0px]'}} InputProps={{endAdornment:(<InputAdornment>{showLoadingArrow?<LoadingIcon className='size-5'/>:<LoadingIcon className='size-5 invisible'/>}</InputAdornment>)}} className='w-full'></TextField>
                         </div>
                         <div className='w-[80%] mb-8'>
-                            <TextField autoComplete='on' label="Email" name='email' value={email} onChange={emailHandler} inputProps={{'type':'email', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
+                            <TextField autoComplete='on' color={emailError?'warning':'primary'} label="Email" name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} inputProps={{'type':'email', 'className':'focus:ring-[0px]'}} className='w-full' focused={emailError?true:false}></TextField>
                         </div>
                         <div className='w-[80%] mb-8'>
-                            <TextField autoComplete='on' label="Password" name='password' value={password} onChange={passwordHandler} inputProps={{'type':'password', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
+                            <TextField autoComplete='on' color={passwordError?'warning':'primary'} label="Password" name='password' value={password} onChange={passwordHandler} onBlur={validatePasswordLocal} inputProps={{'type':'password', 'className':'focus:ring-[0px]'}} className='w-full' focused={passwordError?true:false}></TextField>
                         </div>
                 </ThemeProvider>
                 <ThemeProvider theme={themeButton}>
