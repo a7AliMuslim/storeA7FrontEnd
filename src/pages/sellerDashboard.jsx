@@ -41,10 +41,10 @@ function a11yProps(index) {
 const theme = createTheme({
   palette: {
     primary: {
-        main:grey[200],
-        light:grey[100],
+        main:'#608BC1',
+        light:grey[800],
         dark:grey[400],
-        contrastText: grey[800],
+        contrastText: grey[100],
     },
     info:{
         main:grey[200],
@@ -136,10 +136,6 @@ function SellerDashboard(){
                     <Tab label="Post product " {...a11yProps(0)} />
                     <Tab label="Products status" {...a11yProps(1)} />
                     <Tab label="Seller bio" {...a11yProps(2)} />
-                    <Tab label="Item Four" {...a11yProps(3)} />
-                    <Tab label="Item Five" {...a11yProps(4)} />
-                    <Tab label="Item Six" {...a11yProps(5)} />
-                    <Tab label="Item Seven" {...a11yProps(6)} />
                   </Tabs>
               </ThemeProvider>
               <TabPanel value={value} index={0} className='grow'>
@@ -150,18 +146,6 @@ function SellerDashboard(){
               </TabPanel>
               <TabPanel value={value} index={2} className='grow'>
                 <SellerBio/>
-              </TabPanel>
-              <TabPanel value={value} index={3} className='grow'>
-                Item Four
-              </TabPanel>
-              <TabPanel value={value} index={4} className='grow'>
-                Item Five
-              </TabPanel>
-              <TabPanel value={value} index={5} className='grow'>
-                Item Six
-              </TabPanel>
-              <TabPanel value={value} index={6} className='grow'>
-                Item Seven
               </TabPanel>
               </div>
             

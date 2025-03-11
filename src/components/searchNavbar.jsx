@@ -28,7 +28,8 @@ function SearchNavbar({classes=''}){
     const [cartDrawerOpener, setCartDrawerOpener]=React.useState(false);
     
     //setting user
-    const [user, setUser]=React.useState(userData.user || null);
+    const user=userData.userInStorage() || null;
+    console.log(user);
     
     //handles cart drawer
     const cartDrawerHandler=()=>{
@@ -37,9 +38,8 @@ function SearchNavbar({classes=''}){
     
     const logOutHandler=()=>{
         userData.logout();
-        setUser(null);
     }
-    
+    console.log(user);
     return <div className={`${classes} flex justify-around w-full`}>
             <div className='flex min-w-max basis-4/5'>
                 <SearchBar className='flex-auto'/>
@@ -54,7 +54,7 @@ function SearchNavbar({classes=''}){
                 }
                 <CartDrawer opener={cartDrawerOpener} setOpener={setCartDrawerOpener}></CartDrawer>
                 {
-                    !!user && <div className='flex items-center justify-evenly w-full'><p>Hi {user}</p> <p onClick={logOutHandler} className='cursor-pointer'>log out</p></div>
+                    !!user && <div className='flex items-center justify-evenly w-full'><p>Hi {user.userName}</p> <p onClick={logOutHandler} className='cursor-pointer'>log out</p></div>
                 }
             </nav>
         </div>

@@ -47,6 +47,7 @@ function Login(){
         try{
             const response=await axios.post('http://localhost:3002/api/v1/auth/login',{password,email});
             localStorage.setItem('key',response.data.token);
+            console.log(response.data)
             userObj.login(response.data.user);
             navigate('/');
         }catch(err){

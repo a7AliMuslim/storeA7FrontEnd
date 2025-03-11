@@ -12,14 +12,16 @@ const UserProvider=({children})=>{
     const [user,setUser]=useState(localStorage.getItem('user') || null);
     const login=(user)=>{
         setUser(user);
-        localStorage.setItem('user',user.name);
+        console.log(user);
+        localStorage.setItem('user',JSON.stringify(user));
     };
     const logout=()=>{
         setUser(null);
         localStorage.removeItem('user');
+        localStorage.removeItem('seller');
     };
     const userInStorage=()=>{
-        return localStorage.getItem('user');
+        return JSON.parse(localStorage.getItem('user'));
     }
     return(
         <userContext.Provider value={{user,login,logout,userInStorage}}>

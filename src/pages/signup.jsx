@@ -125,10 +125,13 @@ function Signup(){
                 return
             }
             setShowLoadingArrow(false);
-            if(err.response.status==409){
-                setUserValidated(false);
-                setUserNameColor('warning');
-                console.log('invalid');
+            if(err.response){
+                if(err.response.status==409){
+                    setUserValidated(false);
+                    setUserNameColor('warning');
+                    console.log('invalid');
+                }
+                
             }else{
                 console.log(err);
             }
@@ -157,7 +160,7 @@ function Signup(){
         const header1Height=parseInt(getComputedStyle(document.getElementById('header1')).height);
         const header2Height=parseInt(getComputedStyle(document.getElementById('header2')).height);
         document.getElementById('signupContainer').style.height=appContainerHeight-header1Height-header2Height+'px'
-        if(emailError||passwordError||userValidated==false){
+        if(emailError||passwordError||userValidated==false||email==''||password==''){
             setButtonDisabled(true);
         }else{
             setButtonDisabled(false);
@@ -182,7 +185,7 @@ function Signup(){
                             <div></div>
                             <div>
                                 <Button className='!mr-2' disabled={buttonDisabled} onClick={signupHandler} variant="contained" >Sign up</Button>
-                                <Button onClick={validateUser} variant="outlined" >login</Button>
+                                <Button onClick={loginHandler} variant="outlined" >login</Button>
                             </div>
                             
                         </div>

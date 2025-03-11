@@ -31,7 +31,7 @@ function ProductsStatus(){
         setProducts(newProducts);
     }
     useEffect(()=>{
-        document.getElementById('product_status').style.height=Number(getComputedStyle(document.getElementById('root')).height.replace('px',''))-(2*(Number(getComputedStyle(document.getElementById('header')).height.replace('px',''))))+'px';
+        document.getElementById('product_status').style.height=Number(getComputedStyle(document.getElementById('root')).height.replace('px',''))-(2*(Number(getComputedStyle(document.getElementById('header1')).height.replace('px',''))))+'px';
     },[products])
     useEffect(()=>{
         productsStatusFetcher();
