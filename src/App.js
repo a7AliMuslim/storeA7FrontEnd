@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import './App.css';
 import{Routes, Route} from 'react-router-dom';
 import UserProvider from './components/userContext.jsx';
@@ -16,6 +17,10 @@ import Test from './pages/testPageCatagoryadd.jsx';
 
 
 function App() {
+    useEffect(()=>{
+        const root=document.getElementById('root');
+        root.classList.add('touch:w-full')
+    })
   return (
       <>
       

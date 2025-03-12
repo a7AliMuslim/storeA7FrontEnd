@@ -43,13 +43,13 @@ export default function Slider(){
   transitionDuration={1500}
   draggable={true}
   centerMode={false}
-  className="rounded-r-xl"
+  className="rounded-r-xl touch:rounded-r-[0px] touch:!rounded-b-xl"
   containerClass="container-with-dots"
   dotListClass=""
   draggable
   focusOnSelect={false}
   infinite
-  itemClass="h-96"
+  itemClass="h-96 touch:h-48"
   keyBoardControl
   minimumTouchDrag={80}
   pauseOnHover
@@ -67,11 +67,11 @@ export default function Slider(){
   focusOnSelect={true}
   swipeable
 >
-  <img className='w-full' src={img1}/>
-  <img className='w-full' src={img2}/>
-  <img src={img3} className='w-full'/>
-  <img src={img4} className='w-full'/>
-  <img src={img5} className='w-full'/>
-  <img src={img6} className='h-96 w-full'/>
+  <img className='h-96 w-full touch:h-48' src={img1}/>
+  <img className='h-96 w-full touch:h-48' src={img2}/>
+  <img src={img3} className='h-96 w-full touch:h-48'/>
+  <img src={img4} className='h-96 w-full touch:h-48'/>
+  <img src={img5} className='h-96 w-full touch:h-48'/>
+  <img src={img6} className='h-96 w-full touch:h-48'/>
 </Carousel>;
 }

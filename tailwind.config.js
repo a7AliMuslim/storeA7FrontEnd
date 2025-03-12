@@ -15,12 +15,21 @@ module.exports = {
         },
         animation:{
             'slide-in':'slideIn 0.2s ease-in-out forwards',
+            'slide-down':'slideDown 0.2s ease-in-out forwards',
         },
         keyframes:{
             slideIn:{
                 '0%':{transform: ' translateX(-10%)', opacity:'0'},
                 '100%':{transform: ' translateX(0%)', opacity:'1'}
             },
+            slideDown:{
+                '0%':{transform: ' translateY(-10%)', opacity:'0'},
+                '80%':{transform: ' translateY(2%)', opacity:'0.8'},
+                '100%':{transform: ' translateY(0%)', opacity:'1'}
+            },
+        },
+        screens:{
+            'touch':{'raw':'(hover:none) and (pointer:coarse)'},
         }
     },
   },

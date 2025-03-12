@@ -81,11 +81,17 @@ export default function HoverTab() {
   const handleMouseLeave = () => {
     setSelectedIndex(4);
   };
+  useEffect(()=>{
+      const touch=window.matchMedia('(hover:none) and (pointer:coarse)');
+      if(touch){
+          document.getElementById('tabPanels').style.width=getComputedStyle(document.getElementById('imageSlider')).width;
+      }
+  })
   return (
-    <div className="flex px-4">
-      <div className="rounded-l-xl bg-white/30 w-full max-w-md overflow-hidden">
+    <div className="flex px-4 touch:px-0">
+      <div className="rounded-l-xl bg-white/30 w-full max-w-md overflow-hidden touch:rounded-md">
         <TabGroup className='flex flex-row' selectedIndex={selectedIndex} manual onMouseLeave={handleMouseLeave}>
-          <TabList className="flex flex-col gap-4" id='tabList'>
+          <TabList className="flex flex-col gap-4 touch:flex-row touch:gap-2" id='tabList'>
             {categories.map(({ name,index }) => (
               <Tab
                 key={name}
@@ -95,9 +101,9 @@ export default function HoverTab() {
               </Tab>
             ))}
           </TabList>
-          <TabPanels className={selectedIndex==4?'hidden':'absolute ml-[5.5rem] z-[1002] animate-slide-in'}>
+          <TabPanels id='tabPanels' className={selectedIndex==4?'hidden':'absolute ml-[5.5rem] z-[1002] animate-slide-in touch:animate-slide-down touch:ml-[0px] touch:mt-[2rem]'}>
             {categories.map(({ name, posts }) => (
-              <TabPanel key={name}  className="h-96 w-36 rounded-r-xl bg-cdarkBlue p-3">
+              <TabPanel key={name}  className="h-96 w-36 rounded-r-xl bg-cdarkBlue p-3 touch:rounded-r-[0px] touch:!rounded-b-xl touch:w-full touch:h-48">
                 <ul>
                   {posts.map((post) => (
                     <li key={post.id} className="relative rounded-md p-3 text-sm/6 transition hover:bg-white/5">

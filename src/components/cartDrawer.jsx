@@ -22,7 +22,7 @@ export default function CartDrawer({opener,setOpener}){
         setOpener(false)
     }
     return (
-        <SwipeableDrawer anchor='right' open={opener} onClose={closeHandler} PaperProps={{className:'w-1/3 !bg-white/90'}}>
+        <SwipeableDrawer className='' anchor='right' open={opener} onClose={closeHandler} PaperProps={{className:'w-1/3 !bg-white/90 touch:w-4/5'}}>
             <div className="p-2 flex w-full items-center justify-between">
               <span className='text-2xl'>Cart</span>
               <XMarkIcon onClick={closeHandler} className="size-5 cursor-pointer" />
