@@ -95,7 +95,7 @@ export default function HoverTab() {
             {categories.map(({ name,index }) => (
               <Tab
                 key={name}
-                className={selectedIndex==4?'rounded-full py-1 px-3 text-sm/6 font-semibold text-black focus:outline-none data-[hover]:bg-white/5 data-[focus]:outline-1 data-[focus]:outline-white capitalize':"rounded-sm py-1 px-3 text-sm/6 font-semibold text-dark focus:outline-none data-[selected]:bg-white/20 data-[hover]:bg-white/10 data-[selected]:data-[hover]:text-light data-[selected]:data-[hover]:bg-cdarkBlue data-[focus]:outline-1 data-[focus]:outline-white capitalize"} onMouseEnter={()=>handleMouseEnter(index)} 
+                className={selectedIndex==4?'rounded-full py-1 px-3 text-sm/6 font-semibold text-black focus:outline-none data-[hover]:bg-white/5 data-[focus]:outline-1 data-[focus]:outline-white capitalize':"rounded-sm py-1 px-3 text-sm/6 font-semibold text-dark focus:outline-none data-[selected]:text-light-gray data-[selected]:bg-dark-purple-black data-[hover]:text-custom-white data-[hover]:bg-white/10 data-[selected]:data-[hover]:text-light data-[selected]:data-[hover]:bg-dark-purple-black data-[focus]:outline-1 data-[focus]:outline-white capitalize"} onMouseEnter={()=>handleMouseEnter(index)} 
               >
                 {name}
               </Tab>
@@ -103,7 +103,7 @@ export default function HoverTab() {
           </TabList>
           <TabPanels id='tabPanels' className={selectedIndex==4?'hidden':'absolute ml-[5.5rem] z-[1002] animate-slide-in touch:animate-slide-down touch:ml-[0px] touch:mt-[2rem]'}>
             {categories.map(({ name, posts }) => (
-              <TabPanel key={name}  className="h-96 w-36 rounded-r-xl bg-cdarkBlue p-3 touch:rounded-r-[0px] touch:!rounded-b-xl touch:w-full touch:h-48">
+              <TabPanel key={name}  className="h-96 w-36 rounded-r-xl bg-dark-purple-black p-3 touch:rounded-r-[0px] touch:!rounded-b-xl touch:w-full touch:h-48">
                 <ul>
                   {posts.map((post) => (
                     <li key={post.id} className="relative rounded-md p-3 text-sm/6 transition hover:bg-white/5">

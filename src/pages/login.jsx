@@ -18,10 +18,50 @@ const themeTextfield = createTheme({
   },
 });
 
+const themeTextfieldTouch = createTheme({
+  palette: {
+    primary: {
+        main:'#F3F3E0',
+        light:grey[200],
+        dark:grey[900],
+        contrastText: grey[100],
+    },
+  },
+ components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgba(255, 255, 255, 0)', // transparent background for input
+          borderRadius: '8px',
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: grey[500], // Border color on hover
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: grey[300], // Border color when focused
+          },
+          '.MuiOutlinedInput-notchedOutline': {
+            borderColor: '#F3F3E0', // Border color
+          },
+        },
+        input: {
+          color: '#F0F0F0', // Dark text inside input
+        },
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: grey[500], // Change placeholder (label) text color
+        },
+      },
+    },
+ }
+});
+
 const themeButton=createTheme({
   palette: {
     primary: {
-        main:'#608BC1',
+        main:'#1F1B24',
         light:grey[300],
         dark:indigo[500],
         contrastText: grey[100],
@@ -71,9 +111,9 @@ function Login(){
     })
     
     return <div id='loginContainer' className='w-full h-full flex  items-center justify-center'>
-        <div className='bg-white rounded-3xl w-[45%] aspect-video drop-shadow-2xl flex  items-center justify-center'>
-            <div className='bg-white w-[90%] aspect-video flex flex-col justify-center items-center'>
-                <ThemeProvider theme={themeTextfield}>
+        <div className='bg-white rounded-3xl w-[45%] aspect-video drop-shadow-2xl flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient'>
+            <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>
+                <ThemeProvider theme={window.matchMedia('(hover:none) and (pointer:coarse)')?themeTextfieldTouch:themeTextfield}>
                         <div className='w-[80%] my-8'>
                             <TextField autoComplete='on' label="Email" name='email' value={email} onChange={emailHandler} inputProps={{'type':'email', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
                         </div>

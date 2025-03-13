@@ -24,22 +24,22 @@ function App() {
   return (
       <>
       
-    <div id='app' className="App w-full bg-gradient-to-r from-cwhiteBlue to-cblank min-h-screen text-black">
-        <UserProvider>
-            <Header/>
-            <Routes>
-                <Route path='/' element={<Home/>}/>
-                <Route path='/contact' element={<ContactUs/>}/>
-                <Route path='/login' element={<Login/>}/>
-                <Route path='/signup' element={<Signup/>}/>
-                <Route path='/seller' element={<SellerDashboard/>}/>
-                <Route path='/becomeSeller' element={<BecomeSeller/>}/>
-                <Route path='/checkout' element={<Checkout/>}/>
-                <Route path='/products' element={<Products/>}/>
-                <Route path='/singleProduct' element={<SingleProduct/>}/>
-                <Route path='/test' element={<Test/>}/>
-            </Routes>
-        </UserProvider>
+    <div id='app' className="App w-full bg-gradient-to-r from-custom-white to-white-blue min-h-screen text-black ">
+            <UserProvider>
+                <Header/>
+                <Routes>
+                    <Route path='/' element={<Home/>}/>
+                    <Route path='/contact' element={<ContactUs/>}/>
+                    <Route path='/login' element={<Login/>}/>
+                    <Route path='/signup' element={<Signup/>}/>
+                    <Route path='/seller' element={<SellerDashboard/>}/>
+                    <Route path='/becomeSeller' element={<BecomeSeller/>}/>
+                    <Route path='/checkout' element={<Checkout/>}/>
+                    <Route path='/products' element={<Products/>}/>
+                    <Route path='/singleProduct' element={<SingleProduct/>}/>
+                    <Route path='/test' element={<Test/>}/>
+                </Routes>
+            </UserProvider>
     </div>
       </>
   );

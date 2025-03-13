@@ -6,12 +6,15 @@ module.exports = {
   theme: {
     extend: {
         colors:{
-            'cblank':'#F3F3E0',
-            'cdarkBlue':'#133E87',
-            'clightBlue':'#608BC1',
-            'cwhiteBlue':'#CBDCEB',
-            'light':'#FFFFFF',
-            'dark':'#000000',
+            'custom-white':'#F3F3E0',
+            'dark-blue':'#133E87',
+            'ligh-blue':'#608BC1',
+            'white-blue':'#CBDCEB',
+            'light-dark':'#43414a',
+            'dark':'#2C2A34',
+            'dark-purple-black':'#1F1B24',
+            'light-text':'#F0F0F0',
+            'light-gray':'#b2aebc'
         },
         animation:{
             'slide-in':'slideIn 0.2s ease-in-out forwards',
