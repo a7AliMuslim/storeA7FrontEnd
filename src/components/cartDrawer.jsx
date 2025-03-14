@@ -8,6 +8,20 @@ import { Button,Divider  } from '@mui/material';
 import {add, remove} from '../features/cart/cartSlice.jsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { grey, indigo } from '@mui/material/colors';
+
+const themeButton=createTheme({
+  palette: {
+    primary: {
+        main:'#76B900',
+        light:'#F0F0F0',
+        dark:'#2C2A34',
+        contrastText: '#F0F0F0',
+    },
+    
+  },
+});
 
 export default function CartDrawer({opener,setOpener}){
     const navigate=useNavigate();
@@ -22,10 +36,10 @@ export default function CartDrawer({opener,setOpener}){
         setOpener(false)
     }
     return (
-        <SwipeableDrawer className='' anchor='right' open={opener} onClose={closeHandler} PaperProps={{className:'w-1/3 black-linen-gradient  touch:w-4/5'}}>
+        <SwipeableDrawer className='' anchor='right' open={opener} onClose={closeHandler} PaperProps={{className:'w-1/3 black-linen-gradient text-light-text touch:w-4/5'}}>
             <div className="p-2 flex w-full items-center justify-between">
-              <span className='text-2xl'>Cart</span>
-              <XMarkIcon onClick={closeHandler} className="size-5 cursor-pointer" />
+              <span className='text-2xl text-light-text'>Cart</span>
+              <XMarkIcon onClick={closeHandler} className="size-5 cursor-pointer text-light-gray" />
             </div>
             <div className='h-full overflow-auto'>
                 {
@@ -38,14 +52,16 @@ export default function CartDrawer({opener,setOpener}){
             </div>
             <div className='w-full p-2'>
                 <div className='flex justify-between w-full'>
-                    <p className='text-xl'>SubTotal</p>
-                    <p>Rs.{subTotalAll}</p>
+                    <p className='text-xl text-light-text'>SubTotal</p>
+                    <p className='text-light-text'>Rs.{subTotalAll}</p>
                 </div>
-                <p className="">doesn't include shipping charges</p>
+                <p className="text-light-text">doesn't include shipping charges</p>
             </div>
             <div className='w-full flex flex-col items-center justify-between p-2'>
-                <Button onClick={goToCheckout} variant="contained" className='w-1/2 h-10'><span>Go to checkout</span></Button>
-                <p onClick={closeHandler} className='text-sky-400 text-sx cursor-pointer'>or continue shopping</p>
+                <ThemeProvider theme={themeButton}>
+                    <Button onClick={goToCheckout} variant="contained" className='w-1/2 h-10'><span>Go to checkout</span></Button>
+                </ThemeProvider>
+                <p onClick={closeHandler} className='text-nvidia-green text-sx cursor-pointer'>or continue shopping</p>
             </div>
             
             

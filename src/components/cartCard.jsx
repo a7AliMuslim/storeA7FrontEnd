@@ -48,23 +48,23 @@ export default function CartCard({product, setChange=null, change=null}){
             <img src={`http://localhost:3002/api/v1/images?imageID=${product.imageIDs[0]}`} className='col-span-1 aspect-square rounded-md overflow-hidden'/>
             <div className='col-span-2 grid grid-cols-2 grid-rows-2 items-center h-full overflow-hidden'>
                <div className='flex flex-col overflow-hidden'>
-                    <span className='capitalize text-xl'>{product.title}</span>
-                    <span>{setChange?product.chosenSize:null}</span>
+                    <span className='capitalize text-xl text-light-text'>{product.title}</span>
+                    <span className='text-light-text'>{setChange?product.chosenSize:null}</span>
                 </div>
                 <div>
                     
                 </div>
                 <div className="col-span-2 flex justify-between">
-                  <span className='capitalize'>{setChange?null:product.chosenSize+', '+product.chosenColor+', '}Qty:{product.cartQuantity}</span>
+                  <span className='capitalize text-light-text'>{setChange?null:product.chosenSize+', '+product.chosenColor+', '}Qty:{product.cartQuantity}</span>
                   {
                         setChange?(<div className='flex'>
-                      <MinusIcon onClick={decreaseProduct} className="size-5 cursor-pointer" />
-                      <PlusIcon onClick={increaseProduct} className="size-5 cursor-pointer" />
+                      <MinusIcon onClick={decreaseProduct} className="size-5 cursor-pointer text-light-text" />
+                      <PlusIcon onClick={increaseProduct} className="size-5 cursor-pointer text-light-text" />
                   </div>):null
                     }
                 </div>
             </div>
-            <div className='col-span-1 grid grid-cols-1 grid-rows-2 items-center h-full overflow-hidden'>
+            <div className='col-span-1 grid grid-cols-1 grid-rows-2 items-center h-full overflow-hidden text-light-text'>
                 <span>Rs.{product.subTotal}</span>
                 {
                     setChange?<span onClick={removeAllHandler} className='cursor-pointer' productid={product.id}>Remove</span>:null

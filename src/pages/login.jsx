@@ -61,11 +61,11 @@ const themeTextfieldTouch = createTheme({
 const themeButton=createTheme({
   palette: {
     primary: {
-        main:'#1F1B24',
-        light:grey[300],
-        dark:indigo[500],
-        contrastText: grey[100],
-    }
+        main:'#76B900',
+        light:'#F0F0F0',
+        dark:'#2C2A34',
+        contrastText: '#F0F0F0',
+    },
     
   },
 });

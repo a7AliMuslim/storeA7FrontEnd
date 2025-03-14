@@ -113,7 +113,7 @@ function ProductsContainer({filter}){
     useEffect(()=>{
         fetchedProductData();
     },[filter,pageNumber]);
-    return<div className='basis-5/6 rounded-md'>
+    return<div className='w-5/6 rounded-md p-8'>
             <div className='flex flex-wrap justify-center'>
                        {
                       products?products.map((product)=><ProductCard onClick={cardClickHandler} img={`http://localhost:3002/api/v1/images?imageID=${product.imageIDs[0]}`} productId={product.id} title={product.title} price={product.price}/>):Array.from({length:50}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))

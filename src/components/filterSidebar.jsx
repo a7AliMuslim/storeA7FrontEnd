@@ -5,6 +5,19 @@ import ColorFilter from './colorFilter';
 import RangeSlider from './rangeSlider';
 import RatingFilter from './ratingFilter';
 import Button from '@mui/material/Button'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
+const themeButton = createTheme({
+  palette: {
+    primary: {
+        main:'#76B900',
+        light:'#F0F0F0',
+        dark:'#2C2A34',
+        contrastText: '#F0F0F0',
+    },
+  },
+});
 
 function FilterSidbar({setFilter, state}){
     const [filterObj, setFilterObj]=useState({objName:'filter'});
@@ -16,8 +29,8 @@ function FilterSidbar({setFilter, state}){
         applyFilter();
         
     },[]);
-    return (<div className='flex basis-1/6 flex-col gap-4'>
-        <h1 className="text-2xl tracking-tight text-gray-900 my-2">Filters</h1>
+    return (<div className='flex w-1/6 flex-col gap-4 p-8 black-diamond-gradient touch:w-full'>
+        <h1 className="text-2xl tracking-tight text-light-text my-2">Filters</h1>
         <RangeSlider filterObj={filterObj}/>
         {
                 state.tag=='catagories'?<CatagoryFilter filterObj={filterObj} subTag={state.subTag}/>:<CatagoryFilter filterObj={filterObj}/>
@@ -26,7 +39,9 @@ function FilterSidbar({setFilter, state}){
                 state.tag=='color'?<ColorFilter filterObj={filterObj} subTag={state.subTag}/>:<ColorFilter filterObj={filterObj}/>
         }
         <RatingFilter filterObj={filterObj}/>
-        <Button className='!my-4' variant="contained" onClick={applyFilter}>Apply</Button>
+        <ThemeProvider theme={themeButton}>
+            <Button className='!my-4' variant="contained" onClick={applyFilter}>Apply</Button>
+        </ThemeProvider>
     </div>)
 }
 export default FilterSidbar;
