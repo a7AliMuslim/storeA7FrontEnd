@@ -19,17 +19,22 @@ const themeButton = createTheme({
   },
 });
 
-function FilterSidbar({setFilter, state}){
+function FilterSidbar({setFilter, state, setFilterDrawerOpener=null}){
     const [filterObj, setFilterObj]=useState({objName:'filter'});
     //applies the filter on main filter object, triggers rerender of parent
     const applyFilter=()=>{
+        if(setFilterDrawerOpener){
+            setFilterDrawerOpener(false);
+        }
+        console.log(filterObj)
         setFilter({...filterObj});
     }
     useEffect(()=>{
+        console.log(filterObj)
         applyFilter();
         
     },[]);
-    return (<div className='flex w-1/6 flex-col gap-4 p-8 black-diamond-gradient touch:w-full'>
+    return (<div className='flex w-1/6 flex-col gap-4 p-8 black-diamond-gradient h-full touch:w-full'>
         <h1 className="text-2xl tracking-tight text-light-text my-2">Filters</h1>
         <RangeSlider filterObj={filterObj}/>
         {

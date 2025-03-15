@@ -1,22 +1,10 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import { SwipeableDrawer } from '@mui/material';
 
 
-function FilterDrawer({children,opener,setOpener}){
-    const [container, setContainer]=useState(null);
-    const closeHandler=()=>{
-        setOpener(false)
-    }
-    useEffect(()=>{
-        console.log('zin',getComputedStyle(document.getElementById('header2')).zIndex);
-        setContainer(document.getElementById("filter-drawer-container"));
-    },[])
-    if (!container) return null; 
-    return <SwipeableDrawer className='' anchor='left' open={opener} onClose={closeHandler} PaperProps={{className:'w-1/3 black-linen-gradient text-light-text touch:w-4/5'}} container={container} disablePortal disableEnforceFocus ModalProps={{
-                keepMounted: true,
-            }}>
+function FilterDrawer({children,opener}){
+    return <div id='filter-drawer-container' className={opener?'absolute h-full animate-slide-in z-10 drop-shadow-[0_2rem_10rem_rgba(0,0,0,1)] rounded-tr-lg overflow-hidden':'absolute h-full animate-slide-out z-10 rounded-tr-lg'}>
             {children}
-    </SwipeableDrawer>
+    </div>
 }
 export default FilterDrawer;

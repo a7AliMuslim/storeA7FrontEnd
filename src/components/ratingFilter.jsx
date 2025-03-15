@@ -40,7 +40,7 @@ export default function RatingFilter({filterObj}){
         
             
         <div className='flex justify-center text-light-text'>
-            <div className={hoverValue==-1?'flex-none w-6 opacity-0':'w-6 flex-none'}>
+            <div className={hoverValue==-1?'flex-none w-6 opacity-0 touch:hidden':'w-6 flex-none touch:hidden'}>
                 {hoverValue}
             </div>
             <ThemeProvider theme={theme}>

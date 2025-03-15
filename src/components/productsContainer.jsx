@@ -113,32 +113,17 @@ function ProductsContainer({filter}){
     useEffect(()=>{
         fetchedProductData();
     },[filter,pageNumber]);
-    return<div className='w-5/6 rounded-md p-8'>
-            <div className='flex flex-wrap justify-center'>
+    return<div className='w-5/6 rounded-md p-8 touch:w-full'>
+            <div className='flex flex-wrap justify-center touch:gap-2'>
                        {
                       products?products.map((product)=><ProductCard onClick={cardClickHandler} img={`http://localhost:3002/api/v1/images?imageID=${product.imageIDs[0]}`} productId={product.id} title={product.title} price={product.price}/>):Array.from({length:50}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))
                   }
             </div>
             <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
 
-                <div className="flex flex-1 justify-between sm:hidden">
-                   <StyledEngineProvider injectFirst>
-                        <Button
-                          onClick={pageDecrease} className='text-black bg-white/90 hover:bg-white'
-                        >
-                          Previous
-                        </Button>
-                    </StyledEngineProvider>
-                    <StyledEngineProvider injectFirst>
-                        <Button
-                          onClick={pageIncrease} className='text-black bg-white/90 hover:bg-white'
-                        >
-                          Next
-                        </Button>
-                    </StyledEngineProvider>
-                </div>
-                <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                    <div>
+                
+                <div className="flex flex-1 items-center justify-between touch:justify-end">
+                    <div className='touch:hidden'>
                       <p className="text-sm text-gray-700">
                         Showing <span className="font-medium">{filteredProductSliceRange[0]}</span> to <span className="font-medium">{filteredProductSliceRange[1]}</span> of{' '}
                         <span className="font-medium">{filteredProductCount}</span> results
@@ -186,12 +171,3 @@ function ProductsContainer({filter}){
 }
 export default React.memo(ProductsContainer);
 
-//
-//     
-//        <div className='border-2 border-sky-500 flex-auto'>
-//            {
-//            
-//            products?products.map((product)=><div>{product.title}<button onClick={()=>addToCartHandler(product)}>add to cart</button></div>):null
-//            
-//        }
-//        </div>
