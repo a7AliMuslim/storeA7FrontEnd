@@ -17,6 +17,7 @@ function Products(){
     const [filter, setFilter]=useState('');
     const [filterDrawerOpener, setFilterDrawerOpener]=React.useState(false);
     const iconDivRef=useRef(null);
+    const wholeComponentRef=useRef(null)
     const filterDrawerCloseHandler=(event)=>{
         if(event.target.closest('#filter-icon')){
             return
@@ -33,8 +34,11 @@ function Products(){
         if(window.matchMedia('(hover:none) and (pointer:coarse)').matches){
             iconDivRef.current.style.width=getComputedStyle(document.getElementById('filter-drawer-container')).width;
         }
-        console.log(filter);
-        
+        document.getElementById('app').classList.add('flex','flex-col')
+//        const appContainerHeight=parseInt(getComputedStyle(document.getElementById('app')).height);
+//        const header1Height=parseInt(getComputedStyle(document.getElementById('header1')).height);
+//        const header2Height=parseInt(getComputedStyle(document.getElementById('header2')).height);
+//        wholeComponentRef.current.style.minHeight=appContainerHeight-header1Height-header2Height+'px'
     });
     const isFilterSet=()=>{
         if(filter==''){
@@ -47,14 +51,14 @@ function Products(){
         }
         return true;
     }
-    return <div className='min-h-screen' onClick={filterDrawerCloseHandler}>
+    return <div ref={wholeComponentRef} className='grow flex flex-col' onClick={filterDrawerCloseHandler}>
           
            <div ref={iconDivRef} className='hidden justify-between touch:flex'  >
                 <div onClick={filterDrawerOpenHandler} className='flex'>{filterIcon}<div className={'size-2 rounded-full bg-red-400 -translate-x-2 translate-y-[0.1rem] '+(isFilterSet()?'':'hidden')}></div></div>
                 <XMarkIcon className={"animate-spin-fast overflow-hidden rounded-lg z-20 size-6 cursor-pointer text-dark hover:bg-red-300 hover:text-light-text "+(filterDrawerOpener?'block':'hidden')} />
            </div>
            
-            <div className='flex h-full'>
+            <div className='flex grow items-stretch'>
                {
                     (window.matchMedia('(hover:none) and (pointer:coarse)').matches)?<FilterDrawer opener={filterDrawerOpener}><FilterSidebar setFilter={setFilter} state={state} setFilterDrawerOpener={setFilterDrawerOpener}></FilterSidebar></FilterDrawer>:<FilterSidebar setFilter={setFilter} state={state}></FilterSidebar>
                 }

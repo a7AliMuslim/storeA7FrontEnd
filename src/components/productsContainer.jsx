@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import {add} from '../features/cart/cartSlice.jsx';
 import {useSelector, useDispatch} from 'react-redux';
@@ -8,7 +8,6 @@ import ProductCard from './productCard';
 import { Button, ButtonGroup, Skeleton } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
 import {useLocation, useNavigate} from 'react-router-dom';
-
 
 //input:total number of products without slice applied and number of products on single, output: total pages
 function getTotalPages(prodCount, productsPerPage){
@@ -23,11 +22,15 @@ function ProductsContainer({filter}){
     const [products, setProducts]=useState(null);
     const [pageNumber, setPageNumber]=useState(1);
     const [totalPages, setTotalPages]=useState(0);
+    const [masksPositionWithoutMouse, setMasksPositionWithoutMouse]=useState('');
+    
     //for buttons which load slices of product
     const [pageButtonList, setPageButtonList]=useState([]);
     const [filteredProductCount, setFilteredProductCount]=useState(0);
     const [filteredProductSliceRange, setfilteredProductSliceRange]=useState([0,0])
     const dispatch=useDispatch();
+    const contentRef=useRef(null);
+    const maskRef=useRef(null);
     
     //handlers
     const productPageJump=(event)=>{
@@ -55,7 +58,6 @@ function ProductsContainer({filter}){
     const fetchedProductData= async ()=>{
             try{
                 const respons=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products`,{filter,pageNumber,});
-                console.log(respons.data);
                 setProducts(respons.data.slice);
                 setFilteredProductCount(respons.data.count);
                 
@@ -101,25 +103,55 @@ function ProductsContainer({filter}){
                     list.push(pages-1);
                     list.push(pages);
                 }
-                console.log('list',list);
-                console.log('pageNumber+1',pageNumber+1);
-                console.log('pages-2',pages-2)
                 setPageButtonList(list);
                 
             }catch(err){
                 console.log(err);
             }
     };
+    const mouseMaskHandler=(event)=>{
+        const {clientX, clientY}=event;
+        console.log(clientX,clientY);
+        if(masksPositionWithoutMouse.length>0){
+            const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
+            maskRef.current.style.maskPosition=masksPositionWithoutMouse+`, ${clientX-(remInPixels*4)+'px'} ${clientY-(remInPixels*4)+'px'}`
+        }
+        console.log(maskRef.current.style.maskPosition);
+    }
     useEffect(()=>{
         fetchedProductData();
     },[filter,pageNumber]);
-    return<div className='w-5/6 rounded-md p-8 touch:w-full'>
-            <div className='flex flex-wrap justify-center touch:gap-2'>
+    useEffect(()=>{
+        const rect = contentRef.current.getBoundingClientRect();
+        const top = rect.top + window.scrollY+'px' ;
+        const left = rect.left + window.scrollX+'px' ;
+        const width = rect.width+'px';
+        const height = rect.height+'px';
+        
+        
+        const position=`0px 0px, ${left} ${top}`;
+        const size=`100% 100%, ${width} ${height}, 8rem 8rem`;
+        console.log('size', size);
+        console.log('position', position);
+        
+      
+        
+        maskRef.current.style.maskPosition=position;
+        maskRef.current.style.maskSize=size;
+        setMasksPositionWithoutMouse(position);
+        
+    },[products])
+    return<div onMouseMove={mouseMaskHandler} className='w-5/6 rounded-md p-8 touch:w-full touch:px-1  bg-clip-content'>
+            <div ref={maskRef} className="w-full h-full grid-blocks-dark-gradient absolute inset-0 z-0 mask">
+            
+            </div>
+            <div ref={contentRef} className='relative'>
+                <div className='flex flex-wrap justify-center z-40 touch:gap-2'>
                        {
                       products?products.map((product)=><ProductCard onClick={cardClickHandler} img={`http://localhost:3002/api/v1/images?imageID=${product.imageIDs[0]}`} productId={product.id} title={product.title} price={product.price}/>):Array.from({length:50}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))
                   }
-            </div>
-            <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
+                </div>
+                <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
 
                 
                 <div className="flex flex-1 items-center justify-between touch:justify-end">
@@ -164,6 +196,7 @@ function ProductsContainer({filter}){
                       </nav>
                     </div>
           </div>
+            </div>
             </div> 
         </div>
         

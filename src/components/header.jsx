@@ -20,7 +20,7 @@ function Header(){
                         }
                     </div>
                 </div>
-                <div id='header2' className='bg-dark-purple-black w-full h-4 touch:h-1'></div>
+                <div id='header2' className='bg-dark-purple-black w-full h-4 touch:h-1 z-10'></div>
         </>
 }
 

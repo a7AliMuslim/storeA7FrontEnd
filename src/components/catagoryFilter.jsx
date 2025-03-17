@@ -24,7 +24,6 @@ function CatagoryFilter({filterObj, subTag=''}){
     const [catagory1Check,setCatagory1Check]=useState(subTag=='catagory1'?true:false);
     const [catagory2Check,setCatagory2Check]=useState(subTag=='catagory2'?true:false);
     const [catagory3Check,setCatagory3Check]=useState(subTag=='catagory3'?true:false);
-    console.log('subTag',subTag);
     //fills checked catagories on render and re render
     filterObj.catagory=[];
     if(catagory1Check){
