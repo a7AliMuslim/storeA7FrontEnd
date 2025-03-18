@@ -15,8 +15,17 @@
     .grid-blocks-dark-gradient{
         background: url("/public/grid-me.png"), linear-gradient(to right, #2C2A34, #43414a);
     }
+    .grid-blocks{
+        background: url("/public/grid-me.png");
+    }
+    .grid-blocks-custom{
+        background: url("/public/grid-me-custom.png"), linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+    }
     .black-linen-gradient{
         background: url("/public/black-linen.png"), linear-gradient(to right, #2C2A34, #43414a);
+    }
+    .black-linen{
+        background: url("/public/black-linen.png");
     }
     .black-diamond-gradient{
         background: url("/public/diagmonds.png"), linear-gradient(to right, #2C2A34, #43414a);

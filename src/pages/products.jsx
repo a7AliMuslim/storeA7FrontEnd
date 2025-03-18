@@ -34,11 +34,7 @@ function Products(){
         if(window.matchMedia('(hover:none) and (pointer:coarse)').matches){
             iconDivRef.current.style.width=getComputedStyle(document.getElementById('filter-drawer-container')).width;
         }
-        document.getElementById('app').classList.add('flex','flex-col')
-//        const appContainerHeight=parseInt(getComputedStyle(document.getElementById('app')).height);
-//        const header1Height=parseInt(getComputedStyle(document.getElementById('header1')).height);
-//        const header2Height=parseInt(getComputedStyle(document.getElementById('header2')).height);
-//        wholeComponentRef.current.style.minHeight=appContainerHeight-header1Height-header2Height+'px'
+        document.getElementById('app').classList.add('flex','flex-col');
     });
     const isFilterSet=()=>{
         if(filter==''){
@@ -53,9 +49,9 @@ function Products(){
     }
     return <div ref={wholeComponentRef} className='grow flex flex-col' onClick={filterDrawerCloseHandler}>
           
-           <div ref={iconDivRef} className='hidden justify-between touch:flex'  >
-                <div onClick={filterDrawerOpenHandler} className='flex'>{filterIcon}<div className={'size-2 rounded-full bg-red-400 -translate-x-2 translate-y-[0.1rem] '+(isFilterSet()?'':'hidden')}></div></div>
-                <XMarkIcon className={"animate-spin-fast overflow-hidden rounded-lg z-20 size-6 cursor-pointer text-dark hover:bg-red-300 hover:text-light-text "+(filterDrawerOpener?'block':'hidden')} />
+           <div ref={iconDivRef} className='hidden justify-between touch:flex z-10'  >
+                <div onClick={filterDrawerOpenHandler} className='flex text-light-text'>{filterIcon}<div className={'size-2 rounded-full bg-red-400 -translate-x-2 translate-y-[0.1rem] '+(isFilterSet()?'':'hidden')}></div></div>
+                <XMarkIcon className={"animate-spin-fast overflow-hidden rounded-lg z-20 size-6 cursor-pointer text-light-text hover:bg-red-300 hover:text-light-text "+(filterDrawerOpener?'block':'hidden')} />
            </div>
            
             <div className='flex grow items-stretch'>
