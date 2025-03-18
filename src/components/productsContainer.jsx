@@ -32,7 +32,10 @@ const blobSvg=<svg width="696" height="694" viewBox="0 0 696 694" fill="none" xm
 function getTotalPages(prodCount, productsPerPage){
     return Math.ceil(prodCount/productsPerPage);
 }
-
+const parseBorderRadius = (radius) => {
+    return radius.split(" ").map((val) => parseFloat(val) || 0);
+};
+let lastCanvasBlobCall=1;
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
 axios.defaults.headers.get['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
 function ProductsContainer({filter}){
@@ -42,6 +45,9 @@ function ProductsContainer({filter}){
     const [pageNumber, setPageNumber]=useState(1);
     const [totalPages, setTotalPages]=useState(0);
     const [masksPositionWithoutMouse, setMasksPositionWithoutMouse]=useState('');
+    const [maskPos,setMaskPos]=useState('');
+    
+    
     
     //for buttons which load slices of product
     const [pageButtonList, setPageButtonList]=useState([]);
@@ -50,6 +56,7 @@ function ProductsContainer({filter}){
     const dispatch=useDispatch();
     const contentRef=useRef(null);
     const maskRef=useRef(null);
+    const canvasRef = useRef(null);
     
     //handlers
     const productPageJump=(event)=>{
@@ -129,47 +136,82 @@ function ProductsContainer({filter}){
             }
     };
     const mouseMaskHandler=(event)=>{
-        const {clientX, clientY}=event;
-        console.log(clientX,clientY);
         if(masksPositionWithoutMouse.length>0){
+            const {clientX, clientY}=event;
             const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
             maskRef.current.style.maskPosition=masksPositionWithoutMouse+`, ${clientX-(remInPixels*4)+'px'} ${clientY-(remInPixels*4)+'px'}`
         }
-        console.log(maskRef.current.style.maskPosition);
     }
     useEffect(()=>{
         fetchedProductData();
     },[filter,pageNumber]);
-    useEffect(()=>{
-        const rect = contentRef.current.getBoundingClientRect();
-        const top = rect.top + window.scrollY+'px' ;
-        const left = rect.left + window.scrollX+'px' ;
-        const width = rect.width+'px';
-        const height = rect.height+'px';
-        
-        
-        const position=`0px 0px, ${left} ${top}`;
-        const size=`100% 100%, ${width} ${height}, 8rem 8rem`;
-        console.log('size', size);
-        console.log('position', position);
-        
-      
-        
-        maskRef.current.style.maskPosition=position;
+    
+    useEffect(() => {
+    if (!contentRef.current) return;
+
+    const sourceDiv = contentRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    // Get div dimensions
+    
+
+    // Get computed styles
+    const computedStyle = window.getComputedStyle(sourceDiv);
+    const borderRadius = computedStyle.borderRadius;
+    const rect = sourceDiv.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const top = rect.top +'px';
+    const left = rect.left +'px';
+    const position=`0px 0px, ${left} ${top}`;
+    const size=`100% 100%, ${width+'px'} ${height+'px'}, 8rem 8rem`;
+
+    // Set canvas size to match div
+    canvas.width = width;
+    canvas.height = height;
+
+    // Parse border radius
+    const radiusValues = parseBorderRadius(borderRadius, width, height);
+    //console.log(radiusValues)
+
+    // Draw rounded rectangle mask
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.roundRect(0, 0, width, height, radiusValues);
+    ctx.fill();
+
+    
+    const currentCanvasBlobCall=lastCanvasBlobCall;
+    lastCanvasBlobCall=lastCanvasBlobCall+1
+    // Convert canvas to Blob
+    canvas.toBlob((blob) => {
+      if (blob && currentCanvasBlobCall==(lastCanvasBlobCall-1)) {
+        lastCanvasBlobCall=1
+        const objectURL = URL.createObjectURL(blob);
+        maskRef.current.style.maskImage= `linear-gradient(black, black) ,url(${objectURL}), radial-gradient(circle, rgba(0, 0, 0, 0.5) 0%, transparent 65%)`;
+        maskRef.current.style.maskPosition=position
         maskRef.current.style.maskSize=size;
         setMasksPositionWithoutMouse(position);
         
-    },[products])
+        
+      }
+    }, "image/png");
+  }, [products]);
+    
+    
     return<div onMouseMove={mouseMaskHandler} className='w-5/6 rounded-md p-8 touch:w-full touch:px-1  bg-clip-content'>
             <div className=' absolute inset-0 w-full h-full'>
                 {
-                    blobSvg
+                    
                 }
             </div>
-            <div ref={maskRef} className="w-full h-full grid-blocks-dark-gradient absolute inset-0 z-0 mask">
+            <canvas ref={canvasRef} className="hidden" />
+            <div ref={maskRef}  className="w-full h-full grid-blocks-dark-gradient absolute inset-0 z-0 mask">
             
             </div>
-            <div ref={contentRef} className='relative'>
+            <div ref={contentRef} className='relative rounded-2xl'>
                 <div className='flex flex-wrap justify-center z-40 touch:gap-2'>
                        {
                       products?products.map((product)=><ProductCard onClick={cardClickHandler} img={`http://localhost:3002/api/v1/images?imageID=${product.imageIDs[0]}`} productId={product.id} title={product.title} price={product.price}/>):Array.from({length:50}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))

@@ -22,11 +22,11 @@
         background: url("/public/diagmonds.png"), linear-gradient(to right, #2C2A34, #43414a);
     }
     .mask{
-        mask-image:url("/public/squareMaskRounded.png"), url("/public/squareMaskRounded.png"), radial-gradient(circle, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.82) 30%, transparent 65%);
         -webkit-mask-repeat: no-repeat, no-repeat, no-repeat;
         mask-repeat: no-repeat, no-repeat, no-repeat;
-        -webkit-mask-composite: exclude,add;
-        mask-composite: exclude,add;
+        -webkit-mask-composite: exclude;
+        mask-composite: exclude;
+        
     }
     
 }
