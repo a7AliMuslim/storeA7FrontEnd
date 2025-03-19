@@ -106,7 +106,7 @@ function PostProduct(){
         console.log(formData);
         const sellerToken=await JSON.parse(localStorage.getItem('seller')).sellerToken;
         axios.defaults.headers.patch['Authorization'] = `Bearer ${sellerToken}`;
-        const response= await axios.patch('http://localhost:3002/api/v1/products/withImage', formData, {
+        const response= await axios.patch(`${process.env.REACT_APP_backHost}api/v1/products/withImage`, formData, {
             headers:{
                 'Content-Type':'multipart/form-data'
             }

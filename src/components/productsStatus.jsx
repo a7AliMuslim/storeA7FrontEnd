@@ -10,7 +10,7 @@ function ProductsStatus(){
     const productsStatusFetcher= async ()=>{
         const sellerToken=await JSON.parse(localStorage.getItem('seller')).sellerToken;
         axios.defaults.headers.post['Authorization'] = `Bearer ${sellerToken}`;
-        const response=await axios.post('http://localhost:3002/api/v1/products/');
+        const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products/`);
         console.log(response.data.products);
         setProducts(response.data.products);
     }
@@ -20,7 +20,7 @@ function ProductsStatus(){
         axios.defaults.headers.patch['Authorization'] = `Bearer ${sellerToken}`;
         const productID=event.target.attributes.prod_id.value;
         console.log(productID);
-        await axios.patch('http://localhost:3002/api/v1/products/delete',{productID});
+        await axios.patch(`${process.env.REACT_APP_backHost}api/v1/products/delete`,{productID});
         const newProducts=products.filter(prod=>{
             if(prod.id==productID){
                 return false;

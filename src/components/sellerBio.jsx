@@ -41,9 +41,9 @@ function SellerBio(){
     const getSellerData=async ()=>{
         const sellerToken=await JSON.parse(localStorage.getItem('seller')).sellerToken;
         axios.defaults.headers.get['Authorization'] = `Bearer ${sellerToken}`;
-        const response=await axios.get('http://localhost:3002/api/v1/seller/getSellerData');
+        const response=await axios.get(`${process.env.REACT_APP_backHost}api/v1/seller/getSellerData`);
         console.log(response.data);
-        const link=`http://localhost:3002/api/v1/images?imageID=${response.data.sellerPfpImageID}`;
+        const link=`${process.env.REACT_APP_backHost}api/v1/images?imageID=${response.data.sellerPfpImageID}`;
         if(link!=pfpLink){
 //            console.log(link);
 //            console.log(pfpLink);
@@ -61,7 +61,7 @@ function SellerBio(){
         if(dataChange){
             const sellerToken=await JSON.parse(localStorage.getItem('seller')).sellerToken;
             axios.defaults.headers.patch['Authorization'] = `Bearer ${sellerToken}`;
-            const response=await axios.patch('http://localhost:3002/api/v1/seller/updateSellerData',{brandName,email,location,bio});
+            const response=await axios.patch(`${process.env.REACT_APP_backHost}api/v1/seller/updateSellerData`,{brandName,email,location,bio});
             console.log(response.data);
             setDataChange(false);
         }

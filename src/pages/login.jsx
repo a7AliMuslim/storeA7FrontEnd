@@ -85,7 +85,7 @@ function Login(){
     };
     const loginHandler=async ()=>{
         try{
-            const response=await axios.post('http://localhost:3002/api/v1/auth/login',{password,email});
+            const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/auth/login`,{password,email});
             localStorage.setItem('key',response.data.token);
             console.log(response.data)
             userObj.login(response.data.user);

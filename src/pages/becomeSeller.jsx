@@ -77,7 +77,7 @@ function BecomeSeller(){
     
     const registerHandler=async ()=>{
         axios.defaults.headers.post['Authorization'] = `Bearer ${userKey}`
-        const response =await axios.post('http://localhost:3002/api/v1/seller/register').catch(err=>console.log(err));
+        const response =await axios.post(`${process.env.REACT_APP_backHost}api/v1/seller/register`).catch(err=>console.log(err));
         console.log(response);
         localStorage.setItem('seller',JSON.stringify(response.data));
         localStorage.removeItem('key');
@@ -89,7 +89,7 @@ function BecomeSeller(){
             return;
         }
         axios.defaults.headers.post['Authorization'] = `Bearer ${userKey}`
-        const response=await axios.post('http://localhost:3002/api/v1/seller/login',{email,password}).catch(err=>console.log(err));
+        const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/seller/login`,{email,password}).catch(err=>console.log(err));
         console.log(response.data);
         localStorage.setItem('seller',JSON.stringify(response.data));
         localStorage.removeItem('key');
