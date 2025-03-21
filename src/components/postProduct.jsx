@@ -96,12 +96,14 @@ function PostProduct(){
             quality,
             quantities:quantities,
         }
-        console.log(prod);
         const jsonProd=JSON.stringify(prod);
         console.log(jsonProd);
         const prodBlob=new Blob([jsonProd],{type: "application/json"});
         const formData=new FormData();
-        formData.append('productImage',document.getElementById('imageInput').files[0]);
+        const files = document.getElementById('imageInput').files;
+        for (let i = 0; i < files.length; i++) {
+            formData.append('productImage', files[i]);
+        }
         formData.append('prodBlob', prodBlob, 'prodBlob.json');
         console.log(formData);
         const sellerToken=await JSON.parse(localStorage.getItem('seller')).sellerToken;

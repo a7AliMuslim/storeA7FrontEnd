@@ -204,7 +204,7 @@ function ProductsContainer({filter}){
             <div ref={contentRef} className='relative rounded-2xl'>
                 <div className='flex flex-wrap justify-center z-40 touch:gap-2'>
                        {
-                      products?products.map((product)=><ProductCard onClick={cardClickHandler} img={`${process.env.REACT_APP_backHost}api/v1/images?imageID=${product.imageIDs[0]}`} productId={product.id} title={product.title} price={product.price}/>):Array.from({length:50}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))
+                      products?products.map((product)=><ProductCard onClick={cardClickHandler} img={`${product.imageIDs[0]}`} productId={product.id} title={product.title} price={product.price}/>):Array.from({length:16}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))
                   }
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
