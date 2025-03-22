@@ -11,7 +11,7 @@ import {useUserContext} from './userContext.jsx';
 function Header(){
     const location=useLocation();
     return <>
-                <div className='bg-dark-purple-black flex flex-row text-white sticky -top-3 z-[1001] py-1 touch:-top-1' id='header1'>
+                <div className='bg-dark-purple-black flex flex-row text-white sticky top-0 z-[1001] py-1 touch:-top-1' id='header1'>
                     <div className='w-1/5 px-8 flex justify-center items-center'><Link to='/'><StoreMallDirectoryRoundedIcon className='!size-16 touch:!size-8'/></Link></div>
                     <div className='w-4/5'>
                         <Navbar/>

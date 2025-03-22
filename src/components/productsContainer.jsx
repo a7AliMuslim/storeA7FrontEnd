@@ -30,7 +30,6 @@ function ProductsContainer({filter}){
     const [pageNumber, setPageNumber]=useState(1);
     const [totalPages, setTotalPages]=useState(0);
     const [masksPositionWithoutMouse, setMasksPositionWithoutMouse]=useState('');
-    const [maskPos,setMaskPos]=useState('');
     
     
     
@@ -144,7 +143,7 @@ function ProductsContainer({filter}){
     useEffect(() => {
     if (!contentRef.current) return;
     
-    
+    console.log('prodchange loged')
     const sourceDiv = contentRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -184,23 +183,21 @@ function ProductsContainer({filter}){
     lastCanvasBlobCall=lastCanvasBlobCall+1
     // Convert canvas to Blob
     canvas.toBlob((blob) => {
-      if (blob && currentCanvasBlobCall==(lastCanvasBlobCall-1)) {
-        lastCanvasBlobCall=1
-        const objectURL = URL.createObjectURL(blob);
-        maskRef.current.style.maskImage= `linear-gradient(black, black) ,url(${objectURL}), radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)`;
-        maskRef.current.style.maskPosition=position
-        maskRef.current.style.maskSize=size;
-        setMasksPositionWithoutMouse(position);
-        
+        if (blob && currentCanvasBlobCall==(lastCanvasBlobCall-1)) {
+            document.getElementById('app').removeAttribute('style');
+            lastCanvasBlobCall=1
+            const objectURL = URL.createObjectURL(blob);
+            maskRef.current.style.maskImage= `linear-gradient(black, black) ,url(${objectURL}), radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)`;
+            maskRef.current.style.maskPosition=position
+            maskRef.current.style.maskSize=size;
+            setMasksPositionWithoutMouse(position);
+            maskRef.current.style.height=getComputedStyle(document.getElementById('app')).height;
+            document.getElementById('app').style.height=getComputedStyle(document.getElementById('app')).height;
+
       }
     }, "image/png");
   }, [products]);
-    useEffect(()=>{
-        if(maskRef){
-            maskRef.current.style.height=getComputedStyle(document.getElementById('app')).height;
-        }
-        
-    })
+
     
     
     return<div ref={prodContainer} onMouseMove={mouseMaskHandler} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='w-5/6 rounded-md p-8 touch:w-full touch:px-1  bg-clip-content'>

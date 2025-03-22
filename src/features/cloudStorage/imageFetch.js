@@ -22,6 +22,6 @@ export default async function fetchImageBlob(path) {
     return URL.createObjectURL(blob);
   } catch (err) {
     console.error("Error fetching file:", err);
-    return null;
+    throw err;
   }
 }
