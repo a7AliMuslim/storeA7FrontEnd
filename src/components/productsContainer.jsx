@@ -125,7 +125,7 @@ function ProductsContainer({filter}){
         if(masksPositionWithoutMouse.length>0 && prodContainer){
             const {clientX, clientY}=event;
             const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
-            maskRef.current.style.maskPosition=masksPositionWithoutMouse+`, ${clientX-(remInPixels*2)+'px'} ${clientY-(remInPixels*2)+'px'}`
+            maskRef.current.style.maskPosition=masksPositionWithoutMouse+`, ${clientX+window.scrollX-(remInPixels*2)+'px'} ${clientY+window.scrollY-(remInPixels*2)+'px'}`
         }
     }
     const mouseLeaveMaskHandler=(event)=>{
@@ -143,7 +143,8 @@ function ProductsContainer({filter}){
     
     useEffect(() => {
     if (!contentRef.current) return;
-
+    
+    
     const sourceDiv = contentRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -157,7 +158,8 @@ function ProductsContainer({filter}){
     const rect = sourceDiv.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
-    const top = rect.top +'px';
+    const yScroll=window.scrollY;
+    const top = rect.top +yScroll +'px';
     const left = rect.left +'px';
     const position=`0px 0px, ${left} ${top}`;
     const size=`100% 100%, ${width+'px'} ${height+'px'}, 4rem 4rem`;
@@ -190,10 +192,15 @@ function ProductsContainer({filter}){
         maskRef.current.style.maskSize=size;
         setMasksPositionWithoutMouse(position);
         
-        
       }
     }, "image/png");
   }, [products]);
+    useEffect(()=>{
+        if(maskRef){
+            maskRef.current.style.height=getComputedStyle(document.getElementById('app')).height;
+        }
+        
+    })
     
     
     return<div ref={prodContainer} onMouseMove={mouseMaskHandler} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='w-5/6 rounded-md p-8 touch:w-full touch:px-1  bg-clip-content'>

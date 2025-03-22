@@ -6,7 +6,6 @@ export default async function fetchImageBlob(path) {
   const bucket = process.env.REACT_APP_bucketName; // or bucketFromPath if intended
   const key = rest.join('/');
   
-  console.log(bucketFromPath, '--', bucket, '--', key);
   
   const command = new GetObjectCommand({
     Bucket: bucket,
@@ -15,7 +14,6 @@ export default async function fetchImageBlob(path) {
   
   try {
     const response = await s3.send(command);
-    console.log(response);
     
     // If in a browser, convert the stream to an ArrayBuffer first:
     const arrayBuffer = await response.Body.transformToByteArray();
