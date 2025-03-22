@@ -64,6 +64,7 @@ function ProductsContainer({filter}){
     };
     const cardClickHandler=(event)=>{
         const clickedProduct=products.find(prod=>prod.id==event.currentTarget.attributes.productid.value);
+        document.getElementById('app').removeAttribute('style');
         navigate('/singleProduct',{state:{path:location.pathname,product:clickedProduct}});
     }
     const fetchedProductData= async ()=>{

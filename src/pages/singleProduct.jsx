@@ -8,6 +8,7 @@ import { ShoppingCartIcon } from '@heroicons/react/20/solid';
 import {add} from '../features/cart/cartSlice.jsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {cartStore} from '../features/cart/cartStore.jsx';
+import ImageCard from '../components/imageCard.jsx';
 
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`
 function SingleProduct(){
@@ -92,21 +93,21 @@ function SingleProduct(){
     useEffect(()=>{
         fetchExtendedProductData();
     },[]);
-    return <div className='flex m-4'>
-            <div className='flex-auto w-1/2 m-4'>
-              <div>
+    return <div className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow'>
+            <div className='flex-auto w-1/2 pt-2'>
+              
                    {
-                        isLoading?<Skeleton className='bg-white/50' variant="rounded"><img src={'no'} className='w-full aspect-square'></img> </Skeleton>:<div className='w-full flex justify-center items-center'><img src={`http://localhost:3002/api/v1/images?imageID=${mainImage}`} className='rounded-md w-4/5 aspect-square'/></div>
+                        isLoading?<Skeleton className='bg-white/50' variant="rounded"><img src={'no'} className='w-full aspect-square'></img> </Skeleton>:<div className='w-full flex justify-center items-center'><ImageCard img={mainImage} className='rounded-md w-[75%] aspect-square'/></div>
                     }
-                </div>
-                <div className='flex justify-between mt-2'>
+                
+                <div className='flex justify-center gap-2 mt-3'>
                     {
-                        isLoading?Array.from({length:4},()=><Skeleton className='m-2 bg-white/50' variant="rounded"><div className='w-1 aspect-square'/> </Skeleton>):smallImages.map((imageID)=><img src={`http://localhost:3002/api/v1/images?imageID=${imageID}`} imageid={imageID} onClick={imageChangeHandler} className='w-1/6 flex-initial aspect-square rounded hover:scale-110 transition-all duration-300'></img>)
+                        isLoading?Array.from({length:4},()=><Skeleton className='m-2 bg-white/50' variant="rounded"><div className='w-1 aspect-square'/> </Skeleton>):smallImages.map((imageID)=><ImageCard img={imageID} imageid={imageID} onClick={imageChangeHandler} className='w-[10%] flex-initial aspect-square rounded hover:scale-110 transition-all duration-300'></ImageCard>)
                     }
                 </div>
             </div>
-            <div className='flex-auto w-1/2 m-4'>
-                <h1 className='text-5xl capitalize text-gray-700'>{product.title}</h1>
+            <div className='flex-auto w-1/2 p-8'>
+                <h1 className='text-5xl capitalize text-light-text'>{product.title}</h1>
                 <p className='text-red-500 my-2 text-2xl'>{`Rs.${product.price}`}</p>
                 <Rating
                   name="product-rating"
@@ -114,8 +115,8 @@ function SingleProduct(){
                   readOnly
                   emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                 />
-                <p className='line-clamp-4 text-justify my-8'>{product.description}</p>
-                <div name='color' className='w-full my-2'>
+                <p className='line-clamp-4 text-justify my-8 text-light-text h-28'>{product.description}</p>
+                <div name='color' className='w-full my-2 text-light-text'>
                     <p>Color</p>
                     <div name='colorblob' className='flex justify-between'>
                        {
@@ -141,7 +142,7 @@ function SingleProduct(){
                         
                     </div>
                 </div>
-                <div name='sizes' className='w-full my-2'>
+                <div name='sizes' className='w-full my-2 text-light-text'>
                     <p>Sizes</p>
                     <div name='sizesblob' className='flex flex-wrap justify-center'>
                        {

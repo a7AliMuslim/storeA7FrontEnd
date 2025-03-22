@@ -37,6 +37,27 @@
         mask-composite: exclude;
         
     }
+    .bg-big-multi-gradient{
+        background: linear-gradient(to right, #2C2A34 10%, #76B900 40%, #1F1B24 40.1%, #1F1B24 85%, #2c2a2f 99.9%);
+        background-size: 400% 100%;
+    }
+    .loading-spinner circle {
+        opacity: 1;
+    }
+    .loading-spinner g {
+        opacity: 0;
+    }
+    .loading-spinner.error circle {
+        opacity: 0;
+    }
+    .loading-spinner.error g{
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
+    .loading-spinner.error g circle{
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
     
 }
 

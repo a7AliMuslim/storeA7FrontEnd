@@ -5,12 +5,15 @@ import fetchImageBlob from '../features/cloudStorage/imageFetch.js';
 
 function ImageCard({
     img=null,
-    className='w-48',
-    onClick
+    className='',
+    onClick,
+    imageid=''
 }){
     const [imageFetched, setImageFetched]=useState(false);
     const [imageSrc, setImageSrc]=useState('');
+    const [error, setError]=useState('');
     const imgRef=useRef(null);
+    console.log(onClick)
     useEffect(()=>{
         if(!img){
             return;
@@ -20,18 +23,20 @@ function ImageCard({
                 try{
                     setImageSrc(await fetchImageBlob(img));
                     setImageFetched(true);
+                    setError('');
                 }catch(err){
                     console.log(err);
+                    setError('error');
                 }
                 
             }
             fetchImg();
         }
     },[img])
-    className='hover:shadow-black/20 hover:shadow-2xl hover:scale-105 transition-transform duration-300 overflow-hidden rounded-md touch:w-40 '+className;
-    return<div onClick={onClick} className={className}>
+    className='overflow-hidden rounded-md touch:w-40 '+className;
+    return<div onClick={onClick} className={className} imageid={imageid}>
         {
-            imageFetched?<img ref={imgRef} src={imageSrc} className='w-full aspect-square'/>:<PlaceHolderImage className='w-full aspect-square'/>
+            imageFetched?<img ref={imgRef} src={imageSrc} className='w-full aspect-square'/>:<PlaceHolderImage className={'w-full aspect-square '+ error}/>
         }
     </div>
 }

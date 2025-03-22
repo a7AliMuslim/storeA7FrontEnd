@@ -24,7 +24,7 @@ function App() {
   return (
       <>
       
-    <div id='app' className="App w-full bg-gradient-to-r from-dark to-light-dark min-h-screen text-black">
+    <div id='app' className="App w-full bg-gradient-to-r from-dark to-light-dark min-h-screen text-black flex flex-col">
             <UserProvider>
                 <Header/>
                 <Routes>

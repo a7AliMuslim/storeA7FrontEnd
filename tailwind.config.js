@@ -22,6 +22,7 @@ module.exports = {
             'slide-down':'slideDown 0.2s ease-in-out forwards',
             'slide-out':'slideOut 0.2s ease-in-out forwards',
             'spin-fast':'spinFast 0.5s ease-out forwards',
+            'bg-pan-left':'bgPanLeft 3s cubic-bezier(0.175, 0.885, 0.320, 1.275) 2s alternate-reverse both'
         },
         keyframes:{
             slideIn:{
@@ -43,6 +44,10 @@ module.exports = {
                 '30%':{transform: ' rotate(140deg)', opacity:'0.8'},
                 '60%':{transform: ' translateY(170deg)', opacity:'1'},
                 '100%':{transform: ' translateY(180deg)', opacity:'1'}
+            },
+            bgPanLeft:{
+                '0%':{backgroundPosition: '120% 50%'},
+                '100%':{backgroundPosition: '0% 50%'}
             }
         },
         screens:{
