@@ -50,7 +50,7 @@ function SearchNavbar({classes=''}){
                     !user && <><NavLink className='mx-1 flex items-center' to='/login'>Login</NavLink><NavLink className='mx-1 flex items-center'  to='/signup'>Sign up</NavLink></>
                 }
                 {
-                    location.pathname=='/checkout'?null:<div className='flex items-center' onClick={cartDrawerHandler}>< ShoppingBasketRoundedIcon className='!size-5 mx-2 cursor-pointer touch:!size-4' /></div>
+                    location.pathname=='/checkout'?null:<div id='cart-icon' className='flex items-center' onClick={cartDrawerHandler}>< ShoppingBasketRoundedIcon className='!size-5 mx-2 cursor-pointer touch:!size-4' /></div>
                 }
                 <CartDrawer opener={cartDrawerOpener} setOpener={setCartDrawerOpener}></CartDrawer>
                 {

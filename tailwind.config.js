@@ -22,7 +22,9 @@ module.exports = {
             'slide-down':'slideDown 0.2s ease-in-out forwards',
             'slide-out':'slideOut 0.2s ease-in-out forwards',
             'spin-fast':'spinFast 0.5s ease-out forwards',
-            'bg-pan-left':'bgPanLeft 3s cubic-bezier(0.175, 0.885, 0.320, 1.275) 2s alternate-reverse both'
+            'bg-pan-left':'bgPanLeft 3s cubic-bezier(0.175, 0.885, 0.320, 1.275) 2s alternate-reverse both',
+            'slide-in-appear':'slideInAppear 3s ease-in-out forwards',
+            'bg-breath-right-left':'bgBreathRightLeft 40s ease-in-out infinite',
         },
         keyframes:{
             slideIn:{
@@ -48,6 +50,18 @@ module.exports = {
             bgPanLeft:{
                 '0%':{backgroundPosition: '120% 50%'},
                 '100%':{backgroundPosition: '0% 50%'}
+            },
+            slideInAppear:{
+                '0%':{transform: ' translateX(-4%)', opacity:'0'},
+                '40%':{transform: ' translateX(-4%)', opacity:'0'},
+                '95':{transform: ' translateX(-1%)', opacity:'0.9'},
+                '100%':{transform: ' translateX(0%)', opacity:'1'}
+            },
+            bgBreathRightLeft:{
+                '0%':{backgroundPosition: '120% 50%'},
+                '10%':{backgroundPosition: '100% 50%'},
+                '90%':{backgroundPosition: '100% 50%'},
+                '100%':{backgroundPosition: '120% 50%'}
             }
         },
         screens:{

@@ -3,44 +3,45 @@ import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid';
 import {add, remove, removeAll} from '../features/cart/cartSlice.jsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {cartStore} from '../features/cart/cartStore.jsx';
+import ImageCard from '../components/imageCard.jsx';
 
 export default function CartCard({product, setChange=null, change=null}){
     const dispatch=useDispatch();
     
     const removeAllHandler=()=>{
-        console.log('remove all product');
-        console.log(product);
+//        console.log('remove all product');
+//        console.log(product);
         const stateBefore=[...(cartStore.getState().cart.products)];
         dispatch(removeAll(product));
         const stateAfter=[...(cartStore.getState().cart.products)];
-        console.log('stateBefore');
-        console.log(stateBefore);
-        console.log('stateAfter');
-        console.log(stateAfter);
+//        console.log('stateBefore');
+//        console.log(stateBefore);
+//        console.log('stateAfter');
+//        console.log(stateAfter);
         const temp=setChange?setChange(change+1):null;
     }
     const increaseProduct=()=>{
-        console.log('add single product');
-        console.log(product);
+//        console.log('add single product');
+//        console.log(product);
         const stateBefore=[...(cartStore.getState().cart.products)];
         dispatch(add(product));
         const stateAfter=[...(cartStore.getState().cart.products)];
-        console.log('stateBefore');
-        console.log(stateBefore);
-        console.log('stateAfter');
-        console.log(stateAfter);
+//        console.log('stateBefore');
+//        console.log(stateBefore);
+//        console.log('stateAfter');
+//        console.log(stateAfter);
         const temp=setChange?setChange(change+1):null;
     };
     const decreaseProduct=()=>{
-        console.log('remove single product');
-        console.log(product);
+//        console.log('remove single product');
+//        console.log(product);
         const stateBefore=[...(cartStore.getState().cart.products)];
         dispatch(remove(product));
         const stateAfter=[...(cartStore.getState().cart.products)];
-        console.log('stateBefore');
-        console.log(stateBefore);
-        console.log('stateAfter');
-        console.log(stateAfter);
+//        console.log('stateBefore');
+//        console.log(stateBefore);
+//        console.log('stateAfter');
+//        console.log(stateAfter);
         const temp=setChange?setChange(change+1):null;
     };
     return(

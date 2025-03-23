@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {useLocation, Navigate} from 'react-router-dom';
 import axios from 'axios';
 import { Skeleton, Rating, Button  } from '@mui/material';
@@ -9,6 +9,25 @@ import {add} from '../features/cart/cartSlice.jsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {cartStore} from '../features/cart/cartStore.jsx';
 import ImageCard from '../components/imageCard.jsx';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
+
+const themeButton = createTheme({
+  palette: {
+    primary: {
+        main:'#76B900',
+        light:'#F0F0F0',
+        dark:'#2C2A34',
+        contrastText: '#F0F0F0',
+    },
+  },
+});
+
+let lastCanvasBlobCall=1;
+const parseBorderRadius = (radius) => {
+    return radius.split(" ").map((val) => parseFloat(val) || 0);
+};
 
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`
 function SingleProduct(){
@@ -21,12 +40,17 @@ function SingleProduct(){
     const [isLoading, setIsLoading]=useState(true);
     const [selectedColorBlob, setSelectedColorBlob]=useState(null);
     const [selectedSize, setSelectedSize]=useState(null);
+    const [masksPositionWithoutMouse, setMasksPositionWithoutMouse]=useState('');
+    const contentRef=useRef(null);
+    const maskRef=useRef(null);
+    const canvasRef = useRef(null);
+    const prodContainer = useRef(null);
+    const cartRef = useRef(null);
     const [sizes, setSizes]=useState(product.quantities.map(qt=>{
             return '!'+qt.attributesPair.size;
         }));
     const dispatch=useDispatch();
     
-    console.log(product);
     const colorChangeHandler=(event)=>{
         if(selectedColorBlob){
             selectedColorBlob.classList.remove('ring-2');
@@ -81,11 +105,44 @@ function SingleProduct(){
         const stateBefore=[...(cartStore.getState().cart.products)];
         dispatch(add(product));
         const stateAfter=[...(cartStore.getState().cart.products)];
-        console.log('stateBefore');
-        console.log(stateBefore);
-        console.log('stateAfter');
-        console.log(stateAfter);
+        if(cartRef){
+            cartRef.current.classList.remove('animate-[pulse_1s_ease-out_3]');
+            console.log(cartRef.current.classList);
+            setTimeout(()=>{
+                cartRef.current.classList.add('animate-[pulse_1s_ease-out_3]');
+                console.log(cartRef.current.classList);   
+            },0);
+            
+            
+        }
+        //console.log('stateBefore');
+        //console.log(stateBefore);
+        //console.log('stateAfter');
+        //console.log(stateAfter);
     };
+    const cartOpenHandler=()=>{
+        document.getElementById('cart-icon').click();
+    }
+    
+    
+    const mouseMaskHandler=(event)=>{
+        if(masksPositionWithoutMouse.length>0 && prodContainer){
+            const {clientX, clientY}=event;
+            const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
+            maskRef.current.style.maskPosition=masksPositionWithoutMouse+`, ${clientX+window.scrollX-(remInPixels*2)+'px'} ${clientY+window.scrollY-(remInPixels*2)+'px'}`
+        }
+    }
+    const mouseLeaveMaskHandler=(event)=>{
+        maskRef.current.style.maskImage=maskRef.current.style.maskImage.replace(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)','');
+    }
+    const mouseEnterMaskHandler=(event)=>{
+        if(maskRef.current.style.maskImage.includes(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)')){
+            return;
+        }
+        maskRef.current.style.maskImage=maskRef.current.style.maskImage+', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)';
+    }
+    
+    
     const fetchExtendedProductData=async ()=>{
         setSmallImages(product.imageIDs);
         setIsLoading(false);
@@ -93,11 +150,87 @@ function SingleProduct(){
     useEffect(()=>{
         fetchExtendedProductData();
     },[]);
-    return <div className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow'>
-            <div className='flex-auto w-1/2 pt-2'>
+    const applyMask=()=>{
+        if (!contentRef.current) return;
+
+        
+        const sourceDiv = contentRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+
+        // Get div dimensions
+
+
+        // Get computed styles
+        const computedStyle = window.getComputedStyle(sourceDiv);
+        const borderRadius = computedStyle.borderRadius;
+        const rect = sourceDiv.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        const yScroll=window.scrollY;
+        const top = rect.top +yScroll +'px';
+        const left = rect.left +'px';
+        const position=`0px 0px, ${left} ${top}`;
+        const size=`100% 100%, ${width+'px'} ${height+'px'}, 4rem 4rem`;
+
+        // Set canvas size to match div
+        canvas.width = width;
+        canvas.height = height;
+
+        // Parse border radius
+        const radiusValues = parseBorderRadius(borderRadius, width, height);
+        //console.log(radiusValues)
+
+        // Draw rounded rectangle mask
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.roundRect(0, 0, width, height, radiusValues);
+        ctx.fill();
+
+
+        const currentCanvasBlobCall=lastCanvasBlobCall;
+        lastCanvasBlobCall=lastCanvasBlobCall+1
+        // Convert canvas to Blob
+        canvas.toBlob((blob) => {
+            if (blob && currentCanvasBlobCall==(lastCanvasBlobCall-1)) {
+                document.getElementById('app').removeAttribute('style');
+                lastCanvasBlobCall=1
+                const objectURL = URL.createObjectURL(blob);
+                maskRef.current.style.maskImage= `linear-gradient(black, black) ,url(${objectURL}), radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)`;
+                maskRef.current.style.maskPosition=position
+                maskRef.current.style.maskSize=size;
+                setMasksPositionWithoutMouse(position);
+                maskRef.current.style.height=getComputedStyle(document.getElementById('app')).height;
+                document.getElementById('app').style.height=getComputedStyle(document.getElementById('app')).height;
+
+          }
+        }, "image/png");
+    }
+    useEffect(() => {
+        const timeOutId=setTimeout(()=>{
+            maskRef.current.classList.remove('hidden');
+            maskRef.current.classList.add('mask','grid-blocks-custom','animate-slide-in-appear');
+            prodContainer.current.classList.remove('animate-bg-pan-left');
+            prodContainer.current.classList.add('animate-bg-breath-right-left');
+            applyMask();
+            window.addEventListener("resize", applyMask);
+        },6000);
+        
+
+        return () =>{
+            window.removeEventListener("resize", applyMask);
+            clearTimeout(timeOutId);
+        } 
+        
+  },[]);
+    return <div ref={prodContainer} onMouseMove={mouseMaskHandler} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow'>
+            <canvas ref={canvasRef} className="hidden" />
+            <div ref={maskRef}  className="w-full h-full absolute hidden inset-0 z-0"/>
+            <div className='flex-auto w-1/2 pt-2 z-10'>
               
                    {
-                        isLoading?<Skeleton className='bg-white/50' variant="rounded"><img src={'no'} className='w-full aspect-square'></img> </Skeleton>:<div className='w-full flex justify-center items-center'><ImageCard img={mainImage} className='rounded-md w-[75%] aspect-square'/></div>
+                        isLoading?<Skeleton className='bg-white/50' variant="rounded"><img src={'no'} alt='oops' className='w-full aspect-square'></img> </Skeleton>:<div className='w-full flex justify-center items-center'><ImageCard img={mainImage} className='rounded-tl-[8rem] rounded-br-[8rem] w-[75%] aspect-square ' applyDynamicShadow={true}/></div>
                     }
                 
                 <div className='flex justify-center gap-2 mt-3'>
@@ -106,7 +239,7 @@ function SingleProduct(){
                     }
                 </div>
             </div>
-            <div className='flex-auto w-1/2 p-8'>
+            <div ref={contentRef} className='flex-auto w-1/2 p-8 z-10'>
                 <h1 className='text-5xl capitalize text-light-text'>{product.title}</h1>
                 <p className='text-red-500 my-2 text-2xl'>{`Rs.${product.price}`}</p>
                 <Rating
@@ -115,7 +248,7 @@ function SingleProduct(){
                   readOnly
                   emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                 />
-                <p className='line-clamp-4 text-justify my-8 text-light-text h-28'>{product.description}</p>
+                <p className='line-clamp-4 text-justify my-4 text-light-text h-28'>{product.description}</p>
                 <div name='color' className='w-full my-2 text-light-text'>
                     <p>Color</p>
                     <div name='colorblob' className='flex justify-between'>
@@ -156,8 +289,11 @@ function SingleProduct(){
                         }
                     </div>
                 </div>
-                <div name='button-container' className='flex justify-center items-center mt-10'>
-                    <Button onClick={addToCartHandler} variant="contained" className='w-1/2 h-10'><span>Add to cart</span>< ShoppingCartIcon className='size-5 mx-2' /></Button>
+                <div name='button-container' className='flex flex-col gap-2 justify-center items-center mt-10'>
+                    <ThemeProvider theme={themeButton}>
+                        <Button onClick={addToCartHandler} variant="contained" className='w-1/3'><span>Add to</span>< ShoppingCartIcon className='size-5 ml-2' /></Button>
+                        <p ref={cartRef} className='text-nvidia-green underline underline-offset-4 cursor-pointer animate-[pulse_1s_ease-out_3]' onClick={cartOpenHandler}>Open Cart</p>
+                    </ThemeProvider>
                 </div>
             </div>
         </div>
