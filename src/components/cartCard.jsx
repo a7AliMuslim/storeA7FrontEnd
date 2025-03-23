@@ -1,19 +1,19 @@
-import placeHolderImage from '../images/volcanicThunder.jpg';
 import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid';
 import {add, remove, removeAll} from '../features/cart/cartSlice.jsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {cartStore} from '../features/cart/cartStore.jsx';
 import ImageCard from '../components/imageCard.jsx';
+import {memo} from 'react';
 
-export default function CartCard({product, setChange=null, change=null}){
+function CartCard({product, setChange=null, change=null}){
     const dispatch=useDispatch();
     
     const removeAllHandler=()=>{
 //        console.log('remove all product');
 //        console.log(product);
-        const stateBefore=[...(cartStore.getState().cart.products)];
+//        const stateBefore=[...(cartStore.getState().cart.products)];
         dispatch(removeAll(product));
-        const stateAfter=[...(cartStore.getState().cart.products)];
+//       const stateAfter=[...(cartStore.getState().cart.products)];
 //        console.log('stateBefore');
 //        console.log(stateBefore);
 //        console.log('stateAfter');
@@ -23,9 +23,9 @@ export default function CartCard({product, setChange=null, change=null}){
     const increaseProduct=()=>{
 //        console.log('add single product');
 //        console.log(product);
-        const stateBefore=[...(cartStore.getState().cart.products)];
+//        const stateBefore=[...(cartStore.getState().cart.products)];
         dispatch(add(product));
-        const stateAfter=[...(cartStore.getState().cart.products)];
+//        const stateAfter=[...(cartStore.getState().cart.products)];
 //        console.log('stateBefore');
 //        console.log(stateBefore);
 //        console.log('stateAfter');
@@ -35,9 +35,9 @@ export default function CartCard({product, setChange=null, change=null}){
     const decreaseProduct=()=>{
 //        console.log('remove single product');
 //        console.log(product);
-        const stateBefore=[...(cartStore.getState().cart.products)];
+//        const stateBefore=[...(cartStore.getState().cart.products)];
         dispatch(remove(product));
-        const stateAfter=[...(cartStore.getState().cart.products)];
+//        const stateAfter=[...(cartStore.getState().cart.products)];
 //        console.log('stateBefore');
 //        console.log(stateBefore);
 //        console.log('stateAfter');
@@ -46,7 +46,7 @@ export default function CartCard({product, setChange=null, change=null}){
     };
     return(
         <div className='w-full h-1/3 grid grid-cols-4 gap-4 p-2 items-center overflow-hidden'>
-            <img src={`http://localhost:3002/api/v1/images?imageID=${product.imageIDs[0]}`} className='col-span-1 aspect-square rounded-md overflow-hidden'/>
+            <ImageCard alt='oops' img={product.imageIDs[0]} className='col-span-1 rounded-md'/>
             <div className='col-span-2 grid grid-cols-2 grid-rows-2 items-center h-full overflow-hidden'>
                <div className='flex flex-col overflow-hidden'>
                     <span className='capitalize text-xl text-light-text'>{product.title}</span>
@@ -76,3 +76,4 @@ export default function CartCard({product, setChange=null, change=null}){
     )
 }
 
+export default memo(CartCard);

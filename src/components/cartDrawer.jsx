@@ -1,15 +1,11 @@
 import { SwipeableDrawer } from '@mui/material';
 import {cartStore} from '../features/cart/cartStore.jsx';
-import {useState} from 'react';
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
+import {useState, memo} from 'react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import CartCard from './cartCard';
 import { Button,Divider  } from '@mui/material';
-import {add, remove} from '../features/cart/cartSlice.jsx';
-import {useSelector, useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey, indigo } from '@mui/material/colors';
 
 const themeButton=createTheme({
   palette: {
@@ -23,7 +19,7 @@ const themeButton=createTheme({
   },
 });
 
-export default function CartDrawer({opener,setOpener}){
+function CartDrawer({opener,setOpener}){
     const navigate=useNavigate();
     const products=[...(cartStore.getState().cart.products)];
     const [change, setChange]=useState(1);
@@ -45,7 +41,6 @@ export default function CartDrawer({opener,setOpener}){
                 {
                     products?products.map(product=>{
                         subTotalAll=subTotalAll+product.subTotal;
-                        console.log(subTotalAll);
                         return<><CartCard product={product} setChange={setChange} change={change}/><Divider/></>
                     }):null
                 }
@@ -69,4 +64,6 @@ export default function CartDrawer({opener,setOpener}){
     
     )
 }
-//{false}?Rs.{products.reduce((acc,product)=>acc+product.subTotal,0)}:null
+
+
+export default memo(CartDrawer);
