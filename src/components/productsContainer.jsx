@@ -198,6 +198,11 @@ function ProductsContainer({filter}){
       }
     }, "image/png");
   }, [products]);
+    useEffect(()=>{
+        return ()=>{
+            document.getElementById('app').removeAttribute('style');
+        }
+    },[]);
 
     
     

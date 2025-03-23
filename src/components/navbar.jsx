@@ -15,4 +15,4 @@ function Navbar(){
         <NavLink className='m-2' to='/seller'>Become seller</NavLink>
     </nav>
 }
-export default Navbar;
+export default React.memo(Navbar);

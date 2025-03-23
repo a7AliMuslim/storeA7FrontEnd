@@ -221,6 +221,7 @@ function SingleProduct(){
         return () =>{
             window.removeEventListener("resize", applyMask);
             clearTimeout(timeOutId);
+            document.getElementById('app').removeAttribute('style');
         } 
         
   },[]);

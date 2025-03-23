@@ -1,12 +1,11 @@
 import {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
 import axios from 'axios';
 import {useUserContext} from '../components/userContext.jsx';
-import {Navigate, useLocation} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {cartStore} from '../features/cart/cartStore.jsx';
 import { TextField, Button, Divider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey, lime, purple } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 import CartCard from '../components/cartCard';
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
 
@@ -46,9 +45,7 @@ function Checkout(){
     let subTotalAll=0;
     const userObj=useUserContext();
     const location=useLocation();
-    useEffect(()=>{
-        document.getElementById('orderSummery').style.height=getComputedStyle(document.getElementById('deliveryDetails')).height;
-    });
+    
     const emailChangeHandler=(event)=>{
         setEmail(event.currentTarget.value);
     }
@@ -157,7 +154,7 @@ function Checkout(){
         </div>
         <div id='orderSummery' className='basis-1/2 bg-black/10 rounded-tr-[8em] h-full p-4'>
            <p className='text-2xl my-4'>Order summery</p>
-            <div className='h-2/3 overflow-auto my-4'>
+            <div className='max-h-96 overflow-auto my-4 custom-scrollbar'>
                
                 {
                     products?products.map(product=>{

@@ -1,7 +1,8 @@
-import { Description, Field, Input, Label } from '@headlessui/react'
-import clsx from 'clsx'
+import { Field, Input } from '@headlessui/react';
+import clsx from 'clsx';
+import {memo} from 'react';
 
-export default function Example() {
+function Example() {
   return (
     <div className="w-full px-4">
       <Field>
@@ -15,3 +16,5 @@ export default function Example() {
     </div>
   )
 }
+
+export default memo(Example);
