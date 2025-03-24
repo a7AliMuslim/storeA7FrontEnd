@@ -1,32 +1,48 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import {useUserContext} from '../components/userContext.jsx';
 import {useLocation} from 'react-router-dom';
 import {cartStore} from '../features/cart/cartStore.jsx';
 import { TextField, Button, Divider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
+import { grey, red } from '@mui/material/colors';
 import CartCard from '../components/cartCard';
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
 
-const theme = createTheme({
-  palette: {
-    primary: {
-        main:grey[200],
-        light:grey[100],
-        dark:grey[400],
-        contrastText: grey[800],
+const themeTextfield = createTheme({
+    palette: {
+      primary: {
+          main:grey[700],
+          light:grey[200],
+          dark:grey[900],
+          contrastText: grey[100],
+      },
+      warning:{
+          main:red[800],
+          light:grey[200],
+          dark:grey[900],
+          contrastText: grey[900],
+      }
     },
-    info:{
-        main:grey[200],
-    },
-    
-  },
 });
+
+const themeButton=createTheme({
+    palette: {
+      primary: {
+          main:'#76B900',
+          light:grey[300],
+          dark:'#598D00',
+          contrastText: grey[900],
+      }
+      
+    },
+});
+
+const parseBorderRadius = (radius) => {
+    return radius.split(" ").map((val) => parseFloat(val) || 0);
+};
+let lastCanvasBlobCall=1;
 function Checkout(){
-    //const products=useSelector((state)=>state.Checkout.products);
-    //const Checkout=useSelector((state)=>state.Checkout);
-    
     const [change, setChange]=useState(1);
     const [email,setEmail]=useState(null);
     const [telephone,setTelephone]=useState(null);
@@ -45,6 +61,14 @@ function Checkout(){
     let subTotalAll=0;
     const userObj=useUserContext();
     const location=useLocation();
+    const canvasRef = useRef(null);
+    const contactInfoDivRef=useRef(null);
+    const paymentDetailsDivRef=useRef(null);
+    const addressDviRef=useRef(null);
+    const deliveryTextRef=useRef(null);
+    const productsListDiv=useRef(null);
+    const checkoutContainerRef=useRef(null);
+    const maskRef=useRef(null);
     
     const emailChangeHandler=(event)=>{
         setEmail(event.currentTarget.value);
@@ -110,51 +134,136 @@ function Checkout(){
         }
         submit();
     }
+    const drawDivOnCanvas=(Div,Canvas)=>{
+        if (!Div) return;
+        if (!Canvas) return;
+        
+        const ctx = Canvas.getContext("2d");
+    
+    
+        
+        const borderRadius = window.getComputedStyle(Div).borderRadius;
 
-    return <div className='w-full flex'>
-        <div id='deliveryDetails' className='basis-1/2 h-full p-4'>
-            <div name='contactInfo' className='w-full py-4'>
-                <p className='text-2xl my-2'>Contact Information</p>
-                <ThemeProvider theme={theme}>
-                    <TextField autoComplete='on' label="Email" variant="filled" name='email' value={email} onChange={emailChangeHandler} color='primary' className='w-1/2' ></TextField>
-                    <TextField autoComplete='on' label="Ph. number" variant="filled" name='tel' value={telephone} onChange={telephoneChangeHandler} inputProps={{'type':'tel'}} className='w-1/2'></TextField>
-                </ThemeProvider>
-            </div>
-            <div name='paymentDetails' className='w-full py-4'>
-                <p className='text-2xl my-2'>Payment details</p>
-                <ThemeProvider theme={theme}>
-                    <TextField autoComplete='on' label="Card No." variant="filled" name='paymentCard' value={cardNumber} onChange={cardNumberChangeHandler} inputProps={{'placeholder':'XXXX-XXXX-XXXX-XXXX'}} fullWidth={true}></TextField>
-                </ThemeProvider>
-                <div className='flex'>
-                    <ThemeProvider theme={theme}>
-                        <TextField autoComplete='on' label="Expiration date" variant="filled" name='cardExpiration' value={cardExpiration} onChange={cardExpirationChangeHandler} inputProps={{'placeholder':'MM/YY'}} fullWidth={true} className='basis-2/3'></TextField>
-                        <TextField autoComplete='on' label="CVC" variant="filled" name='CVC' value={cvc} onChange={cvcChangeHandler} inputProps={{'placeholder':'CVC'}} fullWidth={true} className='basis-1/3'></TextField>
+
+        const rect = Div.getBoundingClientRect();
+        
+        const width = rect.width;
+        const height = rect.height;
+        const yScroll=window.scrollY;
+        const xScroll=window.scrollX;
+        const top = rect.top +yScroll;
+        const left = rect.left+xScroll;
+    
+    
+        // Parse border radius
+        const radiusValues = parseBorderRadius(borderRadius, width, height);
+        
+
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.roundRect(left, top, width, height, radiusValues);
+        ctx.fill();
+    
+    }
+    const drawMask=()=>{
+        if(productsListDiv && deliveryTextRef&& canvasRef && checkoutContainerRef){
+            const containerComputedStyles=window.getComputedStyle(checkoutContainerRef.current);
+            const Ctx = canvasRef.current.getContext("2d");
+            const checkoutContainerWidth=parseFloat(containerComputedStyles.width);
+            const checkoutContainerHeight=parseFloat(containerComputedStyles.height);
+
+            canvasRef.current.width=checkoutContainerWidth;
+            canvasRef.current.height=checkoutContainerHeight;
+            Ctx.clearRect(0, 0, checkoutContainerWidth, checkoutContainerHeight);
+
+            
+            drawDivOnCanvas(productsListDiv.current, canvasRef.current);
+            drawDivOnCanvas(deliveryTextRef.current, canvasRef.current);
+
+            
+            const position=`0px 0px, 0px 0px`;
+            const size=`100% 100%, ${checkoutContainerWidth}px ${checkoutContainerHeight}px`;
+
+
+            const currentCanvasBlobCall=lastCanvasBlobCall;
+            lastCanvasBlobCall=lastCanvasBlobCall+1
+            
+            canvasRef.current.toBlob((blob) => {
+                if (blob && currentCanvasBlobCall===(lastCanvasBlobCall-1)) {
+                    const compAppStyle=window.getComputedStyle(document.getElementById('app'));
+                    maskRef.current.style.height=compAppStyle.height;
+                    maskRef.current.style.width=compAppStyle.width;
+                    lastCanvasBlobCall=1
+                    const objectURL = URL.createObjectURL(blob);
+                    maskRef.current.style.maskImage= `linear-gradient(black, black) ,url(${objectURL})`;
+                    maskRef.current.style.maskPosition=position
+                    maskRef.current.style.maskSize=size;
+              }
+            }, "image/png");
+
+
+        }
+
+    }
+    useEffect(() => {
+        drawMask()
+        window.addEventListener("resize", drawMask);
+        return ()=>{
+            window.removeEventListener("resize", drawMask);
+        }
+        
+    },[]);
+    return <div ref={checkoutContainerRef} className='w-full flex green-gradient-y flex-grow'>
+        <canvas ref={canvasRef} className="hidden" />
+        <div ref={maskRef}  className="w-full h-full grid-lines absolute inset-0 z-0 mask">
+        </div>
+        <div id='deliveryDetails' className='basis-1/2 p-4 z-10'>
+            <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-sm'>
+                <div name='contactInfo' className='w-full text-light-text py-4 px-2'>
+                    <p className='text-2xl my-2'>Contact Information</p>
+                    <ThemeProvider theme={themeTextfield}>
+                        <TextField autoComplete='on' label="Email" name='email' value={email} onChange={emailChangeHandler} color='primary' className='w-1/2' inputProps={{'type':'email', 'className':'focus:ring-[0px]'}}/>
+
+                        <TextField autoComplete='on' label="Ph. number" name='tel' value={telephone} onChange={telephoneChangeHandler} inputProps={{'type':'tel', 'className':'focus:ring-[0px]'}} className='w-1/2' />
                     </ThemeProvider>
                 </div>
-            </div>
-            <div name='address' className='w-full py-4'>
-                 <p className='text-2xl my-2'>Shipping address</p>
-                <ThemeProvider theme={theme}>
-                    <TextField autoComplete='on' label="Address" variant="filled" name='address' value={address} onChange={addressChangeHandler} fullWidth={true}></TextField>
-                </ThemeProvider>
-                <div className='flex'>
-                    <ThemeProvider theme={theme}>
-                        <TextField autoComplete='on' label="City" variant="filled" name='city' value={city} onChange={cityChangeHandler} fullWidth={true} className='basis-1/3'></TextField>
-                        <TextField autoComplete='on' label="Country/State" variant="filled" name='country/state' value={country} onChange={countryChangeHandler} fullWidth={true} className='basis-1/3'></TextField>
-                        <TextField autoComplete='on' label="Postal code" variant="filled" name='postalCode' value={postalCode} onChange={postalChangeHandler} fullWidth={true} className='basis-1/3'></TextField>
+                <div name='paymentDetails' className='w-full text-light-text py-4 px-2'>
+                    <p className='text-2xl my-2'>Payment details</p>
+                    <ThemeProvider theme={themeTextfield}>
+                        <TextField autoComplete='on' label="Card No." name='paymentCard' value={cardNumber} onChange={cardNumberChangeHandler} inputProps={{'placeholder':'XXXX-XXXX-XXXX-XXXX', 'className':'focus:ring-[0px]'}} fullWidth={true}/>
                     </ThemeProvider>
+                    <div className='flex'>
+                        <ThemeProvider theme={themeTextfield}>
+                            <TextField autoComplete='on' label="Expiration date" name='cardExpiration' value={cardExpiration} onChange={cardExpirationChangeHandler} inputProps={{'placeholder':'MM/YY','className':'focus:ring-[0px]'}} fullWidth={true} className='basis-2/3'/>
+                            <TextField autoComplete='on' label="CVC" name='CVC' value={cvc} onChange={cvcChangeHandler} inputProps={{'placeholder':'CVC', 'className':'focus:ring-[0px]'}} fullWidth={true} className='basis-1/3'/>
+                        </ThemeProvider>
+                    </div>
+                    
+                </div>
+                <div name='address' className='w-full text-light-text rounded-3xl py-4 px-2'>
+                    <p className='text-2xl my-2'>Shipping address</p>
+                    <ThemeProvider theme={themeTextfield}>
+                        <TextField autoComplete='on' label="Address" name='address' value={address} onChange={addressChangeHandler} fullWidth={true} inputProps={{'className':'focus:ring-[0px]'}}/>
+                    </ThemeProvider>
+                    <div className='flex'>
+                        <ThemeProvider theme={themeTextfield}>                                
+                            <TextField autoComplete='on' label="City" name='city' value={city} onChange={cityChangeHandler} fullWidth={true} className='basis-1/3' inputProps={{'className':'focus:ring-[0px]'}}/>
+                            <TextField autoComplete='on' label="Country/State" name='country/state' value={country} onChange={countryChangeHandler} fullWidth={true} className='basis-1/3' inputProps={{'className':'focus:ring-[0px]'}}/>
+                            <TextField autoComplete='on' label="Postal code" name='postalCode' value={postalCode} onChange={postalChangeHandler} fullWidth={true} className='basis-1/3' inputProps={{'className':'focus:ring-[0px]'}}/>
+                        </ThemeProvider>
+                    </div>    
                 </div>
             </div>
             <div className='flex justify-between w-full py-4'>
                <div></div>
-                <ThemeProvider theme={theme}>
+                <ThemeProvider theme={themeButton}>
                     <Button onClick={submitOrderHandler} variant="contained" >Submit Order</Button>
                 </ThemeProvider>
             </div>
         </div>
-        <div id='orderSummery' className='basis-1/2 bg-black/10 rounded-tr-[8em] h-full p-4'>
+        <div id='orderSummery' className='basis-1/2 h-full p-4 z-10'>
            <p className='text-2xl my-4'>Order summery</p>
-            <div className='max-h-96 overflow-auto my-4 custom-scrollbar'>
+            <div ref={productsListDiv} className='max-h-80 overflow-auto my-4 custom-scrollbar rounded-3xl bg-black/5 backdrop-blur-sm'>
                
                 {
                     products?products.map(product=>{

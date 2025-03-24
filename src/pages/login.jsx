@@ -3,9 +3,9 @@ import axios from 'axios';
 import {useState, useEffect} from 'react';
 import {useUserContext} from '../components/userContext.jsx';
 import {useNavigate} from 'react-router-dom';
-import { TextField, Button, Divider } from '@mui/material';
+import { TextField, Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey, indigo } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 
 const themeTextfield = createTheme({
   palette: {
@@ -103,12 +103,12 @@ function Login(){
         const header1Height=parseInt(getComputedStyle(document.getElementById('header1')).height);
         const header2Height=parseInt(getComputedStyle(document.getElementById('header2')).height);
         document.getElementById('loginContainer').style.height=appContainerHeight-header1Height-header2Height+'px'
-        if(email==''||password.length<9){
+        if(email===''||password.length<9){
             setButtonDisabled(true);
         }else{
             setButtonDisabled(false);
         }
-    })
+    },[email,password])
     
     return <div id='loginContainer' className='w-full h-full flex  items-center justify-center'>
         <div className='bg-white rounded-3xl w-[45%] aspect-video drop-shadow-2xl flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient'>

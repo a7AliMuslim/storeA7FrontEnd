@@ -15,7 +15,8 @@ module.exports = {
             'dark-purple-black':'#1F1B24',
             'light-text':'#F0F0F0',
             'light-gray':'#b2aebc',
-            'nvidia-green':'#76B900'
+            'nvidia-green':'#76B900',
+            'nvidia-green-dark':'#598D00'
         },
         animation:{
             'slide-in':'slideIn 0.2s ease-in-out forwards',

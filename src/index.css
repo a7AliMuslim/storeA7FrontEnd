@@ -9,6 +9,12 @@
     .grid-lines-green-gradient{
         background: url("/public/axiom-pattern-thick.png"), linear-gradient(to bottom, #76B900, #2C2A34);
     }
+    .green-gradient-y{
+        background: linear-gradient(to bottom, #76B900, #2C2A34);
+    }
+    .grid-lines{
+        background: url("/public/axiom-pattern-thick.png");
+    }
     .grid-lines-dark-gradient{
         background: url("/public/axiom-pattern.png"), linear-gradient(to right, #2C2A34, #43414a);
     }
