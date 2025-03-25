@@ -76,6 +76,7 @@ const StarrySky = () => {
   const randomRadius = () => Math.random() * 0.7 + 0.6;
   const getRandomX = () => Math.floor(Math.random() * viewport.vw);
   const getRandomY = () => Math.floor(Math.random() * viewport.vh);
+  
 
   return (
     <div ref={meteorContainerRef} className="absolute w-screen h-screen overflow-hidden">
