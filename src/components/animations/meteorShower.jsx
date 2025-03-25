@@ -3,8 +3,12 @@ import anime from "animejs";
 import "./meteorShowerCss.css";
 
 
-const StarrySky = () => {
-  const [numStars] = useState(60);
+const StarrySky = ({
+  numOfStars=30,
+  numOfMeteors=30,
+  starDelay=100,
+  meteorDelay=2000
+}) => {
   const [viewport, setViewport] = useState({
     vw: window.innerWidth,
     vh: window.innerHeight,
@@ -57,16 +61,16 @@ const StarrySky = () => {
       ],
       easing: "linear",
       loop: true,
-      delay: (el, i) => 50 * i,
+      delay: (el, i) => starDelay * i,
     });
   };
 
   const shootingStars = () => {
     anime({
-      targets: ".wish",
+      targets: ".starfal",
       easing: "linear",
       loop: true,
-      delay: (el, i) => 1000 * i,
+      delay: (el, i) => meteorDelay * i,
       opacity: [{ duration: 700, value: "1" }],
       width: [{ value: "150px" }, { value: "0px" }],
       translateX: 350,
@@ -81,7 +85,7 @@ const StarrySky = () => {
   return (
     <div ref={meteorContainerRef} className="absolute w-screen h-screen overflow-hidden">
       <svg ref={skyRef} id="sky" className="absolute w-full h-full">
-        {[...Array(numStars)].map((_, i) => (
+        {[...Array(numOfStars)].map((_, i) => (
           <circle
             key={i}
             cx={getRandomX()}
@@ -93,10 +97,10 @@ const StarrySky = () => {
         ))}
       </svg>
       <div ref={shootingStarRef} id="shootingstars" className="absolute">
-        {[...Array(60)].map((_, i) => (
+        {[...Array(numOfMeteors)].map((_, i) => (
           <div
             key={i}
-            className="wish absolute bg-white h-[2px] opacity-0"
+            className="starfal absolute bg-white h-[2px] opacity-0"
             style={{ left: `${getRandomY()}px`, top: `${getRandomX()}px` }}
           />
         ))}

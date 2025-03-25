@@ -3,6 +3,22 @@ import { useState, memo } from 'react';
 import { Divider } from '@mui/material';
 import CartCard from '../cartCard';
 import {cartStore} from '../../features/cart/cartStore';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { grey, red } from '@mui/material/colors';
+
+
+const themeDivider = createTheme({
+    components: {
+      MuiDivider: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "#F2F2F2", 
+          },
+        },
+      },
+    },
+  });
+  
 
 function OrderSummery({productsListDiv}) {
     const products=cartStore.getState().cart.products;
@@ -37,7 +53,9 @@ function OrderSummery({productsListDiv}) {
                     <p>Rs.{taxes}</p>
                 </div>
         </div>
-        <Divider/>
+        <ThemeProvider theme={themeDivider}>
+            <Divider/>
+        </ThemeProvider>
         <div name='total' className='flex justify-between my-4'>
                     <p>Total</p>
                     <p>Rs.{shippingCost+subTotalAll+taxes}</p>

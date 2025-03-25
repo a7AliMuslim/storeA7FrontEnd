@@ -113,7 +113,7 @@ function Checkout(){
         <div id='deliveryDetails' className='basis-1/2 p-4 z-10'>
             <DeliveryDetails deliveryTextRef={deliveryTextRef}/>
         </div>
-        <div id='orderSummery' className='basis-1/2 h-full p-4 z-10'>
+        <div id='orderSummery' className='basis-1/2 h-full p-4 z-10 text-light-text'>
             <OrderSummery productsListDiv={productsListDiv}/>
         </div>
     </div>

@@ -10,7 +10,9 @@
         background: url("/public/axiom-pattern-thick.png"), linear-gradient(to bottom, #76B900, #2C2A34);
     }
     .green-gradient-y{
-        background: linear-gradient(to bottom, #2C2A34 50%, #76B900);
+        background: linear-gradient(to bottom, #2C2A34 70%, #76B900);
+        background-size: 100% 120%;
+        background-position-y: top;
     }
     .grid-lines{
         background: url("/public/axiom-pattern-thick.png");
@@ -72,13 +74,13 @@
     /* Scrollbar track */
     ::-webkit-scrollbar-track {
         background: #a3ca5f; /* Light grey background */
-        border-radius: 5px;
+        border-radius: 10px;
     }
   
     /* Scrollbar handle */
     ::-webkit-scrollbar-thumb {
         background: #76B900; /* Dark grey */
-        border-radius: 5px;
+        border-radius: 10px;
     }
   
     /* Scrollbar handle on hover */
@@ -92,7 +94,7 @@
     }
       
     .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #007bff;
+        background: #FFFFFF;
         border-radius: 10px;
     }
       
