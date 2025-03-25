@@ -13,9 +13,9 @@ axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('k
 const themeTextfield = createTheme({
     palette: {
       primary: {
-          main:grey[700],
-          light:grey[200],
-          dark:grey[900],
+          main:'#F2F2F2',
+          light:'#F2F2F2',
+          dark:'#F2F2F2',
           contrastText: grey[100],
       },
       warning:{
@@ -25,6 +25,50 @@ const themeTextfield = createTheme({
           contrastText: grey[900],
       }
     },
+    components: {
+        MuiOutlinedInput: {
+          styleOverrides: {
+            root: {
+                "& fieldset": { borderColor: '#FFFFFF38' }, // Idle border color
+                "&:hover fieldset": { borderColor: '#F2F2F2 !important' }, // Hover border color
+                "& input:-webkit-autofill": {
+                    boxShadow: "0 0 0px 1000px transparent inset", // Transparent background
+                    "-webkit-text-fill-color": "#F2F2F2", // White text color
+                    backgroundColor: "transparent !important",
+                    transition: "background-color 5000s ease-in-out 0s !important"
+                },
+                "& input:-webkit-autofill:focus": {
+                    boxShadow: "0 0 0px 1000px transparent inset !important",
+                    backgroundColor: "transparent !important",
+                    "-webkit-text-fill-color": "#F2F2F2 !important",
+                    transition: "background-color 5000s ease-in-out 0s !important"
+                },
+                "& input:-webkit-autofill:hover": {
+                    boxShadow: "0 0 0px 1000px transparent inset !important",
+                    backgroundColor: "transparent !important",
+                    "-webkit-text-fill-color": "#F2F2F2 !important",
+                    transition: "background-color 5000s ease-in-out 0s !important"
+                },
+                "& input":{
+                    color: '#F2F2F2',
+                },
+                "& input::selection":{
+                    color: '#F2F2F2',
+                    backgroundColor:'#76B900',
+                }
+            },
+          },
+        },
+        MuiInputLabel: {
+          styleOverrides: {
+            root: {
+              color: "#F2F2F2", // Idle label color
+              "&:hover": { color: '#F2F2F2' }, // Hover label color
+              //"&.Mui-focused": { color: "green" }, // Focus label color
+            },
+          },
+        },
+      },
 });
 
 const themeButton=createTheme({
@@ -33,7 +77,7 @@ const themeButton=createTheme({
           main:'#76B900',
           light:grey[300],
           dark:'#598D00',
-          contrastText: grey[900],
+          contrastText: grey[200],
       }
       
     },
@@ -229,8 +273,8 @@ function Checkout(){
                         <TextField autoComplete='on' label="Ph. number" name='tel' value={telephone} onChange={telephoneChangeHandler} inputProps={{'type':'tel', 'className':'focus:ring-[0px]'}} className='w-1/2' />
                     </ThemeProvider>
                 </div>
-                <div name='paymentDetails' className='w-full text-light-text px-2'>
-                    <p className='text-2xl my-2'>Payment details</p>
+                <div name='paymentDetails' className='w-full text-light-text px-2 flex flex-col gap-2'>
+                    <p className='text-2xl'>Payment details</p>
                     <ThemeProvider theme={themeTextfield}>
                         <TextField autoComplete='on' label="Card No." name='paymentCard' value={cardNumber} onChange={cardNumberChangeHandler} inputProps={{'placeholder':'XXXX-XXXX-XXXX-XXXX', 'className':'focus:ring-[0px]'}} fullWidth={true}/>
                     </ThemeProvider>
@@ -242,8 +286,8 @@ function Checkout(){
                     </div>
                     
                 </div>
-                <div name='address' className='w-full text-light-text rounded-3xl pb-4 px-2'>
-                    <p className='text-2xl my-2'>Shipping address</p>
+                <div name='address' className='w-full text-light-text rounded-3xl pb-4 px-2 flex flex-col gap-2'>
+                    <p className='text-2xl'>Shipping address</p>
                     <ThemeProvider theme={themeTextfield}>
                         <TextField autoComplete='on' label="Address" name='address' value={address} onChange={addressChangeHandler} fullWidth={true} inputProps={{'className':'focus:ring-[0px]'}}/>
                     </ThemeProvider>
