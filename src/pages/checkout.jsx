@@ -7,6 +7,7 @@ import { TextField, Button, Divider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import CartCard from '../components/cartCard';
+import StarrySky from '../components/animations/meteorShower.jsx';
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
 
 const themeTextfield = createTheme({
@@ -214,12 +215,13 @@ function Checkout(){
         
     },[]);
     return <div ref={checkoutContainerRef} className='w-full flex green-gradient-y flex-grow'>
+        <StarrySky/>
         <canvas ref={canvasRef} className="hidden" />
         <div ref={maskRef}  className="w-full h-full grid-lines absolute inset-0 z-0 mask">
         </div>
         <div id='deliveryDetails' className='basis-1/2 p-4 z-10'>
             <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-sm'>
-                <div name='contactInfo' className='w-full text-light-text py-4 px-2'>
+                <div name='contactInfo' className='w-full text-light-text pt-4 px-2'>
                     <p className='text-2xl my-2'>Contact Information</p>
                     <ThemeProvider theme={themeTextfield}>
                         <TextField autoComplete='on' label="Email" name='email' value={email} onChange={emailChangeHandler} color='primary' className='w-1/2' inputProps={{'type':'email', 'className':'focus:ring-[0px]'}}/>
@@ -227,7 +229,7 @@ function Checkout(){
                         <TextField autoComplete='on' label="Ph. number" name='tel' value={telephone} onChange={telephoneChangeHandler} inputProps={{'type':'tel', 'className':'focus:ring-[0px]'}} className='w-1/2' />
                     </ThemeProvider>
                 </div>
-                <div name='paymentDetails' className='w-full text-light-text py-4 px-2'>
+                <div name='paymentDetails' className='w-full text-light-text px-2'>
                     <p className='text-2xl my-2'>Payment details</p>
                     <ThemeProvider theme={themeTextfield}>
                         <TextField autoComplete='on' label="Card No." name='paymentCard' value={cardNumber} onChange={cardNumberChangeHandler} inputProps={{'placeholder':'XXXX-XXXX-XXXX-XXXX', 'className':'focus:ring-[0px]'}} fullWidth={true}/>
@@ -240,7 +242,7 @@ function Checkout(){
                     </div>
                     
                 </div>
-                <div name='address' className='w-full text-light-text rounded-3xl py-4 px-2'>
+                <div name='address' className='w-full text-light-text rounded-3xl pb-4 px-2'>
                     <p className='text-2xl my-2'>Shipping address</p>
                     <ThemeProvider theme={themeTextfield}>
                         <TextField autoComplete='on' label="Address" name='address' value={address} onChange={addressChangeHandler} fullWidth={true} inputProps={{'className':'focus:ring-[0px]'}}/>
