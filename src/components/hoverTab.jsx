@@ -88,20 +88,20 @@ export default function HoverTab() {
       }
   })
   return (
-    <div className="flex px-4 touch:px-0">
-      <div className="rounded-l-xl bg-white/30 w-full max-w-md overflow-hidden touch:rounded-md">
+    <div className="flex px-4 touch:px-0 z-10">
+      <div className="rounded-bl-[5rem] bg-white/30 w-full max-w-md overflow-hidden touch:rounded-md">
         <TabGroup className='flex flex-row' selectedIndex={selectedIndex} manual onMouseLeave={handleMouseLeave}>
           <TabList className="flex flex-col gap-4 touch:flex-row touch:gap-2" id='tabList'>
             {categories.map(({ name,index }) => (
               <Tab
                 key={name}
-                className={selectedIndex==4?'rounded-full py-1 px-3 text-sm/6 font-semibold text-black focus:outline-none data-[hover]:bg-white/5 data-[focus]:outline-1 data-[focus]:outline-white capitalize':"rounded-sm py-1 px-3 text-sm/6 font-semibold text-dark focus:outline-none data-[selected]:text-light-gray data-[selected]:bg-dark-purple-black data-[hover]:text-custom-white data-[hover]:bg-white/10 data-[selected]:data-[hover]:text-light data-[selected]:data-[hover]:bg-dark-purple-black data-[focus]:outline-1 data-[focus]:outline-white capitalize"} onMouseEnter={()=>handleMouseEnter(index)} 
+                className={selectedIndex===4?'rounded-full py-1 px-3 text-sm/6 font-semibold text-black focus:outline-none data-[hover]:bg-white/5 data-[focus]:outline-1 data-[focus]:outline-white capitalize':"rounded-sm py-1 px-3 text-sm/6 font-semibold text-dark focus:outline-none data-[selected]:text-light-gray data-[selected]:bg-dark-purple-black data-[hover]:text-custom-white data-[hover]:bg-white/10 data-[selected]:data-[hover]:text-light data-[selected]:data-[hover]:bg-dark-purple-black data-[focus]:outline-1 data-[focus]:outline-white capitalize"} onMouseEnter={()=>handleMouseEnter(index)} 
               >
                 {name}
               </Tab>
             ))}
           </TabList>
-          <TabPanels id='tabPanels' className={selectedIndex==4?'hidden':'absolute ml-[5.5rem] z-[1002] animate-slide-in touch:animate-slide-down touch:ml-[0px] touch:mt-[2rem]'}>
+          <TabPanels id='tabPanels' className={selectedIndex===4?'hidden':'absolute ml-[5.5rem] z-[1002] animate-slide-in touch:animate-slide-down touch:ml-[0px] touch:mt-[2rem]'}>
             {categories.map(({ name, posts }) => (
               <TabPanel key={name}  className="h-96 w-36 rounded-r-xl bg-dark-purple-black p-3 touch:rounded-r-[0px] touch:!rounded-b-xl touch:w-full touch:h-48">
                 <ul>

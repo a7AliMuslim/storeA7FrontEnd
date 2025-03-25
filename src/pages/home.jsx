@@ -6,11 +6,14 @@ import React from 'react';
 import HoverTab from '../components/hoverTab';
 import SSlider from '../components/slider';
 import ForYouProducts from '../components/forYouProducts';
+import StarrySky from '../components/animations/meteorShower.jsx';
 
 
 
 export default function Home(){
-    return<>
+    return(
+    <>
+        <StarrySky numOfMeteors={150} meteorDelay={2000} numOfStars={90} starDelay={100} className='z-0'/>
         <div className='flex p-8 touch:flex-col touch:p-2 grid-lines-green-gradient'>
             <HoverTab/>
             <div id='imageSlider' className='hero w-3/12 flex-auto h-96 touch:w-full touch:h-48'><SSlider className='h-96'/></div>
@@ -19,4 +22,5 @@ export default function Home(){
             <ForYouProducts/>
         </div>
     </>
+    )
 }

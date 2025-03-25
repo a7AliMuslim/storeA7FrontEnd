@@ -7,6 +7,7 @@ import img5 from '../images/rockyWaters2.jpg';
 import img6 from '../images/steamMount.jpg';
 import Carousel from "react-multi-carousel";
 import 'react-multi-carousel/lib/styles.css'
+import { event } from 'jquery';
 const responsive = {
     desktop: {
       breakpoint: {
@@ -34,6 +35,9 @@ const responsive = {
     }
   };
 export default function Slider(){
+    const imgDragPrevent=(event)=>{
+      event.preventDefault();
+    }
     return <Carousel
   additionalTransfrom={0}
   arrows
@@ -43,11 +47,9 @@ export default function Slider(){
   transitionDuration={1500}
   draggable={true}
   centerMode={false}
-  className="rounded-r-xl touch:rounded-r-[0px] touch:!rounded-b-xl"
+  className="rounded-tr-[5rem] touch:rounded-r-[0px] touch:!rounded-b-xl"
   containerClass="container-with-dots"
   dotListClass=""
-  draggable
-  focusOnSelect={false}
   infinite
   itemClass="h-96 touch:h-48"
   keyBoardControl
@@ -67,11 +69,11 @@ export default function Slider(){
   focusOnSelect={true}
   swipeable
 >
-  <img className='h-96 w-full touch:h-48' src={img1}/>
-  <img className='h-96 w-full touch:h-48' src={img2}/>
-  <img src={img3} className='h-96 w-full touch:h-48'/>
-  <img src={img4} className='h-96 w-full touch:h-48'/>
-  <img src={img5} className='h-96 w-full touch:h-48'/>
-  <img src={img6} className='h-96 w-full touch:h-48'/>
+  <img onClick={imgDragPrevent} onDragStart={imgDragPrevent} alt='oops' className='h-96 w-full touch:h-48' src={img1}/>
+  <img onClick={imgDragPrevent} onDragStart={imgDragPrevent} alt='oops' className='h-96 w-full touch:h-48' src={img2}/>
+  <img onClick={imgDragPrevent} onDragStart={imgDragPrevent} alt='oops' src={img3} className='h-96 w-full touch:h-48'/>
+  <img onClick={imgDragPrevent} onDragStart={imgDragPrevent} alt='oops' src={img4} className='h-96 w-full touch:h-48'/>
+  <img onClick={imgDragPrevent} onDragStart={imgDragPrevent} alt='oops' src={img5} className='h-96 w-full touch:h-48'/>
+  <img onClick={imgDragPrevent} onDragStart={imgDragPrevent} alt='oops' src={img6} className='h-96 w-full touch:h-48'/>
 </Carousel>;
 }

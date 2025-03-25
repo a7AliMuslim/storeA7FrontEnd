@@ -164,7 +164,7 @@ const DeliveryDetails = ({deliveryTextRef}) => {
         <>
             <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-sm'>
                 <div name='contactInfo' className='w-full text-light-text pt-4 px-2'>
-                    <p className='text-2xl my-2'>Contact Information</p>
+                    <p className='text-2xl my-2'>CONTACT INFORMATION</p>
                     <ThemeProvider theme={themeTextfield}>
                         <TextField autoComplete='on' label="Email" name='email' value={email} onChange={emailChangeHandler} color='primary' className='w-1/2' inputProps={{'type':'email', 'className':'focus:ring-[0px]'}}/>
 

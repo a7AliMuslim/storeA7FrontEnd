@@ -29,7 +29,7 @@ module.exports = {
         },
         keyframes:{
             slideIn:{
-                '0%':{transform: ' translateX(-10%)', opacity:'0'},
+                '0%':{transform: ' translateX(-1%)', opacity:'0'},
                 '100%':{transform: ' translateX(0%)', opacity:'1'}
             },
             slideOut:{
@@ -38,7 +38,7 @@ module.exports = {
                 '100%':{transform: ' translateX(-500%)', opacity:'0'}
             },
             slideDown:{
-                '0%':{transform: ' translateY(-10%)', opacity:'0'},
+                '0%':{transform: ' translateY(-1%)', opacity:'0'},
                 '80%':{transform: ' translateY(2%)', opacity:'0.8'},
                 '100%':{transform: ' translateY(0%)', opacity:'1'}
             },

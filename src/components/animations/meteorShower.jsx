@@ -7,11 +7,16 @@ const StarrySky = ({
   numOfStars=30,
   numOfMeteors=30,
   starDelay=100,
-  meteorDelay=2000
+  meteorDelay=2000,
+  appContainerId='app',
+  containerWidth=window.innerWidth,
+  containerHeight=window.innerHeight,
+  className='',
+
 }) => {
   const [viewport, setViewport] = useState({
-    vw: window.innerWidth,
-    vh: window.innerHeight,
+    vw: parseFloat(containerWidth),
+    vh: parseFloat(containerHeight),
   });
   const meteorContainerRef=useRef(null);
   const skyRef=useRef(null);
@@ -19,30 +24,36 @@ const StarrySky = ({
 
   useEffect(() => {
     const updateViewport = () => {
-        const compAppStyle=window.getComputedStyle(document.getElementById('app'));
+        const compAppStyle=window.getComputedStyle(document.getElementById(appContainerId));
         const width=parseFloat(compAppStyle.width);
         const height=parseFloat(compAppStyle.height);
-        if(meteorContainerRef){
+        if(meteorContainerRef  && skyRef && shootingStarRef){
             meteorContainerRef.current.style.width=compAppStyle.width;
-            meteorContainerRef.current.style.height=compAppStyle.height;
             skyRef.current.style.width=compAppStyle.width;
-            skyRef.current.style.height=compAppStyle.height;
-            //shootingStarRef.current.style.width=compAppStyle.width;
-            //shootingStarRef.current.style.height=compAppStyle.height;
+            if(height>window.innerHeight){
+              meteorContainerRef.current.style.height=window.innerHeight+'px';
+              skyRef.current.style.height=window.innerHeight+'px';
+            }else{
+              meteorContainerRef.current.style.height=compAppStyle.height;
+              skyRef.current.style.height=compAppStyle.height;
+            }
         }
-        console.log(width);
-        console.log(height);
         setViewport({ vw: width, vh: height });
     };
     window.addEventListener("resize", updateViewport);
     if(meteorContainerRef && skyRef && shootingStarRef){
-        const compAppStyle=window.getComputedStyle(document.getElementById('app'));
+        const compAppStyle=window.getComputedStyle(document.getElementById(appContainerId));
         meteorContainerRef.current.style.width=compAppStyle.width;
-        meteorContainerRef.current.style.height=compAppStyle.height;
         skyRef.current.style.width=compAppStyle.width;
-        skyRef.current.style.height=compAppStyle.height;
-        //shootingStarRef.current.style.width=compAppStyle.width;
-        //shootingStarRef.current.style.height=compAppStyle.height;
+        console.log()
+        if(parseFloat(compAppStyle.height)>window.innerHeight){
+          meteorContainerRef.current.style.height=window.innerHeight+'px';
+          skyRef.current.style.height=window.innerHeight+'px';
+        }else{
+          meteorContainerRef.current.style.height=compAppStyle.height;
+          skyRef.current.style.height=compAppStyle.height;
+        }
+        
     }
     starryNight();
     shootingStars();
@@ -83,8 +94,8 @@ const StarrySky = ({
   
 
   return (
-    <div ref={meteorContainerRef} className="absolute w-screen h-screen overflow-hidden">
-      <svg ref={skyRef} id="sky" className="absolute w-full h-full">
+    <div ref={meteorContainerRef} className={"absolute w-screen h-screen overflow-hidden "+className}>
+      <svg ref={skyRef} id="sky" className="absolute">
         {[...Array(numOfStars)].map((_, i) => (
           <circle
             key={i}

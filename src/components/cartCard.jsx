@@ -6,7 +6,7 @@ import {memo} from 'react';
 
 // eslint-disable-next-line no-unused-vars
 let temp=0;
-function CartCard({product, setChange=null, change=null}){
+function CartCard({product, setChange=null, change=null, imageClassName=''}){
     const dispatch=useDispatch();
     
     const removeAllHandler=()=>{
@@ -47,7 +47,7 @@ function CartCard({product, setChange=null, change=null}){
     };
     return(
         <div className='w-full h-1/3 grid grid-cols-4 gap-4 p-2 items-center overflow-hidden'>
-            <ImageCard alt='oops' img={product.imageIDs[0]} className='col-span-1 rounded-md'/>
+            <ImageCard alt='oops' img={product.imageIDs[0]} className={`col-span-1 ${imageClassName}`}/>
 
             <div className='col-span-2 grid grid-cols-2 grid-rows-2 items-center h-full overflow-hidden'>
                <div className='flex flex-col overflow-hidden'>

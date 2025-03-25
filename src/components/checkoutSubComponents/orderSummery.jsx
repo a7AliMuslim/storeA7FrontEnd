@@ -4,7 +4,7 @@ import { Divider } from '@mui/material';
 import CartCard from '../cartCard';
 import {cartStore} from '../../features/cart/cartStore';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey, red } from '@mui/material/colors';
+
 
 
 const themeDivider = createTheme({
@@ -12,7 +12,7 @@ const themeDivider = createTheme({
       MuiDivider: {
         styleOverrides: {
           root: {
-            backgroundColor: "#F2F2F2", 
+            backgroundColor: "#76B900", 
           },
         },
       },
@@ -28,16 +28,17 @@ function OrderSummery({productsListDiv}) {
     const [taxes, setTaxes]=useState(200);
   return (
     <>
-        <p className='text-2xl my-4'>Order summery</p>
-        <div ref={productsListDiv} className='max-h-80 overflow-auto my-4 custom-scrollbar rounded-3xl bg-black/5 backdrop-blur-sm'>
-               
+        <p className='text-2xl my-4'>ORDER SUMMERY</p>
+        <div ref={productsListDiv} className='overflow-hidden my-4 custom-scrollbar rounded-tr-[5rem] rounded-bl-[5rem] bg-black/5 backdrop-blur-sm'>
+            <div className='max-h-80 overflow-auto'>   
                 {
                     products?products.map(product=>{
                         subTotalAll=subTotalAll+product.subTotal;
                         console.log(subTotalAll);
-                        return<><CartCard product={product} setChange={setChange} change={change}/><Divider/></>
+                        return<><CartCard product={product} setChange={setChange} change={change} imageClassName='rounded-tr-3xl rounded-bl-3xl'/><Divider/></>
                     }):null
                 }
+            </div>
         </div>
         <div className='my-4'>
                 <div name='subTotal' className='flex justify-between'>
