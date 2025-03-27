@@ -7,7 +7,7 @@ import img5 from '../images/rockyWaters2.jpg';
 import img6 from '../images/steamMount.jpg';
 import Carousel from "react-multi-carousel";
 import 'react-multi-carousel/lib/styles.css'
-import { event } from 'jquery';
+
 const responsive = {
     desktop: {
       breakpoint: {

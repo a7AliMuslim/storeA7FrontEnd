@@ -14,6 +14,9 @@
         background-size: 100% 120%;
         background-position-y: top;
     }
+    .green-gradient-x{
+        background: url("/public/greenBall.png"), linear-gradient(to right, #2C2A34, #76B900);
+    }
     .grid-lines{
         background: url("/public/axiom-pattern-thick.png");
     }
