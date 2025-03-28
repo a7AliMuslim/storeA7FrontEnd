@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect , useCallback} from "react";
+import { useState, useRef, useEffect , useCallback, memo} from "react";
 import { motion } from "framer-motion";
 
 
@@ -24,7 +24,7 @@ function getAppliedStyle(status, ...colors){
 
 
 
-const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}}) => {
+const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1}) => {
     const [focused, setFocused] = useState(false);
     const contentRef=useRef(null);
     const textFieldRef=useRef(null);
@@ -59,8 +59,6 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
     const appliedStyle=getAppliedStyle(status, primaryColors, errorColors);
     
 
-
-
     const focusHandler=()=>{
         setFocused(true);
         
@@ -80,7 +78,6 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
         }
     }
 
-    
     const setTextCutoffDimensions=useCallback(()=>{
         if(inputRef && textFieldRef && contentRef && animatedBorderRef){
             const textFieldRect=textFieldRef.current.getBoundingClientRect();
@@ -127,8 +124,8 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
                     "polygon(0% 0%, 0% 100%, 0% 100%, 100% 100%, 100% 0%)"  // Full reveal
                 ],
             transition: {
-                opacity: { duration: 0, delay: 1 }, // Instantly make opacity 1 when animation starts
-                clipPath: { duration: 1, ease: "easeInOut", times: [0.3, 0.5, 1], delay: 1 }
+                opacity: { duration: 0, delay: animationDelay }, // Instantly make opacity 1 when animation starts
+                clipPath: { duration: 1, ease: "easeInOut", times: [0.3, 0.5, 1], delay: animationDelay }
             }
         }}/>
         <div ref={inputRef} className={`flex flex-row relative rounded-lg border-transparent z-10 ${appliedStyle.border} group-hover:${appliedStyle.borderHover}`+ (focused?` ${appliedStyle.borderFocus}`:'')}>
@@ -152,9 +149,13 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
         <motion.label
                 ref={contentRef}
                 htmlFor="input"
-                initial={{ y: "25%", fontSize: "1rem", padding: "0" }}
-                animate={focused ? { y: "-100%", fontSize: "0.75rem" } : {}}
-                transition={{ duration: 0.1, ease: "easeIn" }}
+                initial={{ y: "20%", fontSize: "1rem", padding: "0" , opacity:0}}
+                animate={focused ? { y: "-100%", fontSize: "0.75rem" ,opacity:1} : {opacity:1}}
+                transition={{
+                    y:{duration: 0.1, ease: "easeIn"},
+                    fontSize:{duration: 0.1, ease: "easeIn"},
+                    opacity:{duration: 1, ease: "easeIn", delay: animationDelay}
+                }}
                 className={`absolute left-3 top-2 px-1 group-hover:${appliedStyle.labelHover} ${appliedStyle.labelColor} `+(focused?` ${appliedStyle.labelFocus} `:'')}
             >
                 {
@@ -167,4 +168,4 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
   );
 };
 
-export default FloatingLabelInput;
+export default memo(FloatingLabelInput);
