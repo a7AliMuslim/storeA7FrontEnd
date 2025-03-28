@@ -3,6 +3,26 @@ module.exports = {
   content: [
     "./src/**/*.{html,js,jsx,ts,tsx}",
   ],
+  safelist: [
+    "border-2",
+    "border-white/80",
+    "selection:bg-nvidia-green",
+    "selection:text-white",
+    "text-white",
+    "border-white",
+    'group-hover:border-nvidia-green',
+    'text-white/80',
+    'group-hover:text-nvidia-green',
+    'border-red-300',
+    'border-red-600',
+    'border-red-400',
+    'text-red-300',
+    'text-red-600',
+    'group-hover:text-red-400',
+    'group-hover:border-red-400',
+    'border-transparent',
+  ],
+
   theme: {
     extend: {
         colors:{

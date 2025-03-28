@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect , useCallback} from "react";
 import { motion } from "framer-motion";
 
-let lastCanvasBlobCall=1;
+
 function getTextWidth(text, rem, font = "Arial") {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -14,18 +14,50 @@ function getTextWidth(text, rem, font = "Arial") {
 }
 
 
+function getAppliedStyle(status, ...colors){
+    return colors.find(color=>{
+        return color.status===status?true:false;
+    })
+}
 
 
 
 
 
-
-const FloatingLabelInput = () => {
+const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}}) => {
     const [focused, setFocused] = useState(false);
     const contentRef=useRef(null);
     const textFieldRef=useRef(null);
     const inputRef=useRef(null);
     const animatedBorderRef=useRef(null);
+    const [primaryColors]=useState({
+        status:'primary',
+        border:'border-2',
+        borderColor:'border-white/80',
+        selectionColor:'bg-nvidia-green',
+        textColor:'text-white',
+        borderFocus:'border-white',
+        borderHover:'border-nvidia-green',
+        labelColor:'text-white/80',
+        labelFocus:'text-white',
+        labelHover:'text-nvidia-green',
+        ...primaryUpdate
+    });
+    const [errorColors]=useState({
+        status:'error',
+        border:'border-2',
+        borderColor:'border-red-300',
+        selectionColor:'bg-nvidia-green',
+        textColor:'text-white',
+        borderFocus:'border-red-600',
+        borderHover:'border-red-400',
+        labelColor:'text-red-300',
+        labelFocus:'text-red-600',
+        labelHover:'text-red-400',
+        ...errorUpdate
+    });
+    const appliedStyle=getAppliedStyle(status, primaryColors, errorColors);
+    
 
 
 
@@ -41,13 +73,15 @@ const FloatingLabelInput = () => {
         
     }
     const blurHandle=(e)=>{
-        !e.target.value && setFocused(false);
-        inputRef.current.style.maskImage='';
-        animatedBorderRef.current.style.maskImage='';
-        
+        if(!e.target.value){
+            setFocused(false);
+            inputRef.current.style.maskImage='';
+            animatedBorderRef.current.style.maskImage='';
+        }
     }
 
-    const setTextCutoffDimensions=()=>{
+    
+    const setTextCutoffDimensions=useCallback(()=>{
         if(inputRef && textFieldRef && contentRef && animatedBorderRef){
             const textFieldRect=textFieldRef.current.getBoundingClientRect();
             const contentRect = contentRef.current.getBoundingClientRect();
@@ -70,8 +104,8 @@ const FloatingLabelInput = () => {
             animatedBorder.style.maskRepeat = 'no-repeat, no-repeat'
             animatedBorder.style.maskComposite='exclude';
         }
-    }
-
+    },[label, className, primaryUpdate,errorUpdate])
+    console.log(focused);
     useEffect(()=>{
         setTextCutoffDimensions()
         window.addEventListener('resize', setTextCutoffDimensions);
@@ -79,54 +113,56 @@ const FloatingLabelInput = () => {
         return ()=>{
             window.removeEventListener('resize', setTextCutoffDimensions);
         }
-    },[])
+    },[setTextCutoffDimensions])
 
   return (
-    <div ref={textFieldRef} className="relative w-full">
-        <motion.div ref={animatedBorderRef} className="absolute inset-0 border-[0.1rem] border-black rounded-lg z-0"
-            initial={{ clipPath: "polygon(0% 0%, 40% 50%, 60% 50%, 0% 0%, 0% 0%)" }}
+    <div ref={textFieldRef} className={`relative w-full group ${className}`}>
+        <motion.div ref={animatedBorderRef} className={`absolute inset-0 rounded-lg z-0 group-hover:border-transparent ${appliedStyle.border} ${appliedStyle.borderColor}`+(focused?' border-transparent':'')}
+            initial={{ clipPath: "polygon(0% 0%, 40% 50%, 60% 50%, 0% 0%, 0% 0%)" , opacity:0}}
             animate={{
+                opacity:1,
                 clipPath: [
                     "polygon(0% 0%, 40% 50%, 60% 50%, 100% 0%, 100% 0%)", // Start from center
                     "polygon(0% 0%, 40% 50%, 60% 50%, 100% 100%, 100% 0%)", // Horizontal reveal
                     "polygon(0% 0%, 0% 100%, 0% 100%, 100% 100%, 100% 0%)"  // Full reveal
                 ],
             transition: {
-                duration: 1,
-                ease: "easeInOut",
-                times: [0.3, 0.5, 1],
-                delay:1
+                opacity: { duration: 0, delay: 1 }, // Instantly make opacity 1 when animation starts
+                clipPath: { duration: 1, ease: "easeInOut", times: [0.3, 0.5, 1], delay: 1 }
             }
         }}/>
-      {/* Input Field */}
-        <input
-            ref={inputRef}
-            id="input"
-            type="text"
-            className="w-full h-14 relative border-2 border-transparent focus:ring-[0px] rounded-lg focus:border-white bg-transparent  z-10"
-            onFocus={focusHandler}
-            onBlur={blurHandle}
-        />
+        <div ref={inputRef} className={`flex flex-row relative rounded-lg border-transparent z-10 ${appliedStyle.border} group-hover:${appliedStyle.borderHover}`+ (focused?` ${appliedStyle.borderFocus}`:'')}>
+            <input
+                
+                id="input"
+                type="text"
+                className={`flex-grow h-12 relative border-transparent focus:border-transparent focus:ring-[0px] bg-transparent ${appliedStyle.textColor} selection:${appliedStyle.selectionColor} selection:${appliedStyle.textColor}`}
+                onFocus={focusHandler}
+                onBlur={blurHandle}
+            />
+            <div className="max-h-12 aspect-square">
+                {
+                    adornament
+                }
+            </div>
 
-      {/* Floating Label */}
+        
+            
+        </div>
         <motion.label
-            ref={contentRef}
-            htmlFor="input"
-            initial={{ y: "25%", fontSize: "1rem", padding: "0" }}
-            animate={focused ? { y: "-100%", fontSize: "0.75rem" } : {}}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute left-3 top-2 px-1 text-light-text z-10"
-        >
-            Enter text
+                ref={contentRef}
+                htmlFor="input"
+                initial={{ y: "25%", fontSize: "1rem", padding: "0" }}
+                animate={focused ? { y: "-100%", fontSize: "0.75rem" } : {}}
+                transition={{ duration: 0.1, ease: "easeIn" }}
+                className={`absolute left-3 top-2 px-1 group-hover:${appliedStyle.labelHover} ${appliedStyle.labelColor} `+(focused?` ${appliedStyle.labelFocus} `:'')}
+            >
+                {
+                    label
+                }
         </motion.label>
+        
 
-      {/* Pseudo-element to "cut" the border under label */}
-        <motion.div
-            className="absolute left-2 right-2 top-[14px] h-[6px]"
-            initial={{ scaleX: 0 }}
-            animate={focused ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-        />
     </div>
   );
 };
