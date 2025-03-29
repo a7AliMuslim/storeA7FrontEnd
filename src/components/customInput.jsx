@@ -60,7 +60,6 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
     });
     const appliedStyle=getAppliedStyle(status, primaryColors, errorColors);
     
-    
     const focusHandler=()=>{
         setFocused(true);
         
@@ -118,9 +117,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
             window.removeEventListener('resize', setTextCutoffDimensions);
         }
     },[setTextCutoffDimensions])
-    useEffect(() => {
-        console.log("FOCUSED state changed:", focused);
-    }, [focused]);
+
    
     
 
@@ -169,7 +166,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
                 transition={{
                     y:{duration: 0.1, ease: "easeIn"},
                     fontSize:{duration: 0.1, ease: "easeIn"},
-                    opacity:{duration: 1, ease: "easeIn", delay: animationDelay}
+                    opacity:{duration: 0.2, ease: "easeIn", delay: animationDelay+1}
                 }}
                 className={`absolute left-3 top-2 px-1 z-0 group-hover:!${appliedStyle.labelHover} ${appliedStyle.labelColor} `+(focuseda?` !${appliedStyle.labelFocus} `:'')}
             >

@@ -1,12 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import {useUserContext} from '../components/userContext.jsx';
 import {useNavigate} from 'react-router-dom';
 import { Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import FloatingLabelInput from '../components/customInput.jsx';
+import isEmail from 'validator/lib/isEmail';
 
 const themeTextfieldTouch = createTheme({
   palette: {
@@ -64,60 +65,84 @@ function Login(){
     const [email,setEmail]=useState('');
     const [emailError,setEmailError]=useState(false);
     const [password,setPassword]=useState('');
+    const [passwordError,setPasswordError]=useState(false);
     const [buttonDisabled,setButtonDisabled]=useState(true);
     const userObj=useUserContext();
     const navigate=useNavigate();
-    console.log('parent render');
-    const emailHandler=(event)=>{
-        setEmail(event.target.value);
-    };
-    const validateEmailLocal=()=>{
-      const emailRegex=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      
-      if(emailRegex.test(email) ||email===''){
+
+    const validateEmailLocal=useCallback((val=null)=>{
+      const tempEmail=val?val:email;
+      if(isEmail(tempEmail) ||tempEmail===''){
           setEmailError(false);
-          return;
+          return true;
       }
       setEmailError(true);
-  }
-    const passwordHandler=(event)=>{
-        setPassword(event.target.value);
-    };
-    const loginHandler=async ()=>{
-        try{
-            const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/auth/login`,{password,email});
-            localStorage.setItem('key',response.data.token);
-            console.log(response.data)
-            userObj.login(response.data.user);
-            navigate('/');
-        }catch(err){
-            console.log(err);
+      return false;
+    },[email]);
+    const emailHandler=useCallback((event)=>{
+        setEmail(event.target.value);
+        if(emailError){
+          validateEmailLocal(event.target.value);
         }
+    },[emailError,validateEmailLocal]);
+
+    const validatePasswordLocal=useCallback((val=null)=>{
+      const pass=val?val:password;
+      if(pass.length>8 ||pass===''){
+          setPasswordError(false);
+          return true;
+      }
+      setPasswordError(true);
+      return false;
+    },[password]);
+    const passwordHandler=useCallback((event)=>{
+        setPassword(event.target.value);
+        if(passwordError){
+          validatePasswordLocal(event.target.value);
+        }
+    },[passwordError,validatePasswordLocal])
+
+    const submitRequest=async ()=>{
+      try{
+        const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/auth/login`,{password,email});
+        localStorage.setItem('key',response.data.token);
         
-    };
-    const signupHandler=()=>{
-        navigate('/signup');
+        userObj.login(response.data.user);
+        navigate('/');
+      }catch(err){
+        console.log(err);
+      }
     }
+    const loginHandler=()=>{
+      if(!isEmail(email)){
+        setEmailError(true);
+        return;
+      }
+      if(password.length<9){
+        setPasswordError(true);
+        return;
+      }
+      submitRequest();
+    };
+    const signupHandler=useCallback(()=>{
+        navigate('/signup');
+    },[navigate]);
     useEffect(()=>{
-        const appContainerHeight=parseInt(getComputedStyle(document.getElementById('app')).height);
-        const header1Height=parseInt(getComputedStyle(document.getElementById('header1')).height);
-        const header2Height=parseInt(getComputedStyle(document.getElementById('header2')).height);
-        document.getElementById('loginContainer').style.height=appContainerHeight-header1Height-header2Height+'px'
-        if(email===''||password.length<9){
+        if(emailError || passwordError){
             setButtonDisabled(true);
         }else{
             setButtonDisabled(false);
         }
-    },[email,password])
+    },[emailError,passwordError]);
     
-    return <div id='loginContainer' className='w-full h-full flex  items-center justify-center'>
+    return <div id='loginContainer' className='w-full flex items-center justify-center flex-grow'>
         <div className='rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient'>
             <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>  
               <div className='w-[80%] my-8'>
                             <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label="Email" name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-full'/>
               </div>
               <div className='w-[80%] mb-8'>
-                            <FloatingLabelInput label="Password" name='password' value={password} onChange={passwordHandler} type='password' className='!w-full'/>
+                            <FloatingLabelInput status={passwordError?'error':'primary'} label="Password" name='password' value={password} onChange={passwordHandler} onBlur={validatePasswordLocal} type='password' className='!w-full'/>
               </div>  
                 <ThemeProvider theme={themeButton}>
                         <div className='w-[80%] mb-8 flex justify-between'>
