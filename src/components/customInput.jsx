@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect , useCallback, memo} from "react";
+import { useState, useRef, useEffect , useCallback, memo, useId} from "react";
 import { motion } from "framer-motion";
 
 
@@ -24,12 +24,14 @@ function getAppliedStyle(status, ...colors){
 
 
 
-const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1}) => {
+const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1, value='', onChange=()=>{}, type='text', autoComplete='off', name='input', onBlur=()=>{}}) => {
     const [focused, setFocused] = useState(false);
+    const focuseda=focused?true:false;
     const contentRef=useRef(null);
     const textFieldRef=useRef(null);
     const inputRef=useRef(null);
     const animatedBorderRef=useRef(null);
+    const uniqueId=useId();
     const [primaryColors]=useState({
         status:'primary',
         border:'border-2',
@@ -58,7 +60,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
     });
     const appliedStyle=getAppliedStyle(status, primaryColors, errorColors);
     
-
+    
     const focusHandler=()=>{
         setFocused(true);
         
@@ -71,13 +73,18 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
         
     }
     const blurHandle=(e)=>{
-        if(!e.target.value){
+        
+        if(!(e.target.value)){
+            
             setFocused(false);
             inputRef.current.style.maskImage='';
             animatedBorderRef.current.style.maskImage='';
         }
+        onBlur();
     }
-
+    
+    
+    
     const setTextCutoffDimensions=useCallback(()=>{
         if(inputRef && textFieldRef && contentRef && animatedBorderRef){
             const textFieldRect=textFieldRef.current.getBoundingClientRect();
@@ -102,7 +109,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
             animatedBorder.style.maskComposite='exclude';
         }
     },[label, className, primaryUpdate,errorUpdate])
-    console.log(focused);
+    
     useEffect(()=>{
         setTextCutoffDimensions()
         window.addEventListener('resize', setTextCutoffDimensions);
@@ -111,10 +118,15 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
             window.removeEventListener('resize', setTextCutoffDimensions);
         }
     },[setTextCutoffDimensions])
+    useEffect(() => {
+        console.log("FOCUSED state changed:", focused);
+    }, [focused]);
+   
+    
 
   return (
-    <div ref={textFieldRef} className={`relative w-full group ${className}`}>
-        <motion.div ref={animatedBorderRef} className={`absolute inset-0 rounded-lg z-0 group-hover:border-transparent ${appliedStyle.border} ${appliedStyle.borderColor}`+(focused?' border-transparent':'')}
+    <div ref={textFieldRef} className={`relative w-80 group ${className}`}>
+        <motion.div ref={animatedBorderRef} className={`absolute inset-0 rounded-tr-lg rounded-bl-lg z-0 group-hover:border-transparent ${appliedStyle.border} ${appliedStyle.borderColor}`+(focused?' !border-transparent':'')}
             initial={{ clipPath: "polygon(0% 0%, 40% 50%, 60% 50%, 0% 0%, 0% 0%)" , opacity:0}}
             animate={{
                 opacity:1,
@@ -128,11 +140,14 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
                 clipPath: { duration: 1, ease: "easeInOut", times: [0.3, 0.5, 1], delay: animationDelay }
             }
         }}/>
-        <div ref={inputRef} className={`flex flex-row relative rounded-lg border-transparent z-10 ${appliedStyle.border} group-hover:${appliedStyle.borderHover}`+ (focused?` ${appliedStyle.borderFocus}`:'')}>
+        <div ref={inputRef} className={`flex flex-row relative rounded-tr-lg rounded-bl-lg border-transparent z-10 ${appliedStyle.border} group-hover:!${appliedStyle.borderHover}`+ (focused?` !${appliedStyle.borderFocus}`:'')}>
             <input
-                
-                id="input"
-                type="text"
+                name={name}
+                id={uniqueId}
+                type={type}
+                value={value}
+                onChange={onChange}
+                autoComplete={autoComplete}
                 className={`flex-grow h-12 relative border-transparent focus:border-transparent focus:ring-[0px] bg-transparent ${appliedStyle.textColor} selection:${appliedStyle.selectionColor} selection:${appliedStyle.textColor}`}
                 onFocus={focusHandler}
                 onBlur={blurHandle}
@@ -148,15 +163,15 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
         </div>
         <motion.label
                 ref={contentRef}
-                htmlFor="input"
+                htmlFor={uniqueId}
                 initial={{ y: "20%", fontSize: "1rem", padding: "0" , opacity:0}}
-                animate={focused ? { y: "-100%", fontSize: "0.75rem" ,opacity:1} : {opacity:1}}
+                animate={focuseda ? { y: "-100%", fontSize: "0.75rem" ,opacity:1} : {opacity:1}}
                 transition={{
                     y:{duration: 0.1, ease: "easeIn"},
                     fontSize:{duration: 0.1, ease: "easeIn"},
                     opacity:{duration: 1, ease: "easeIn", delay: animationDelay}
                 }}
-                className={`absolute left-3 top-2 px-1 group-hover:${appliedStyle.labelHover} ${appliedStyle.labelColor} `+(focused?` ${appliedStyle.labelFocus} `:'')}
+                className={`absolute left-3 top-2 px-1 z-0 group-hover:!${appliedStyle.labelHover} ${appliedStyle.labelColor} `+(focuseda?` !${appliedStyle.labelFocus} `:'')}
             >
                 {
                     label

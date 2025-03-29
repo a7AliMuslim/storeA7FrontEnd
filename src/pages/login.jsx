@@ -3,179 +3,10 @@ import axios from 'axios';
 import {useState, useEffect} from 'react';
 import {useUserContext} from '../components/userContext.jsx';
 import {useNavigate} from 'react-router-dom';
-import { TextField, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey, red } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 import FloatingLabelInput from '../components/customInput.jsx';
-
-const themeTextfield = createTheme({
-  palette: {
-    primary: {
-        main:grey[700],
-        light:grey[200],
-        dark:grey[900],
-        contrastText: grey[100],
-    },
-  },
-});
-
-const themeTextfield3 = createTheme({
-  palette: {
-    primary: {
-        main:'#F2F2F2',
-        light:'#F2F2F2',
-        dark:'#F2F2F2',
-        contrastText: grey[100],
-    },
-    warning:{
-        main:red[800],
-        light:grey[200],
-        dark:grey[900],
-        contrastText: grey[900],
-    }
-  },
-  components: {
-      MuiOutlinedInput: {
-        styleOverrides: {
-          root: {
-              "& fieldset": { borderColor: '#FFFFFF38' }, // Idle border color
-              "&:hover fieldset": { borderColor: '#F2F2F2 !important' }, // Hover border color
-              "& input:-webkit-autofill": {
-                  boxShadow: "0 0 0px 1000px transparent inset", // Transparent background
-                  "-webkit-text-fill-color": "#F2F2F2", // White text color
-                  backgroundColor: "transparent !important",
-                  transition: "background-color 5000s ease-in-out 0s !important"
-              },
-              "& input:-webkit-autofill:focus": {
-                  boxShadow: "0 0 0px 1000px transparent inset !important",
-                  backgroundColor: "transparent !important",
-                  "-webkit-text-fill-color": "#F2F2F2 !important",
-                  transition: "background-color 5000s ease-in-out 0s !important"
-              },
-              "& input:-webkit-autofill:hover": {
-                  boxShadow: "0 0 0px 1000px transparent inset !important",
-                  backgroundColor: "transparent !important",
-                  "-webkit-text-fill-color": "#F2F2F2 !important",
-                  transition: "background-color 5000s ease-in-out 0s !important"
-              },
-              "& input":{
-                  color: '#F2F2F2',
-              },
-              "& input::selection":{
-                  color: '#F2F2F2',
-                  backgroundColor:'#76B900',
-              }
-          },
-        },
-      },
-      MuiInputLabel: {
-        styleOverrides: {
-          root: {
-            color: "#F2F2F2", // Idle label color
-            "&:hover": { color: '#F2F2F2' }, // Hover label color
-            //"&.Mui-focused": { color: "green" }, // Focus label color
-          },
-        },
-      },
-    },
-});
-
-const themeTextfield2 = createTheme({
-  palette: {
-    primary: {
-      main: '#F2F2F2',
-      light: '#F2F2F2',
-      dark: '#F2F2F2',
-      contrastText: grey[100],
-    },
-  },
-  components: {
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          "&:not(.MuiOutlinedInput-colorWarning) fieldset": { borderColor: '#FFFFFF38' }, // Idle border color
-          "&:hover:not(.MuiOutlinedInput-colorWarning) fieldset": { borderColor: '#F2F2F2 !important' }, // Hover border color
-          "& input:-webkit-autofill": {
-            boxShadow: "0 0 0px 1000px transparent inset", // Transparent background
-            "-webkit-text-fill-color": "#F2F2F2",
-            backgroundColor: "transparent !important",
-            transition: "background-color 5000s ease-in-out 0s !important"
-          },
-          "& input:-webkit-autofill:focus": {
-            boxShadow: "0 0 0px 1000px transparent inset !important",
-            backgroundColor: "transparent !important",
-            "-webkit-text-fill-color": "#F2F2F2 !important",
-            transition: "background-color 5000s ease-in-out 0s !important"
-          },
-          "& input:-webkit-autofill:hover": {
-            boxShadow: "0 0 0px 1000px transparent inset !important",
-            backgroundColor: "transparent !important",
-            "-webkit-text-fill-color": "#F2F2F2 !important",
-            transition: "background-color 5000s ease-in-out 0s !important"
-          },
-          "& input": {
-            color: '#F2F2F2',
-          },
-          "& input::selection": {
-            color: '#F2F2F2',
-            backgroundColor: '#76B900',
-          },
-          // Style override when color="warning"
-          "&.MuiOutlinedInput-colorWarning fieldset": {
-            borderColor: '#f44336 !important',
-          },
-          "&.MuiOutlinedInput-colorWarning:hover fieldset": {
-            borderColor: '#ef5350 !important',
-          },
-          "&.MuiOutlinedInput-colorWarning.Mui-focused fieldset": {
-            borderColor: '#e53935 !important',
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          color: "#F2F2F2", // Idle label color
-          "&:hover": { color: '#F2F2F2' },
-          // Optionally, adjust focused label color for warning
-          "&.Mui-focused.MuiInputLabel-colorWarning": {
-            color: red[500],
-          },
-        },
-      },
-    },
-  },
-});
-
-const themecustom = createTheme({
-  components: {
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          variants: [
-            {
-              props: { color: 'warning' },
-              style: {
-                borderColor: red[400]
-              },
-            },
-          ],
-        },
-        OutlinedInput:{
-          varients:[
-            {
-              props:{ color: 'warning' },
-              style:{
-                borderColor: red[400]
-              }
-            }
-          ]
-        }
-      },
-    },
-  },
-});
 
 const themeTextfieldTouch = createTheme({
   palette: {
@@ -231,14 +62,24 @@ const themeButton=createTheme({
 
 function Login(){
     const [email,setEmail]=useState('');
+    const [emailError,setEmailError]=useState(false);
     const [password,setPassword]=useState('');
     const [buttonDisabled,setButtonDisabled]=useState(true);
     const userObj=useUserContext();
     const navigate=useNavigate();
-    
+    console.log('parent render');
     const emailHandler=(event)=>{
         setEmail(event.target.value);
     };
+    const validateEmailLocal=()=>{
+      const emailRegex=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      
+      if(emailRegex.test(email) ||email===''){
+          setEmailError(false);
+          return;
+      }
+      setEmailError(true);
+  }
     const passwordHandler=(event)=>{
         setPassword(event.target.value);
     };
@@ -253,7 +94,7 @@ function Login(){
             console.log(err);
         }
         
-    }
+    };
     const signupHandler=()=>{
         navigate('/signup');
     }
@@ -270,18 +111,14 @@ function Login(){
     },[email,password])
     
     return <div id='loginContainer' className='w-full h-full flex  items-center justify-center'>
-        <div className='bg-white rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient'>
-            <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>
-                <FloatingLabelInput/>
-                
-                <ThemeProvider theme={window.matchMedia('(hover:none) and (pointer:coarse)').matches?themeTextfieldTouch:themecustom}>
-                        <div className='w-[80%] my-8'>
-                            <TextField autoComplete='on' color='warning' label="Email" name='email' value={email} onChange={emailHandler} inputProps={{'type':'email', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
-                        </div>
-                        <div className='w-[80%] mb-8'>
-                            <TextField autoComplete='on' label="Password" name='password' value={password} onChange={passwordHandler} inputProps={{'type':'password', 'className':'focus:ring-[0px]'}} className='w-full'></TextField>
-                        </div>
-                </ThemeProvider>
+        <div className='rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient'>
+            <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>  
+              <div className='w-[80%] my-8'>
+                            <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label="Email" name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-full'/>
+              </div>
+              <div className='w-[80%] mb-8'>
+                            <FloatingLabelInput label="Password" name='password' value={password} onChange={passwordHandler} type='password' className='!w-full'/>
+              </div>  
                 <ThemeProvider theme={themeButton}>
                         <div className='w-[80%] mb-8 flex justify-between'>
                             <div></div>
