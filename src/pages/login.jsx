@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import FloatingLabelInput from '../components/customInput.jsx';
 import isEmail from 'validator/lib/isEmail';
+import Dust from '../components/animations/dust.jsx';
 
 const themeTextfieldTouch = createTheme({
   palette: {
@@ -136,7 +137,8 @@ function Login(){
     },[emailError,passwordError]);
     
     return <div id='loginContainer' className='w-full flex items-center justify-center flex-grow'>
-        <div className='rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient'>
+        <div className='relative rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient overflow-hidden'>
+            <Dust/>
             <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>  
               <div className='w-[80%] my-8'>
                             <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label="Email" name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-full'/>
