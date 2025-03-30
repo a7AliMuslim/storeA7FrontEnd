@@ -23,8 +23,8 @@
     height: 2px;
     width: 100px;
     opacity: 0;
-    background: linear-gradient(-45deg, white, rgba(0, 0, 255, 0));
-    filter: drop-shadow(0 0 6px white);
+    background: linear-gradient(-45deg, #76B900, rgba(0, 0, 255, 0));
+    filter: drop-shadow(0 0 6px #76B900);
     position: absolute;
     overflow: hidden;
   }

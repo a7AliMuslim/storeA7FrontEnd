@@ -9,7 +9,7 @@ function getAppliedStyle(status, ...colors){
 }
 
 
-const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1, value='', onChange=()=>{}, type='text', autoComplete='off', name='input', onBlur=()=>{}}) => {
+const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1, value='', onChange=()=>{}, type='text', autoComplete='off', name='input', onBlur=()=>{}, placeholder=''}) => {
     const [focused, setFocused] = useState(false);
     const focuseda=focused?true:false;
     const contentRef=useRef(null);
@@ -113,7 +113,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
     
 
   return (
-    <div ref={textFieldRef} className={`relative w-80 group backdrop-blur-sm ${className}`}>
+    <div ref={textFieldRef} className={`relative w-80 group inline-block backdrop-blur-sm ${className}`}>
         <motion.div ref={animatedBorderRef} className={`absolute inset-0 rounded-tr-lg rounded-bl-lg z-0 group-hover:border-transparent ${appliedStyle.border} ${appliedStyle.borderColor}`+(focused?' !border-transparent':'')}
             initial={{ clipPath: "polygon(0% 0%, 40% 50%, 60% 50%, 0% 0%, 0% 0%)" , opacity:0}}
             animate={{
@@ -135,6 +135,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
                 type={type}
                 value={value}
                 onChange={onChange}
+                placeholder={focused?placeholder:''}
                 autoComplete={autoComplete}
                 className={`flex-grow h-12 relative border-transparent focus:border-transparent focus:ring-[0px] bg-transparent ${appliedStyle.textColor} selection:${appliedStyle.selectionColor} selection:${appliedStyle.textColor}`}
                 onFocus={focusHandler}

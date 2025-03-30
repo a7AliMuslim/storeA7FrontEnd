@@ -1,10 +1,14 @@
 import React from 'react';
-import {useState, memo} from 'react';
+import {useState, memo, useCallback} from 'react';
 import { TextField, Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import axios from 'axios';
 import {cartStore} from '../../features/cart/cartStore';
+import isEmail from 'validator/lib/isEmail';
+import isMobilePhone from 'validator/lib/isMobilePhone';
+import isCreditCard from 'validator/lib/isCreditCard';
+import FloatingLabelInput from '../customInput';
 
 
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
@@ -82,9 +86,12 @@ const themeButton=createTheme({
 });
 
 const DeliveryDetails = ({deliveryTextRef}) => {
-        const [email,setEmail]=useState(null);
-        const [telephone,setTelephone]=useState(null);
-        const [cardNumber,setCardNumber]=useState(null);
+        const [email,setEmail]=useState('');
+        const [emailError,setEmailError]=useState(false);
+        const [telephone,setTelephone]=useState('');
+        const [telephoneError,setTelephoneError]=useState(false);
+        const [cardNumber,setCardNumber]=useState('');
+        const [cardNumberError,setCardNumberError]=useState(false);
         const [cardExpiration,setCardExpiration]=useState(null);
         const [cardExpirationMonth,setCardExpirationMonth]=useState(null);
         const [cardExpirationYear,setCardExpirationYear]=useState(null);
@@ -93,17 +100,60 @@ const DeliveryDetails = ({deliveryTextRef}) => {
         const [city, setCity]=useState(null);
         const [country, setCountry]=useState(null);
         const [postalCode, setPostalCode]=useState(null);
-        console.log('re-render ddetails')
+        
 
-        const emailChangeHandler=(event)=>{
-            setEmail(event.currentTarget.value);
-        }
-        const telephoneChangeHandler=(event)=>{
-            setTelephone(event.currentTarget.value);
-        }
-        const cardNumberChangeHandler=(event)=>{
-            setCardNumber(event.currentTarget.value);
-        }
+        const validateEmailLocal=useCallback((val=null)=>{
+            const tempEmail=val?val:email;
+            if(isEmail(tempEmail) ||tempEmail===''){
+                setEmailError(false);
+                return true;
+            }
+            setEmailError(true);
+            return false;
+        },[email]);
+
+        const emailHandler=useCallback((event)=>{
+            setEmail(event.target.value);
+            if(emailError){
+                validateEmailLocal(event.target.value);
+            }
+        },[emailError,validateEmailLocal]);
+
+        const validateTelephoneLocal=useCallback((val=null)=>{
+            const tempTelephone=val?val:telephone;
+            if(isMobilePhone(tempTelephone) ||tempTelephone===''){
+                setTelephoneError(false);
+                return true;
+            }
+            setTelephoneError(true);
+            return false;
+          },[telephone]);
+      
+        const telephoneHandler=useCallback((event)=>{
+            setTelephone(event.target.value);
+            if(telephoneError){
+                validateTelephoneLocal(event.target.value);
+            }
+        },[telephoneError,validateTelephoneLocal]);
+
+        const validateCardNumberLocal=useCallback((val=null)=>{
+            const tempCardNumber=val?val:cardNumber;
+            if(isCreditCard(tempCardNumber) ||tempCardNumber===''){
+                setCardNumberError(false);
+                return true;
+            }
+            setCardNumberError(true);
+            return false;
+          },[cardNumber]);
+      
+        const cardNumberHandler=useCallback((event)=>{
+            const value = event.target.value
+            setCardNumber(value);
+            if(cardNumberError){
+                validateCardNumberLocal(value);
+            }
+        },[cardNumberError,validateCardNumberLocal]);
+        
         const cardExpirationChangeHandler=(event)=>{
             const elemValue=event.target.value;
             if(elemValue.length<2){
@@ -165,16 +215,17 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-sm'>
                 <div name='contactInfo' className='w-full text-light-text pt-4 px-2'>
                     <p className='text-2xl my-2'>CONTACT INFORMATION</p>
-                    <ThemeProvider theme={themeTextfield}>
-                        <TextField autoComplete='on' label="Email" name='email' value={email} onChange={emailChangeHandler} color='primary' className='w-1/2' inputProps={{'type':'email', 'className':'focus:ring-[0px]'}}/>
 
-                        <TextField autoComplete='on' label="Ph. number" name='tel' value={telephone} onChange={telephoneChangeHandler} inputProps={{'type':'tel', 'className':'focus:ring-[0px]'}} className='w-1/2' />
-                    </ThemeProvider>
+                    <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label='Email' name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-1/2'/>
+    
+                    <FloatingLabelInput autoComplete='on' status={telephoneError?'error':'primary'} label='Ph. number' name='telephone' value={telephone} onChange={telephoneHandler} onBlur={validateTelephoneLocal} type='tel' className='!w-1/2'/>
+
                 </div>
                 <div name='paymentDetails' className='w-full text-light-text px-2 flex flex-col gap-2'>
                     <p className='text-2xl'>Payment details</p>
                     <ThemeProvider theme={themeTextfield}>
-                        <TextField autoComplete='on' label="Card No." name='paymentCard' value={cardNumber} onChange={cardNumberChangeHandler} inputProps={{'placeholder':'XXXX-XXXX-XXXX-XXXX', 'className':'focus:ring-[0px]'}} fullWidth={true}/>
+                        <FloatingLabelInput autoComplete='on' status={cardNumberError?'error':'primary'} label='Card No.' name='cardnumber' value={cardNumber} onChange={cardNumberHandler} onBlur={validateCardNumberLocal} placeholder='XXXX-XXXX-XXXX-XXXX' className='!w-full'/>
+
                     </ThemeProvider>
                     <div className='flex'>
                         <ThemeProvider theme={themeTextfield}>

@@ -84,15 +84,15 @@ const DustParticles = ({dustCount=40}) => {
           easing: "easeInOutQuad",
           complete:animateParticles
         })
-    },4000)
+    },3500)
   
     
     
   },[dustCount])
   useEffect(() => {
-      setAnimation();
+      setTimeout(()=>setAnimation(),100);
       const handleResize=()=>{
-        setAnimation();
+        setTimeout(()=>setAnimation(),100);
       }
       window.addEventListener('resize',handleResize);
       return ()=>{

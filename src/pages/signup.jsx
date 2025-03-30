@@ -165,21 +165,21 @@ function Signup(){
         }
     },[emailError,passwordError,userValidated])
     return <div id='signupContainer' className='w-full flex-grow flex  items-center justify-center'>
-        <div className='relative rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video grid-lines-dark-gradient  flex  items-center justify-center'>
+        <div className='relative rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video grid-lines-dark-gradient overflow-hidden flex  items-center justify-center'>
             <Dust dustCount={20}/>
-            <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>
-                <div className='w-[80%] my-8'>
+            <div className='w-[90%] aspect-video flex flex-col justify-center items-center gap-6'>
+                <div className='w-[80%]'>
                     <FloatingLabelInput autoComplete='on' status={userNameError?'error':'primary'} label={<span className='flex items-center gap-1'>User Name {userNameError?errorIcon:null}</span>} name='userName' value={userName} onChange={userNameHandler} type='text' adornament={showLoadingArrow?<LoadingIcon className='size-5'/>:<LoadingIcon className='size-5 hidden'/>} className='!w-full'/>
                 </div>
-                <div className='w-[80%] mb-8'>
+                <div className='w-[80%]'>
                     <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label='Email' name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-full'/>
                 </div>
-                <div className='w-[80%] mb-8'>
+                <div className='w-[80%]'>
                     <FloatingLabelInput status={passwordError?'error':'primary'} label='Password' name='password' value={password} onChange={passwordHandler} onBlur={validatePasswordLocal} type='password' className='!w-full'/>            
                 </div>
                 
                 <ThemeProvider theme={themeButton}>
-                        <div className='w-[80%] mb-8 flex justify-between'>
+                        <div className='w-[80%] flex justify-between'>
                             <div></div>
                             <div>
                                 <Button className='!mr-2' disabled={buttonDisabled} onClick={signupHandler} variant="contained" >Sign up</Button>

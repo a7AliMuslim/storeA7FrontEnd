@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 import anime from "animejs";
 import "./meteorShowerCss.css";
 
@@ -45,7 +45,7 @@ const StarrySky = ({
         const compAppStyle=window.getComputedStyle(document.getElementById(appContainerId));
         meteorContainerRef.current.style.width=compAppStyle.width;
         skyRef.current.style.width=compAppStyle.width;
-        console.log()
+        
         if(parseFloat(compAppStyle.height)>window.innerHeight){
           meteorContainerRef.current.style.height=window.innerHeight+'px';
           skyRef.current.style.height=window.innerHeight+'px';
@@ -102,7 +102,7 @@ const StarrySky = ({
             cx={getRandomX()}
             cy={getRandomY()}
             r={randomRadius()}
-            fill="white"
+            fill="#76B900"
             className="star"
           />
         ))}
@@ -111,7 +111,7 @@ const StarrySky = ({
         {[...Array(numOfMeteors)].map((_, i) => (
           <div
             key={i}
-            className="starfal absolute bg-white h-[2px] opacity-0"
+            className="starfal absolute bg-nvidia-green h-[2px] opacity-0"
             style={{ left: `${getRandomY()}px`, top: `${getRandomX()}px` }}
           />
         ))}
@@ -120,4 +120,4 @@ const StarrySky = ({
   );
 };
 
-export default StarrySky;
+export default memo(StarrySky);
