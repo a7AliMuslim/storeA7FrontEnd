@@ -38,6 +38,7 @@ module.exports = {
     '!text-red-600',
     'group-hover:!text-red-400',
     'group-hover:!border-red-400',
+    'w-12'
     
   ],
 

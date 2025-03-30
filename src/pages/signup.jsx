@@ -7,9 +7,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, indigo, red } from '@mui/material/colors';
 import LoadingIcon from '../components/arrowPath.jsx';
 import PasswordValidator from "password-validator";
+import FloatingLabelInput from '../components/customInput.jsx';
 
-const errorIcon=<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+const errorIcon=<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className='size-4'>
+  <path strokeLinecap="round" strokeLineJoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
 </svg>
 
 const schema = new PasswordValidator();
@@ -60,7 +61,7 @@ function Signup(){
     const [password,setPassword]=useState('');
     const [buttonDisabled,setButtonDisabled]=useState(true);
     const [userValidated,setUserValidated]=useState(false);
-    const [userNameColor,setUserNameColor]=useState('primary');
+    const [userNameError,setUserNameError]=useState(false);
     const [currentTimerId,setCurrentTimerId]=useState(null);
     const [showLoadingArrow,setShowLoadingArrow]=useState(false);
     const [controller,setController]=useState(new AbortController());
@@ -115,7 +116,7 @@ function Signup(){
             setShowLoadingArrow(false);
             if(response.status===200){
                 setUserValidated(true);
-                setUserNameColor('primary');
+                setUserNameError('primary');
                 console.log('valid');
             }
         }catch(err){
@@ -126,7 +127,7 @@ function Signup(){
             if(err.response){
                 if(err.response.status===409){
                     setUserValidated(false);
-                    setUserNameColor('warning');
+                    setUserNameError('warning');
                     console.log('invalid');
                 }
                 
@@ -154,22 +155,23 @@ function Signup(){
     }
     
     useEffect(()=>{
-        const appContainerHeight=parseInt(getComputedStyle(document.getElementById('app')).height);
-        const header1Height=parseInt(getComputedStyle(document.getElementById('header1')).height);
-        const header2Height=parseInt(getComputedStyle(document.getElementById('header2')).height);
-        document.getElementById('signupContainer').style.height=appContainerHeight-header1Height-header2Height+'px'
+        
+        
         if(emailError||passwordError||userValidated===false||email===''||password===''){
             setButtonDisabled(true);
         }else{
             setButtonDisabled(false);
         }
-    },[email,emailError,password,passwordError,userValidated,userName,userNameColor,controller,showLoadingArrow,currentTimerId])
-    return <div id='signupContainer' className='w-full h-full flex  items-center justify-center'>
-        <div className='bg-white rounded-3xl w-[45%] aspect-video drop-shadow-2xl flex  items-center justify-center'>
-            <div className='bg-white w-[90%] aspect-video flex flex-col justify-center items-center'>
+    },[email,emailError,password,passwordError,userValidated,userName,userNameError,controller,showLoadingArrow,currentTimerId])
+    return <div id='signupContainer' className='w-full flex-grow flex  items-center justify-center'>
+        <div className='relative rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video grid-lines-dark-gradient  flex  items-center justify-center'>
+            <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>
                 <ThemeProvider theme={themeTextfield}>
                         <div className='w-[80%] my-8'>
-                            <TextField autoComplete='on' color={userNameColor} label={<span className='flex items-center gap-1'>User Name {userNameColor==='warning'?errorIcon:null}</span>} name='userName' value={userName} onChange={userNameHandler} inputProps={{type:'text', className:'focus:ring-[0px]'}} InputProps={{endAdornment:(<InputAdornment>{showLoadingArrow?<LoadingIcon className='size-5'/>:<LoadingIcon className='size-5 invisible'/>}</InputAdornment>)}} className='w-full'></TextField>
+                            <FloatingLabelInput autoComplete='on' status={userNameError?'error':'primary'} label={<span className='flex items-center gap-1'>User Name {userNameError?errorIcon:null}</span>} name='userName' value={userName} onChange={userNameHandler} type='text' adornament={showLoadingArrow?<LoadingIcon className='size-5'/>:<LoadingIcon className='size-5 hidden'/>} className='!w-full'/>
+
+
+                            
                         </div>
                         <div className='w-[80%] mb-8'>
                             <TextField autoComplete='on' color={emailError?'warning':'primary'} label="Email" name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} inputProps={{'type':'email', 'className':'focus:ring-[0px]'}} className='w-full' focused={emailError?true:false}></TextField>

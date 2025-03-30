@@ -2,26 +2,11 @@ import { useState, useRef, useEffect , useCallback, memo, useId} from "react";
 import { motion } from "framer-motion";
 
 
-function getTextWidth(text, rem, font = "Arial") {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    // Convert rem to pixels based on the root font size
-    const fontSizePx = rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-    
-    ctx.font = `${fontSizePx}px ${font}`;
-    return ctx.measureText(text).width;
-}
-
-
 function getAppliedStyle(status, ...colors){
     return colors.find(color=>{
         return color.status===status?true:false;
     })
 }
-
-
-
 
 
 const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1, value='', onChange=()=>{}, type='text', autoComplete='off', name='input', onBlur=()=>{}}) => {
@@ -91,9 +76,14 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
             const input=inputRef.current;
             const animatedBorder=animatedBorderRef.current;
             const left = contentRect.left -textFieldRect.left;
-            const width=getTextWidth(contentRef.current.innerText,0.75)+6+'px';
+            let width;
+            if(focused){
+                width=(contentRef.current.getBoundingClientRect().width)+6+'px'
+            }else{
+                width=(contentRef.current.getBoundingClientRect().width*0.75)+6+'px'
+            }
             const height='1rem';
-    
+            
             
             input.style.maskPosition=`100% 100%, ${left-3}px 0px`;
             input.style.maskSize=`100% 100%, ${width} ${height}`;
@@ -107,7 +97,8 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
             animatedBorder.style.maskRepeat = 'no-repeat, no-repeat'
             animatedBorder.style.maskComposite='exclude';
         }
-    },[label, className, primaryUpdate,errorUpdate])
+    },[label, className, JSON.stringify(primaryUpdate),JSON.stringify(errorUpdate)])
+
     
     useEffect(()=>{
         setTextCutoffDimensions()
@@ -149,7 +140,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
                 onFocus={focusHandler}
                 onBlur={blurHandle}
             />
-            <div className="max-h-12 aspect-square">
+            <div className={`aspect-square flex items-center justify-center group-hover:!${appliedStyle.labelHover} ${appliedStyle.labelColor} `+(focuseda?` !${appliedStyle.labelFocus} `:'')+(adornament?' w-12':'')}>
                 {
                     adornament
                 }

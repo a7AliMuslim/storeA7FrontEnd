@@ -18,7 +18,6 @@ const DustParticles = () => {
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement("div");
       particle.classList.add("particle");
-      console.log(getRandomY()+'px');
       particle.style.top=getRandomY()+'px';
       particle.style.left=getRandomX()+'px';
       particle.style.opacity=0;
