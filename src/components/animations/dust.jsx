@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, memo } from "react";
+import React, { useEffect, useRef, memo, useCallback } from "react";
 import anime from "animejs";
 
-const DustParticles = () => {
+const DustParticles = ({dustCount=40}) => {
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    const particleCount = 40;
+  const setAnimation=useCallback(()=>{
+    const particleCount = dustCount;
     const particles = [];
     const container = containerRef.current;
+    container.innerHTML='';
 
+    console.log('hit');
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
 
@@ -29,23 +31,48 @@ const DustParticles = () => {
         anime({
           targets: ".particle",
           translateX: [
-            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(2999, 6000) },
-            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(2999, 6000), easing: "easeInOutSine" }
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
           ],
           translateY: [
-            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(2999, 6000) },
-            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(2999, 6000), easing: "easeInOutSine" }
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-containerHeight / 2, containerHeight / 2), duration: anime.random(5500, 6000), easing: "easeInOutSine" },
           ],
           translateZ: [
-            { value: () => anime.random(-50, 50), duration: anime.random(2999, 6000) },
-            { value: () => anime.random(-50, 50), duration: anime.random(2999, 6000) }
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
+            { value: () => anime.random(-50, 50), duration: anime.random(5500, 6000) },
           ],
           scale: () => anime.random(0.5, 1.5),
           opacity: () => anime.random(0.3, 1),
           easing: "easeInOutSine",
-          duration: anime.random(5500, 6000),
+          duration: anime.random(45000, 60000),
           loop: 1,
-          direction: "alternate",
+          delay: anime.stagger(500, 15000),
+          //direction: "alternate",
           complete: animateParticles
         });
       };
@@ -60,8 +87,18 @@ const DustParticles = () => {
     },4000)
   
     
-      
-  }, []);
+    
+  },[dustCount])
+  useEffect(() => {
+      setAnimation();
+      const handleResize=()=>{
+        setAnimation();
+      }
+      window.addEventListener('resize',handleResize);
+      return ()=>{
+        window.addEventListener('resize',handleResize);
+      }
+  }, [setAnimation]);
 
   return (
     <div className="absolute w-full h-full flex items-center justify-center z-0">

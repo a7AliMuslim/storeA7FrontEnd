@@ -138,13 +138,13 @@ function Login(){
     
     return <div id='loginContainer' className='w-full flex items-center justify-center flex-grow'>
         <div className='relative rounded-tl-[4rem] rounded-br-[4rem] w-[45%] aspect-video flex  items-center justify-center touch:w-[95%] grid-lines-dark-gradient overflow-hidden'>
-            <Dust/>
+            <Dust dustCount={20}/>
             <div className='w-[90%] aspect-video flex flex-col justify-center items-center'>  
               <div className='w-[80%] my-8'>
-                            <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label="Email" name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-full'/>
+                <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label="Email" name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-full'/>
               </div>
               <div className='w-[80%] mb-8'>
-                            <FloatingLabelInput status={passwordError?'error':'primary'} label="Password" name='password' value={password} onChange={passwordHandler} onBlur={validatePasswordLocal} type='password' className='!w-full'/>
+                <FloatingLabelInput status={passwordError?'error':'primary'} label="Password" name='password' value={password} onChange={passwordHandler} onBlur={validatePasswordLocal} type='password' className='!w-full'/>
               </div>  
                 <ThemeProvider theme={themeButton}>
                         <div className='w-[80%] mb-8 flex justify-between'>
