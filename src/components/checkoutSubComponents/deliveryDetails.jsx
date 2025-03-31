@@ -92,7 +92,8 @@ const DeliveryDetails = ({deliveryTextRef}) => {
         const [telephoneError,setTelephoneError]=useState(false);
         const [cardNumber,setCardNumber]=useState('');
         const [cardNumberError,setCardNumberError]=useState(false);
-        const [cardExpiration,setCardExpiration]=useState(null);
+        const [cardExpiration,setCardExpiration]=useState('');
+        const [cardExpirationError,setCardExpirationError]=useState(false);
         const [cardExpirationMonth,setCardExpirationMonth]=useState(null);
         const [cardExpirationYear,setCardExpirationYear]=useState(null);
         const [cvc, setCvc]=useState(null);
@@ -114,6 +115,10 @@ const DeliveryDetails = ({deliveryTextRef}) => {
 
         const emailHandler=useCallback((event)=>{
             setEmail(event.target.value);
+            if(event.target.value===''){
+                setEmailError(false);
+                return;
+            }
             if(emailError){
                 validateEmailLocal(event.target.value);
             }
@@ -131,6 +136,10 @@ const DeliveryDetails = ({deliveryTextRef}) => {
       
         const telephoneHandler=useCallback((event)=>{
             setTelephone(event.target.value);
+            if(event.target.value===''){
+                setTelephoneError(false);
+                return;
+            }
             if(telephoneError){
                 validateTelephoneLocal(event.target.value);
             }
@@ -149,30 +158,66 @@ const DeliveryDetails = ({deliveryTextRef}) => {
         const cardNumberHandler=useCallback((event)=>{
             const value = event.target.value
             setCardNumber(value);
+            if(value===''){
+                setCardNumberError(false);
+                return;
+            }
             if(cardNumberError){
                 validateCardNumberLocal(value);
             }
         },[cardNumberError,validateCardNumberLocal]);
-        
-        const cardExpirationChangeHandler=(event)=>{
-            const elemValue=event.target.value;
-            if(elemValue.length<2){
-                setCardExpirationMonth(elemValue);
-                setCardExpiration(elemValue);
-            }else if(elemValue.length==2){
-                if(elemValue.length<cardExpiration.length){
-                    setCardExpiration(elemValue.slice(0,1));
-                    console.log(elemValue);
-                    return;
-                }
-                setCardExpiration(elemValue+'/');
-                setCardExpirationMonth(elemValue);
-            }else if(elemValue.length>2){
-                setCardExpiration(elemValue.slice(0,5));
-                setCardExpirationYear(elemValue.slice(3,5));
+
+
+        const validateCardExpirationLocal=useCallback((val=null)=>{
+            console.log(val==='');
+            const tempCardExpiration=val?val:cardExpiration;
+            console.log(tempCardExpiration);
+            if(tempCardExpiration===''){
+                setCardExpirationError(false);
+                return true;
             }
-            console.log(elemValue); 
-        }
+            const [month,year] = tempCardExpiration.split('/').map(part=>parseFloat(part));
+            if(!month || !year) return;
+            const currentYear = new Date().getFullYear() % 100; 
+            const currentMonth = new Date().getMonth() + 1;
+            console.log('month',month,'year',year,'currentMonth',currentMonth,'currentYear',currentYear);
+            if(month>12){
+                console.log('month>12');
+                setCardExpirationError(true);
+                return false;
+            } 
+            if(year<currentYear){
+                console.log('year<currentYear');
+                setCardExpirationError(true);
+                return false;
+            }
+            if(year===currentYear&&month<currentMonth){
+                console.log('year===currentYear&&month<currentMonth');
+                setCardExpirationError(true);
+                return false; 
+            }
+            
+            setCardExpirationError(false);
+            return true;
+          },[cardExpiration]);
+      
+        const cardExpirationHandler=useCallback((event)=>{
+            let value = event.target.value.replace(/\D/g, ""); 
+            if (value.length > 4) return; 
+            if (value.length > 2) {
+                value = value.slice(0, 2) + "/" + value.slice(2);
+            }
+    
+            setCardExpiration(value);
+            if(value===''){
+                setCardExpirationError(false);
+                return;
+            }
+            if(cardExpirationError){
+                validateCardExpirationLocal(value);
+            }
+        },[cardExpirationError,validateCardExpirationLocal]);
+        
         const cvcChangeHandler=(event)=>{
             if(isNaN(event.currentTarget.value)){
                 return;
@@ -224,12 +269,15 @@ const DeliveryDetails = ({deliveryTextRef}) => {
                 <div name='paymentDetails' className='w-full text-light-text px-2 flex flex-col gap-2'>
                     <p className='text-2xl'>Payment details</p>
                     <ThemeProvider theme={themeTextfield}>
-                        <FloatingLabelInput autoComplete='on' status={cardNumberError?'error':'primary'} label='Card No.' name='cardnumber' value={cardNumber} onChange={cardNumberHandler} onBlur={validateCardNumberLocal} placeholder='XXXX-XXXX-XXXX-XXXX' className='!w-full'/>
+                        <FloatingLabelInput autoComplete='on' status={cardNumberError?'error':'primary'} label='Card No.' name='cardnumber' value={cardNumber} onChange={cardNumberHandler} onBlur={validateCardNumberLocal} placeholder='12345...' className='!w-full'/>
 
                     </ThemeProvider>
                     <div className='flex'>
                         <ThemeProvider theme={themeTextfield}>
-                            <TextField autoComplete='on' label="Expiration date" name='cardExpiration' value={cardExpiration} onChange={cardExpirationChangeHandler} inputProps={{'placeholder':'MM/YY','className':'focus:ring-[0px]'}} fullWidth={true} className='basis-2/3'/>
+                            <FloatingLabelInput autoComplete='on' status={cardExpirationError?'error':'primary'} label='Expiration date' name='cardExpiration' value={cardExpiration} onChange={cardExpirationHandler} onBlur={validateCardExpirationLocal} placeholder='MM/YY' className='!w-2/3'/>
+
+
+                            
                             <TextField autoComplete='on' label="CVC" name='CVC' value={cvc} onChange={cvcChangeHandler} inputProps={{'placeholder':'CVC', 'className':'focus:ring-[0px]'}} fullWidth={true} className='basis-1/3'/>
                         </ThemeProvider>
                     </div>

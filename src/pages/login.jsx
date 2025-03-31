@@ -82,6 +82,10 @@ function Login(){
     },[email]);
     const emailHandler=useCallback((event)=>{
         setEmail(event.target.value);
+        if(event.target.value===''){
+          setEmailError(false);
+          return
+        }
         if(emailError){
           validateEmailLocal(event.target.value);
         }
@@ -98,6 +102,10 @@ function Login(){
     },[password]);
     const passwordHandler=useCallback((event)=>{
         setPassword(event.target.value);
+        if(event.target.value===''){
+          setPasswordError(false);
+          return;
+        }
         if(passwordError){
           validatePasswordLocal(event.target.value);
         }

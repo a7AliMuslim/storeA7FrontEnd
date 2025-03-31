@@ -70,6 +70,10 @@ function Signup(){
 
     const emailHandler=useCallback((event)=>{
         setEmail(event.target.value);
+        if(event.target.value===''){
+            setEmailError(false);
+            return;
+        }
         if(emailError){
           validateEmailLocal(event.target.value);
         }
@@ -94,6 +98,10 @@ function Signup(){
     },[password]);
     const passwordHandler=useCallback((event)=>{
         setPassword(event.target.value);
+        if(event.target.value===''){
+            setPasswordError(false);
+            return;
+        }
         if(passwordError){
             validatePasswordLocal(event.target.value);
         }
