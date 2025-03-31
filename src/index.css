@@ -6,6 +6,17 @@
 @tailwind utilities;
 
 @layer utilities {
+    @keyframes onAutoFillStart {
+        from {}
+        to {}
+    }
+
+    @keyframes onAutoFillEndStart {
+        from {}
+        to {}
+    }
+      
+    
     .grid-lines-green-gradient{
         background: url("/public/axiom-pattern-thick.png"), linear-gradient(to bottom, #76B900, #2C2A34);
     }
@@ -105,6 +116,14 @@
         -webkit-text-fill-color: #F2F2F2 ; 
         background-color: transparent ;
         transition: background-color 5000s ease-in-out 0s ;
+        animation-name: onAutoFillStart;
+        animation-duration: 0.001s;
+        animation-iteration-count: 1;
+    }
+    input {
+        animation-name: onAutoFillEndStart;
+        animation-duration: 0.001s;
+        animation-iteration-count: 1;
     }
   
     
