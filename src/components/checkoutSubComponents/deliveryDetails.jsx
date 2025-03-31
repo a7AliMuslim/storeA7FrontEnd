@@ -1,8 +1,7 @@
 import React from 'react';
-import {useState, memo, useCallback} from 'react';
-import { TextField, Button } from '@mui/material';
+import {useState, memo, useCallback, useEffect} from 'react';
+import { Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey, red } from '@mui/material/colors';
 import axios from 'axios';
 import {cartStore} from '../../features/cart/cartStore';
 import isEmail from 'validator/lib/isEmail';
@@ -12,75 +11,16 @@ import FloatingLabelInput from '../customInput';
 
 
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
-const themeTextfield = createTheme({
-    palette: {
-      primary: {
-          main:'#F2F2F2',
-          light:'#F2F2F2',
-          dark:'#F2F2F2',
-          contrastText: grey[100],
-      },
-      warning:{
-          main:red[800],
-          light:grey[200],
-          dark:grey[900],
-          contrastText: grey[900],
-      }
-    },
-    components: {
-        MuiOutlinedInput: {
-          styleOverrides: {
-            root: {
-                "& fieldset": { borderColor: '#FFFFFF38' }, // Idle border color
-                "&:hover fieldset": { borderColor: '#F2F2F2 !important' }, // Hover border color
-                "& input:-webkit-autofill": {
-                    boxShadow: "0 0 0px 1000px transparent inset", // Transparent background
-                    "-webkit-text-fill-color": "#F2F2F2", // White text color
-                    backgroundColor: "transparent !important",
-                    transition: "background-color 5000s ease-in-out 0s !important"
-                },
-                "& input:-webkit-autofill:focus": {
-                    boxShadow: "0 0 0px 1000px transparent inset !important",
-                    backgroundColor: "transparent !important",
-                    "-webkit-text-fill-color": "#F2F2F2 !important",
-                    transition: "background-color 5000s ease-in-out 0s !important"
-                },
-                "& input:-webkit-autofill:hover": {
-                    boxShadow: "0 0 0px 1000px transparent inset !important",
-                    backgroundColor: "transparent !important",
-                    "-webkit-text-fill-color": "#F2F2F2 !important",
-                    transition: "background-color 5000s ease-in-out 0s !important"
-                },
-                "& input":{
-                    color: '#F2F2F2',
-                },
-                "& input::selection":{
-                    color: '#F2F2F2',
-                    backgroundColor:'#76B900',
-                }
-            },
-          },
-        },
-        MuiInputLabel: {
-          styleOverrides: {
-            root: {
-              color: "#F2F2F2", // Idle label color
-              "&:hover": { color: '#F2F2F2' }, // Hover label color
-              //"&.Mui-focused": { color: "green" }, // Focus label color
-            },
-          },
-        },
-      },
-});
+
 
 const themeButton=createTheme({
     palette: {
       primary: {
           main:'#76B900',
-          light:grey[300],
-          dark:'#598D00',
-          contrastText: grey[200],
-      }
+          light:'#F0F0F0',
+          dark:'#2C2A34',
+          contrastText: '#F0F0F0',
+      },
       
     },
 });
@@ -94,13 +34,17 @@ const DeliveryDetails = ({deliveryTextRef}) => {
         const [cardNumberError,setCardNumberError]=useState(false);
         const [cardExpiration,setCardExpiration]=useState('');
         const [cardExpirationError,setCardExpirationError]=useState(false);
-        const [cardExpirationMonth,setCardExpirationMonth]=useState(null);
-        const [cardExpirationYear,setCardExpirationYear]=useState(null);
-        const [cvc, setCvc]=useState(null);
-        const [address, setAddress]=useState(null);
-        const [city, setCity]=useState(null);
-        const [country, setCountry]=useState(null);
-        const [postalCode, setPostalCode]=useState(null);
+        const [cvc, setCvc]=useState('');
+        const [cvcError, setCvcError]=useState(false);
+        const [address, setAddress]=useState('');
+        const [addressError, setAddressError]=useState(false);
+        const [city, setCity]=useState('');
+        const [cityError, setCityError]=useState(false);
+        const [country, setCountry]=useState('');
+        const [countryError, setCountryError]=useState(false);
+        const [postalCode, setPostalCode]=useState('');
+        const [postalCodeError, setPostalCodeError]=useState(false);
+        const [submitButtonDisabled, setSubmitButtonDisabled]=useState(false);
         
 
         const validateEmailLocal=useCallback((val=null)=>{
@@ -112,7 +56,6 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             setEmailError(true);
             return false;
         },[email]);
-
         const emailHandler=useCallback((event)=>{
             setEmail(event.target.value);
             if(event.target.value===''){
@@ -132,8 +75,7 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             }
             setTelephoneError(true);
             return false;
-          },[telephone]);
-      
+        },[telephone]);
         const telephoneHandler=useCallback((event)=>{
             setTelephone(event.target.value);
             if(event.target.value===''){
@@ -154,7 +96,6 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             setCardNumberError(true);
             return false;
           },[cardNumber]);
-      
         const cardNumberHandler=useCallback((event)=>{
             const value = event.target.value
             setCardNumber(value);
@@ -167,9 +108,7 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             }
         },[cardNumberError,validateCardNumberLocal]);
 
-
         const validateCardExpirationLocal=useCallback((val=null)=>{
-            console.log(val==='');
             const tempCardExpiration=val?val:cardExpiration;
             console.log(tempCardExpiration);
             if(tempCardExpiration===''){
@@ -180,27 +119,22 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             if(!month || !year) return;
             const currentYear = new Date().getFullYear() % 100; 
             const currentMonth = new Date().getMonth() + 1;
-            console.log('month',month,'year',year,'currentMonth',currentMonth,'currentYear',currentYear);
             if(month>12){
-                console.log('month>12');
                 setCardExpirationError(true);
                 return false;
             } 
             if(year<currentYear){
-                console.log('year<currentYear');
                 setCardExpirationError(true);
                 return false;
             }
             if(year===currentYear&&month<currentMonth){
-                console.log('year===currentYear&&month<currentMonth');
                 setCardExpirationError(true);
                 return false; 
             }
             
             setCardExpirationError(false);
             return true;
-          },[cardExpiration]);
-      
+          },[cardExpiration]);      
         const cardExpirationHandler=useCallback((event)=>{
             let value = event.target.value.replace(/\D/g, ""); 
             if (value.length > 4) return; 
@@ -218,32 +152,79 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             }
         },[cardExpirationError,validateCardExpirationLocal]);
         
-        const cvcChangeHandler=(event)=>{
-            if(isNaN(event.currentTarget.value)){
-                return;
-            }
-            let val=Math.round(event.currentTarget.value);
-            if(val===0){
-                val=''
-            }else{
-               val=''+val; 
-            }
-            setCvc(val.slice(0,3));
+        const cvcHandler=(event)=>{
+            const value = event.target.value.replace(/\D/g, "");
+            if(value.length>4) return;
+            setCvc(value);
         }
-        const addressChangeHandler=(event)=>{
-                setAddress(event.currentTarget.value);
-                console.log(event.currentTarget.value);
+
+        const addressHandler=(event)=>{
+            setAddress(event.target.value);
         }
-        const cityChangeHandler=(event)=>{
-                setCity(event.currentTarget.value);
+
+        const cityHandler=(event)=>{
+            setCity(event.target.value);
         }
-        const countryChangeHandler=(event)=>{
-                setCountry(event.currentTarget.value);
+
+        const countryHandler=(event)=>{
+            setCountry(event.target.value);
         }
-        const postalChangeHandler=(event)=>{
-                setPostalCode(event.currentTarget.value);
+
+        const postalCodeHandler=(event)=>{
+            setPostalCode(event.target.value);
         }
         const submitOrderHandler=()=>{
+            let anyEmpty=false;
+            if(email===''){
+                setEmailError(true);
+                anyEmpty=true;
+            }
+            if(telephone===''){
+                setTelephoneError(true);
+                anyEmpty=true;
+            }
+            if(cardNumber===''){
+                setCardNumberError(true);
+                anyEmpty=true;
+            }
+            if(cardExpiration===''){
+                setCardExpirationError(true);
+                anyEmpty=true;
+            }
+            if(cvc===''){
+                setCvcError(true);
+                anyEmpty=true;
+            }
+            if(address===''){
+                setAddressError(true);
+                anyEmpty=true;
+            }
+            if(city===''){
+                setCityError(true);
+                anyEmpty=true;
+            }
+            if(country===''){
+                setCountryError(true);
+                anyEmpty=true;
+            }
+            if(postalCode===''){
+                setPostalCodeError(true);
+                anyEmpty=true;
+            }
+            if(anyEmpty){
+                return;
+            }
+            const customerInfo={
+                email,
+                telephone,
+                cardNumber,
+                cardExpiration,
+                cvc,
+                address,
+                city,
+                country,
+                postalCode
+            }
             const submit=async ()=>{
                 try{
                     const products=cartStore.getState().cart.products;
@@ -255,6 +236,13 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             }
             submit();
         }
+        useEffect(()=>{
+            if(emailError||telephoneError||cardNumberError||cardExpirationError||cvcError||addressError||cityError||countryError||postalCodeError){
+                setSubmitButtonDisabled(true);
+                return;
+            }
+            setSubmitButtonDisabled(false);
+        },[emailError,telephoneError,cardNumberError,cardExpirationError,cvcError,addressError,cityError,countryError,postalCodeError])
   return (
         <>
             <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-sm'>
@@ -268,32 +256,19 @@ const DeliveryDetails = ({deliveryTextRef}) => {
                 </div>
                 <div name='paymentDetails' className='w-full text-light-text px-2 flex flex-col gap-2'>
                     <p className='text-2xl'>Payment details</p>
-                    <ThemeProvider theme={themeTextfield}>
-                        <FloatingLabelInput autoComplete='on' status={cardNumberError?'error':'primary'} label='Card No.' name='cardnumber' value={cardNumber} onChange={cardNumberHandler} onBlur={validateCardNumberLocal} placeholder='12345...' className='!w-full'/>
-
-                    </ThemeProvider>
+                    <FloatingLabelInput autoComplete='on' status={cardNumberError?'error':'primary'} label='Card No.' name='cardnumber' value={cardNumber} onChange={cardNumberHandler} onBlur={validateCardNumberLocal} placeholder='12345...' className='!w-full'/>                    
                     <div className='flex'>
-                        <ThemeProvider theme={themeTextfield}>
-                            <FloatingLabelInput autoComplete='on' status={cardExpirationError?'error':'primary'} label='Expiration date' name='cardExpiration' value={cardExpiration} onChange={cardExpirationHandler} onBlur={validateCardExpirationLocal} placeholder='MM/YY' className='!w-2/3'/>
-
-
-                            
-                            <TextField autoComplete='on' label="CVC" name='CVC' value={cvc} onChange={cvcChangeHandler} inputProps={{'placeholder':'CVC', 'className':'focus:ring-[0px]'}} fullWidth={true} className='basis-1/3'/>
-                        </ThemeProvider>
-                    </div>
-                    
+                        <FloatingLabelInput autoComplete='on' status={cardExpirationError?'error':'primary'} label='Expiration date' name='cardExpiration' value={cardExpiration} onChange={cardExpirationHandler} onBlur={validateCardExpirationLocal} placeholder='MM/YY' className='!w-2/3'/>
+                        <FloatingLabelInput autoComplete='on' status={cvcError?'error':'primary'} label='CVC' name='cvc' value={cvc} onChange={cvcHandler} placeholder='CVC' className='!w-1/3'/>
+                    </div>   
                 </div>
                 <div name='address' className='w-full text-light-text rounded-3xl pb-4 px-2 flex flex-col gap-2'>
                     <p className='text-2xl'>Shipping address</p>
-                    <ThemeProvider theme={themeTextfield}>
-                        <TextField autoComplete='on' label="Address" name='address' value={address} onChange={addressChangeHandler} fullWidth={true} inputProps={{'className':'focus:ring-[0px]'}}/>
-                    </ThemeProvider>
+                    <FloatingLabelInput autoComplete='on' status={addressError?'error':'primary'} label='Address' name='address' value={address} onChange={addressHandler} className='!w-full'/>
                     <div className='flex'>
-                        <ThemeProvider theme={themeTextfield}>                                
-                            <TextField autoComplete='on' label="City" name='city' value={city} onChange={cityChangeHandler} fullWidth={true} className='basis-1/3' inputProps={{'className':'focus:ring-[0px]'}}/>
-                            <TextField autoComplete='on' label="Country/State" name='country/state' value={country} onChange={countryChangeHandler} fullWidth={true} className='basis-1/3' inputProps={{'className':'focus:ring-[0px]'}}/>
-                            <TextField autoComplete='on' label="Postal code" name='postalCode' value={postalCode} onChange={postalChangeHandler} fullWidth={true} className='basis-1/3' inputProps={{'className':'focus:ring-[0px]'}}/>
-                        </ThemeProvider>
+                        <FloatingLabelInput autoComplete='on' status={cityError?'error':'primary'} label='City' name='city' value={city} onChange={cityHandler} className='!w-1/3'/>
+                        <FloatingLabelInput autoComplete='on' status={countryError?'error':'primary'} label='Country/State' name='country' value={country} onChange={countryHandler} className='!w-1/3'/>
+                        <FloatingLabelInput autoComplete='on' status={postalCodeError?'error':'primary'} label='Postal code' name='postalCode' value={postalCode} onChange={postalCodeHandler} className='!w-1/3'/>
                     </div>    
                 </div>
             </div>
