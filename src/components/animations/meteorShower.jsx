@@ -145,3 +145,4 @@ const StarrySky = ({
 };
 
 export default memo(StarrySky);
+export {shootingStarsAnimation,starryNightAnimation}

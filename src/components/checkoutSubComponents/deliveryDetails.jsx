@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, memo, useCallback, useEffect} from 'react';
-import { Button } from '@mui/material';
+import { Modal, Box, Button, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import {cartStore} from '../../features/cart/cartStore';
@@ -8,9 +8,10 @@ import isEmail from 'validator/lib/isEmail';
 import isMobilePhone from 'validator/lib/isMobilePhone';
 import isCreditCard from 'validator/lib/isCreditCard';
 import FloatingLabelInput from '../customInput';
+import {useUserContext} from '../userContext';
+import { motion, AnimatePresence } from "framer-motion";
+import {shootingStarsAnimation,starryNightAnimation} from '../animations/meteorShower';
 
-
-axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
 
 
 const themeButton=createTheme({
@@ -45,6 +46,8 @@ const DeliveryDetails = ({deliveryTextRef}) => {
         const [postalCode, setPostalCode]=useState('');
         const [postalCodeError, setPostalCodeError]=useState(false);
         const [submitButtonDisabled, setSubmitButtonDisabled]=useState(false);
+        const [requestError,setRequestError]=useState(null);
+        const userObj=useUserContext();
         
 
         const validateEmailLocal=useCallback((val=null)=>{
@@ -228,14 +231,46 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             const submit=async ()=>{
                 try{
                     const products=cartStore.getState().cart.products;
-                    const response=await axios.post('http://localhost:3002/api/v1/orders/post',{products});
-                    console.log(response.data);
+                    const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/orders/post`,{products,customerInfo},{
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem('key')}`
+                        }
+                      });
+                    if(response.data.token){
+                        localStorage.setItem('key',response.data.token);
+                        userObj.login(response.data.user);
+                    }
+                    if(shootingStarsAnimation){
+                        shootingStarsAnimation.pause();
+                    }
+                    if(starryNightAnimation){
+                        starryNightAnimation.pause();
+                    }
+                    setRequestError({err:false});
                 }catch(err){
-                    console.log(err);
+                    if(shootingStarsAnimation){
+                        shootingStarsAnimation.pause();
+                    }
+                    if(starryNightAnimation){
+                        starryNightAnimation.pause();
+                    }
+                    setRequestError({err});
                 }
             }
             submit();
         }
+
+        const handleModalClose = () =>{
+            setRequestError(null);
+            if(shootingStarsAnimation){
+                shootingStarsAnimation.play();
+            }
+            if(starryNightAnimation){
+                starryNightAnimation.play();
+            }
+        }
+             
+
         useEffect(()=>{
             if(emailError||telephoneError||cardNumberError||cardExpirationError||cvcError||addressError||cityError||countryError||postalCodeError){
                 setSubmitButtonDisabled(true);
@@ -275,9 +310,38 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             <div className='flex justify-between w-full py-4'>
                <div></div>
                 <ThemeProvider theme={themeButton}>
-                    <Button onClick={submitOrderHandler} variant="contained" >Submit Order</Button>
+                    <Button onClick={submitOrderHandler} variant="contained" disabled={submitButtonDisabled}>Submit Order</Button>
                 </ThemeProvider>
             </div>
+            <AnimatePresence>
+                {
+                    Boolean(requestError)&&
+                    <Modal open={Boolean(requestError)} onClose={handleModalClose}>
+                        <Box
+                            component={motion.div}
+                            initial={{x:"-50%", y:"-50%", opacity: 0, scale: 0.8 }}
+                            animate={{x:"-50%", y:"-50%", opacity: 1, scale: 1 }}
+                            exit={{x:"-40%", y:"-40%", opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="fixed top-1/2 left-1/2 black-diamond-gradient shadow-lg p-8 rounded-tr-[3rem] rounded-bl-[3rem] w-72 text-center"
+                            
+                        >
+                            <Typography className={requestError.err?'text-red-400':'text-nvidia-green'} variant="h6" gutterBottom>
+                                {
+                                    requestError.err?'Order Failed':'Order Placed'
+                                }
+                            </Typography>
+                            
+                            <ThemeProvider theme={themeButton}>
+                                <Button onClick={handleModalClose} variant="contained" sx={{ mt: 2 }}>
+                                    OK
+                                </Button>
+                            </ThemeProvider>
+                        </Box>
+                    </Modal>
+                }
+                
+            </AnimatePresence>
         </>
   )
 }

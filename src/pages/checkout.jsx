@@ -110,10 +110,10 @@ function Checkout(){
         <canvas ref={canvasRef} className="hidden" />
         <div ref={maskRef}  className="w-full h-full grid-lines absolute inset-0 z-0 mask">
         </div>
-        <div id='deliveryDetails' className='basis-1/2 p-4 z-10'>
+        <div id='deliveryDetails' className='w-1/2 p-4 z-10'>
             <DeliveryDetails deliveryTextRef={deliveryTextRef}/>
         </div>
-        <div id='orderSummery' className='basis-1/2 h-full p-4 z-10 text-light-text'>
+        <div id='orderSummery' className='w-1/2 h-full p-4 z-10 text-light-text'>
             <OrderSummery productsListDiv={productsListDiv}/>
         </div>
     </div>
