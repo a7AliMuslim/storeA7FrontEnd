@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, memo, useCallback } from "react";
 import anime from "animejs";
 
+
+let currentAnimation=null
 const DustParticles = ({dustCount=40}) => {
   const containerRef = useRef(null);
 
@@ -10,7 +12,6 @@ const DustParticles = ({dustCount=40}) => {
     const container = containerRef.current;
     container.innerHTML='';
 
-    console.log('hit');
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
 
@@ -26,9 +27,9 @@ const DustParticles = ({dustCount=40}) => {
       container.appendChild(particle);
       particles.push(particle);
     }
-
+    
     const animateParticles = () => {
-        anime({
+        currentAnimation=anime({
           targets: ".particle",
           translateX: [
             { value: () => anime.random(-containerWidth / 2, containerWidth / 2), duration: anime.random(5500, 6000) },
@@ -77,7 +78,7 @@ const DustParticles = ({dustCount=40}) => {
         });
       };
       setTimeout(() => {
-        anime({
+        currentAnimation=anime({
           targets: ".particle",
           opacity: [0, 1],
           duration: 1000,
@@ -86,9 +87,13 @@ const DustParticles = ({dustCount=40}) => {
         })
     },3500)
   
-    
+ 
     
   },[dustCount])
+
+
+ 
+  
   useEffect(() => {
       setTimeout(()=>setAnimation(),100);
       const handleResize=()=>{
@@ -99,6 +104,25 @@ const DustParticles = ({dustCount=40}) => {
         window.addEventListener('resize',handleResize);
       }
   }, [setAnimation]);
+
+  useEffect(()=>{
+    const handleVisibilityChangetwo=()=>{
+      if(!currentAnimation) return;
+
+      if (document.hidden) {
+        currentAnimation.pause(); // Pause animation when tab is hidden
+      } else {
+        currentAnimation.play(); // Resume when tab is active
+      }
+    }
+    document.addEventListener('visibilitychange',handleVisibilityChangetwo);
+    return ()=>{
+      document.removeEventListener('visibilitychange',handleVisibilityChangetwo);
+    }
+  },[]);
+
+
+  
 
   return (
     <div className="absolute w-full h-full flex items-center justify-center z-0">

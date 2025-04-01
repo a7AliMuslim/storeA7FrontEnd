@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef, memo } from "react";
 import anime from "animejs";
 import "./meteorShowerCss.css";
 
-
+let starryNightAnimation=null;
+let shootingStarsAnimation=null;
 const StarrySky = ({
   numOfStars=30,
   numOfMeteors=30,
@@ -63,8 +64,31 @@ const StarrySky = ({
     };
   }, []);
 
+  useEffect(()=>{
+      const handleVisibilityChangetwo=()=>{
+        if(starryNightAnimation){
+          if (document.hidden) {
+            starryNightAnimation.pause(); // Pause animation when tab is hidden
+          } else {
+            starryNightAnimation.play(); // Resume when tab is active
+          }
+        }
+        if(shootingStarsAnimation){
+          if (document.hidden) {
+            shootingStarsAnimation.pause(); // Pause animation when tab is hidden
+          } else {
+            shootingStarsAnimation.play(); // Resume when tab is active
+          }
+        }
+      }
+      document.addEventListener('visibilitychange',handleVisibilityChangetwo);
+      return ()=>{
+        document.removeEventListener('visibilitychange',handleVisibilityChangetwo);
+      }
+  },[]);
+
   const starryNight = () => {
-    anime({
+    starryNightAnimation=anime({
       targets: ".star",
       opacity: [
         { duration: 700, value: "0" },
@@ -77,7 +101,7 @@ const StarrySky = ({
   };
 
   const shootingStars = () => {
-    anime({
+    shootingStarsAnimation=anime({
       targets: ".starfal",
       easing: "linear",
       loop: true,

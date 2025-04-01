@@ -184,7 +184,7 @@ function ProductsContainer({filter}){
     lastCanvasBlobCall=lastCanvasBlobCall+1
     // Convert canvas to Blob
     canvas.toBlob((blob) => {
-        if (blob && currentCanvasBlobCall==(lastCanvasBlobCall-1)) {
+        if (blob && currentCanvasBlobCall===(lastCanvasBlobCall-1)) {
             document.getElementById('app').removeAttribute('style');
             lastCanvasBlobCall=1
             const objectURL = URL.createObjectURL(blob);
