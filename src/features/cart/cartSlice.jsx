@@ -12,7 +12,7 @@ const cartSlice=createSlice({
         add:(state, action)=>{
             state.numberOfProducts++;
             const matchingProduct=state.products.find((product)=>{
-                if(product.id==action.payload.id && product.chosenColor==action.payload.chosenColor && product.chosenSize==action.payload.chosenSize){
+                if(product.id===action.payload.id && product.chosenColor===action.payload.chosenColor && product.chosenSize===action.payload.chosenSize){
                     return true;
                 }else{
                     return false;
@@ -31,7 +31,7 @@ const cartSlice=createSlice({
         remove:(state, action)=>{
             state.numberOfProducts--;
             const matchingProductIndex=state.products.findIndex((product)=>{
-                if(product.id==action.payload.id && product.chosenColor==action.payload.chosenColor && product.chosenSize==action.payload.chosenSize){
+                if(product.id===action.payload.id && product.chosenColor===action.payload.chosenColor && product.chosenSize===action.payload.chosenSize){
                     return true;
                 }else{
                     return false;
@@ -48,7 +48,7 @@ const cartSlice=createSlice({
         },
         removeAll:(state, action)=>{
             const matchingProductIndex=state.products.findIndex((product)=>{
-                if(product.id==action.payload.id && product.chosenColor==action.payload.chosenColor && product.chosenSize==action.payload.chosenSize){
+                if(product.id===action.payload.id && product.chosenColor===action.payload.chosenColor && product.chosenSize===action.payload.chosenSize){
                     return true;
                 }else{
                     return false;

@@ -1,5 +1,4 @@
-import {useEffect, useRef} from 'react';
-import {useUserContext} from '../components/userContext.jsx';
+import {useEffect, useRef, useState} from 'react';
 import StarrySky from '../components/animations/meteorShower.jsx';
 import DeliveryDetails from '../components/checkoutSubComponents/deliveryDetails.jsx';
 import OrderSummery from '../components/checkoutSubComponents/orderSummery.jsx';
@@ -14,10 +13,8 @@ let lastCanvasBlobCall=1;
 
 
 function Checkout(){
+    const [renderToggle,setRenderToggle ]=useState(false);
     
-    console.log('re-render checkout');
-    
-    const userObj=useUserContext();
     const canvasRef = useRef(null);
     const deliveryTextRef=useRef(null);
     const productsListDiv=useRef(null);
@@ -34,9 +31,12 @@ function Checkout(){
     
         
         const borderRadius = window.getComputedStyle(Div).borderRadius;
+        const t=window.getComputedStyle(Div);
+        console.log('width',t.width,'height',t.height);
 
 
         const rect = Div.getBoundingClientRect();
+        console.log('width',rect.width,'height',rect.height);
         
         const width = rect.width;
         const height = rect.height;
@@ -58,10 +58,10 @@ function Checkout(){
     }
     const drawMask=()=>{
         if(productsListDiv && deliveryTextRef&& canvasRef && checkoutContainerRef){
-            const containerComputedStyles=window.getComputedStyle(checkoutContainerRef.current);
+            const compAppStyle=window.getComputedStyle(document.getElementById('app'));
             const Ctx = canvasRef.current.getContext("2d");
-            const checkoutContainerWidth=parseFloat(containerComputedStyles.width);
-            const checkoutContainerHeight=parseFloat(containerComputedStyles.height);
+            const checkoutContainerWidth=parseFloat(compAppStyle.width);
+            const checkoutContainerHeight=parseFloat(compAppStyle.height);
 
             canvasRef.current.width=checkoutContainerWidth;
             canvasRef.current.height=checkoutContainerHeight;
@@ -81,7 +81,6 @@ function Checkout(){
             
             canvasRef.current.toBlob((blob) => {
                 if (blob && currentCanvasBlobCall===(lastCanvasBlobCall-1)) {
-                    const compAppStyle=window.getComputedStyle(document.getElementById('app'));
                     maskRef.current.style.height=compAppStyle.height;
                     maskRef.current.style.width=compAppStyle.width;
                     lastCanvasBlobCall=1
@@ -105,16 +104,16 @@ function Checkout(){
         
     },[]);
     return (
-    <div ref={checkoutContainerRef} className='w-full flex green-gradient-y flex-grow'>
-        <StarrySky/>
-        <canvas ref={canvasRef} className="hidden" />
+    <div ref={checkoutContainerRef} className='overflow-hidden w-full flex green-gradient-y flex-grow'>
+        {<StarrySky/>}
+        <canvas ref={canvasRef} className="hidden inset-0" />
         <div ref={maskRef}  className="w-full h-full grid-lines absolute inset-0 z-0 mask">
         </div>
         <div id='deliveryDetails' className='w-1/2 p-4 z-10'>
-            <DeliveryDetails deliveryTextRef={deliveryTextRef}/>
+            <DeliveryDetails deliveryTextRef={deliveryTextRef} renderToggle={renderToggle} setRenderToggle={setRenderToggle}/>
         </div>
         <div id='orderSummery' className='w-1/2 h-full p-4 z-10 text-light-text'>
-            <OrderSummery productsListDiv={productsListDiv}/>
+            <OrderSummery productsListDiv={productsListDiv} renderToggle={renderToggle}/>
         </div>
     </div>
     )

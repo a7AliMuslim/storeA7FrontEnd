@@ -4,11 +4,13 @@ import { Modal, Box, Button, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import {cartStore} from '../../features/cart/cartStore';
+import {removeAll} from '../../features/cart/cartSlice';
+import {useDispatch} from 'react-redux';
 import isEmail from 'validator/lib/isEmail';
 import isMobilePhone from 'validator/lib/isMobilePhone';
 import isCreditCard from 'validator/lib/isCreditCard';
 import FloatingLabelInput from '../customInput';
-import {useUserContext} from '../userContext';
+// import {useUserContext} from '../userContext';
 import { motion, AnimatePresence } from "framer-motion";
 import {shootingStarsAnimation,starryNightAnimation} from '../animations/meteorShower';
 
@@ -26,7 +28,7 @@ const themeButton=createTheme({
     },
 });
 
-const DeliveryDetails = ({deliveryTextRef}) => {
+const DeliveryDetails = ({deliveryTextRef, renderToggle, setRenderToggle}) => {
         const [email,setEmail]=useState('');
         const [emailError,setEmailError]=useState(false);
         const [telephone,setTelephone]=useState('');
@@ -47,7 +49,9 @@ const DeliveryDetails = ({deliveryTextRef}) => {
         const [postalCodeError, setPostalCodeError]=useState(false);
         const [submitButtonDisabled, setSubmitButtonDisabled]=useState(false);
         const [requestError,setRequestError]=useState(null);
-        const userObj=useUserContext();
+        // const userObj=useUserContext();
+        const dispatch=useDispatch();
+        const [resetInputs, setResetInputs]=useState(false);
         
 
         const validateEmailLocal=useCallback((val=null)=>{
@@ -159,22 +163,27 @@ const DeliveryDetails = ({deliveryTextRef}) => {
             const value = event.target.value.replace(/\D/g, "");
             if(value.length>4) return;
             setCvc(value);
+            setCvcError(false);
         }
 
         const addressHandler=(event)=>{
             setAddress(event.target.value);
+            setAddressError(false);
         }
 
         const cityHandler=(event)=>{
             setCity(event.target.value);
+            setCityError(false);
         }
 
         const countryHandler=(event)=>{
             setCountry(event.target.value);
+            setCountryError(false);
         }
 
         const postalCodeHandler=(event)=>{
             setPostalCode(event.target.value);
+            setPostalCodeError(false);
         }
         const submitOrderHandler=()=>{
             let anyEmpty=false;
@@ -238,7 +247,7 @@ const DeliveryDetails = ({deliveryTextRef}) => {
                       });
                     if(response.data.token){
                         localStorage.setItem('key',response.data.token);
-                        userObj.login(response.data.user);
+                        // userObj.login(response.data.user);
                     }
                     if(shootingStarsAnimation){
                         shootingStarsAnimation.pause();
@@ -247,6 +256,18 @@ const DeliveryDetails = ({deliveryTextRef}) => {
                         starryNightAnimation.pause();
                     }
                     setRequestError({err:false});
+                    setEmail('');
+                    setTelephone('');
+                    setCardNumber('');
+                    setCardExpiration('');
+                    setCvc('');
+                    setAddress('');
+                    setCity('');
+                    setCountry('');
+                    setPostalCode('');
+                    setResetInputs(true);
+                    products.forEach(prod=>dispatch(removeAll(prod)));
+                    setRenderToggle(!renderToggle);
                 }catch(err){
                     if(shootingStarsAnimation){
                         shootingStarsAnimation.pause();
@@ -277,33 +298,39 @@ const DeliveryDetails = ({deliveryTextRef}) => {
                 return;
             }
             setSubmitButtonDisabled(false);
-        },[emailError,telephoneError,cardNumberError,cardExpirationError,cvcError,addressError,cityError,countryError,postalCodeError])
+        },[emailError,telephoneError,cardNumberError,cardExpirationError,cvcError,addressError,cityError,countryError,postalCodeError]);
+
+        useEffect(()=>{
+            if(resetInputs){
+                setResetInputs(false);
+            } 
+        },[resetInputs]);
   return (
         <>
             <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-sm'>
                 <div name='contactInfo' className='w-full text-light-text pt-4 px-2'>
                     <p className='text-2xl my-2'>CONTACT INFORMATION</p>
 
-                    <FloatingLabelInput autoComplete='on' status={emailError?'error':'primary'} label='Email' name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-1/2'/>
+                    <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={emailError?'error':'primary'} label='Email' name='email' value={email} onChange={emailHandler} onBlur={validateEmailLocal} type='email' className='!w-1/2'/>
     
-                    <FloatingLabelInput autoComplete='on' status={telephoneError?'error':'primary'} label='Ph. number' name='telephone' value={telephone} onChange={telephoneHandler} onBlur={validateTelephoneLocal} type='tel' className='!w-1/2'/>
+                    <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={telephoneError?'error':'primary'} label='Ph. number' name='telephone' value={telephone} onChange={telephoneHandler} onBlur={validateTelephoneLocal} type='tel' className='!w-1/2'/>
 
                 </div>
                 <div name='paymentDetails' className='w-full text-light-text px-2 flex flex-col gap-2'>
                     <p className='text-2xl'>Payment details</p>
-                    <FloatingLabelInput autoComplete='on' status={cardNumberError?'error':'primary'} label='Card No.' name='cardnumber' value={cardNumber} onChange={cardNumberHandler} onBlur={validateCardNumberLocal} placeholder='12345...' className='!w-full'/>                    
+                    <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={cardNumberError?'error':'primary'} label='Card No.' name='cardnumber' value={cardNumber} onChange={cardNumberHandler} onBlur={validateCardNumberLocal} placeholder='12345...' className='!w-full'/>                    
                     <div className='flex'>
-                        <FloatingLabelInput autoComplete='on' status={cardExpirationError?'error':'primary'} label='Expiration date' name='cardExpiration' value={cardExpiration} onChange={cardExpirationHandler} onBlur={validateCardExpirationLocal} placeholder='MM/YY' className='!w-2/3'/>
-                        <FloatingLabelInput autoComplete='on' status={cvcError?'error':'primary'} label='CVC' name='cvc' value={cvc} onChange={cvcHandler} placeholder='CVC' className='!w-1/3'/>
+                        <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={cardExpirationError?'error':'primary'} label='Expiration date' name='cardExpiration' value={cardExpiration} onChange={cardExpirationHandler} onBlur={validateCardExpirationLocal} placeholder='MM/YY' className='!w-2/3'/>
+                        <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={cvcError?'error':'primary'} label='CVC' name='cvc' value={cvc} onChange={cvcHandler} placeholder='123...' className='!w-1/3'/>
                     </div>   
                 </div>
                 <div name='address' className='w-full text-light-text rounded-3xl pb-4 px-2 flex flex-col gap-2'>
                     <p className='text-2xl'>Shipping address</p>
-                    <FloatingLabelInput autoComplete='on' status={addressError?'error':'primary'} label='Address' name='address' value={address} onChange={addressHandler} className='!w-full'/>
+                    <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={addressError?'error':'primary'} label='Address' name='address' value={address} onChange={addressHandler} className='!w-full'/>
                     <div className='flex'>
-                        <FloatingLabelInput autoComplete='on' status={cityError?'error':'primary'} label='City' name='city' value={city} onChange={cityHandler} className='!w-1/3'/>
-                        <FloatingLabelInput autoComplete='on' status={countryError?'error':'primary'} label='Country/State' name='country' value={country} onChange={countryHandler} className='!w-1/3'/>
-                        <FloatingLabelInput autoComplete='on' status={postalCodeError?'error':'primary'} label='Postal code' name='postalCode' value={postalCode} onChange={postalCodeHandler} className='!w-1/3'/>
+                        <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={cityError?'error':'primary'} label='City' name='city' value={city} onChange={cityHandler} className='!w-1/3'/>
+                        <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={countryError?'error':'primary'} label='Country/State' name='country' value={country} onChange={countryHandler} className='!w-1/3'/>
+                        <FloatingLabelInput endFocus={resetInputs} autoComplete='on' status={postalCodeError?'error':'primary'} label='Postal code' name='postalCode' value={postalCode} onChange={postalCodeHandler} className='!w-1/3'/>
                     </div>    
                 </div>
             </div>
@@ -313,7 +340,7 @@ const DeliveryDetails = ({deliveryTextRef}) => {
                     <Button onClick={submitOrderHandler} variant="contained" disabled={submitButtonDisabled}>Submit Order</Button>
                 </ThemeProvider>
             </div>
-            <AnimatePresence>
+            {<AnimatePresence>
                 {
                     Boolean(requestError)&&
                     <Modal open={Boolean(requestError)} onClose={handleModalClose}>
@@ -341,7 +368,7 @@ const DeliveryDetails = ({deliveryTextRef}) => {
                     </Modal>
                 }
                 
-            </AnimatePresence>
+            </AnimatePresence>}
         </>
   )
 }

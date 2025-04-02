@@ -9,7 +9,7 @@ function getAppliedStyle(status, ...colors){
 }
 
 
-const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1, value='', onChange=()=>{}, type='text', autoComplete='off', name='input', onBlur=()=>{}, placeholder=''}) => {
+const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=null, className='', primaryUpdate={}, errorUpdate={}, animationDelay=1, value='', onChange=()=>{}, type='text', autoComplete='off', name='input', onBlur=()=>{}, placeholder='', endFocus=false}) => {
     const [focused, setFocused] = useState(false);
     const [autoFill, setAutoFill] = useState(false);
     const focusRef=useRef(focused);
@@ -144,6 +144,14 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
           
         };
       }, []);
+    useEffect(()=>{
+        if(endFocus){
+            setFocused(false);
+            setAutoFill(false);
+            inputRef.current.style.maskImage='';
+            animatedBorderRef.current.style.maskImage='';
+        }
+    },[endFocus]);
     
 
    

@@ -20,7 +20,7 @@ const themeDivider = createTheme({
   });
   
 
-function OrderSummery({productsListDiv}) {
+function OrderSummery({productsListDiv,renderToggle}) {
     const products=cartStore.getState().cart.products;
     let subTotalAll=0;
     const [change, setChange]=useState(1);
@@ -43,15 +43,15 @@ function OrderSummery({productsListDiv}) {
         <div className='my-4'>
                 <div name='subTotal' className='flex justify-between'>
                     <p>SubTotal</p>
-                    <p>Rs.{subTotalAll}</p>
+                    <p>Rs.{products.length>0?subTotalAll:0}</p>
                 </div>
                 <div name='shipping/deliveryCost' className='flex justify-between'>
                     <p>Shipping</p>
-                    <p>Rs.{shippingCost}</p>
+                    <p>Rs.{products.length>0?shippingCost:0}</p>
                 </div>
                 <div name='taxes' className='flex justify-between'>
                     <p>Taxes</p>
-                    <p>Rs.{taxes}</p>
+                    <p>Rs.{products.length>0?taxes:0}</p>
                 </div>
         </div>
         <ThemeProvider theme={themeDivider}>
@@ -59,7 +59,7 @@ function OrderSummery({productsListDiv}) {
         </ThemeProvider>
         <div name='total' className='flex justify-between my-4'>
                     <p>Total</p>
-                    <p>Rs.{shippingCost+subTotalAll+taxes}</p>
+                    <p>Rs.{products.length>0?shippingCost+subTotalAll+taxes:0}</p>
         </div>    
     </>
   )

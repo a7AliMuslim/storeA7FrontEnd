@@ -118,7 +118,7 @@ const StarrySky = ({
   
 
   return (
-    <div ref={meteorContainerRef} className={"absolute w-screen h-screen overflow-hidden "+className}>
+    <div ref={meteorContainerRef} className={"absolute w-screen h-screen overflow-hidden inset-0"+className}>
       <svg ref={skyRef} id="sky" className="absolute">
         {[...Array(numOfStars)].map((_, i) => (
           <circle
