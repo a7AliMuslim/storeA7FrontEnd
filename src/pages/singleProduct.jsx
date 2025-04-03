@@ -1,12 +1,11 @@
 import React from 'react';
 import {useState, useEffect, useRef} from 'react';
-import {useLocation, Navigate} from 'react-router-dom';
-import axios from 'axios';
+import {useLocation, useNavigate} from 'react-router-dom';
 import { Skeleton, Rating, Button  } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { ShoppingCartIcon } from '@heroicons/react/20/solid';
 import {add} from '../features/cart/cartSlice.jsx';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {cartStore} from '../features/cart/cartStore.jsx';
 import ImageCard from '../components/imageCard.jsx';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -29,14 +28,15 @@ const parseBorderRadius = (radius) => {
     return radius.split(" ").map((val) => parseFloat(val) || 0);
 };
 
-axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`
+
 function SingleProduct(){
     const location=useLocation();
     const state=location.state;
-    const [product, setProduct]=useState(state.product);
-    const remainingColorLenght=9-product.colors.length;
-    const [mainImage,setMainImage]=useState(product.imageIDs[0]);
-    const [smallImages, setSmallImages]=useState(product.imageIDs);
+    const navigate=useNavigate();
+    const [product, setProduct]=useState(state?state.product:null);
+    const remainingColorLenght=product?9-product.colors.length:0;
+    const [mainImage,setMainImage]=useState(product?product.imageIDs[0]:null);
+    const [smallImages, setSmallImages]=useState(product?product.imageIDs:null);
     const [isLoading, setIsLoading]=useState(true);
     const [selectedColorBlob, setSelectedColorBlob]=useState(null);
     const [selectedSize, setSelectedSize]=useState(null);
@@ -46,9 +46,9 @@ function SingleProduct(){
     const canvasRef = useRef(null);
     const prodContainer = useRef(null);
     const cartRef = useRef(null);
-    const [sizes, setSizes]=useState(product.quantities.map(qt=>{
+    const [sizes, setSizes]=useState(product?product.quantities.map(qt=>{
             return '!'+qt.attributesPair.size;
-        }));
+        }):null);
     const dispatch=useDispatch();
     
     const colorChangeHandler=(event)=>{
@@ -143,13 +143,16 @@ function SingleProduct(){
     }
     
     
-    const fetchExtendedProductData=async ()=>{
+    const fetchExtendedProductData=()=>{
         setSmallImages(product.imageIDs);
         setIsLoading(false);
     }
     useEffect(()=>{
-        fetchExtendedProductData();
-    },[]);
+        if(product){
+            fetchExtendedProductData();
+        }
+        
+    },[product]);
     const applyMask=()=>{
         if (!contentRef.current) return;
 
@@ -208,6 +211,10 @@ function SingleProduct(){
         }, "image/png");
     }
     useEffect(() => {
+        if(!product){
+            navigate('/products')
+            return;
+        } 
         const timeOutId=setTimeout(()=>{
             maskRef.current.classList.remove('hidden');
             maskRef.current.classList.add('mask','grid-blocks-custom','animate-slide-in-appear');
@@ -225,7 +232,8 @@ function SingleProduct(){
         } 
         
   },[]);
-    return <div ref={prodContainer} onMouseMove={mouseMaskHandler} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow'>
+    return <>
+    {product?<div ref={prodContainer} onMouseMove={mouseMaskHandler} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow'>
             <canvas ref={canvasRef} className="hidden" />
             <div ref={maskRef}  className="w-full h-full absolute hidden inset-0 z-0"/>
             <div className='flex-auto w-1/2 pt-2 z-10'>
@@ -297,6 +305,7 @@ function SingleProduct(){
                     </ThemeProvider>
                 </div>
             </div>
-        </div>
+        </div>:null}
+        </>
 }
 export default SingleProduct;

@@ -242,7 +242,7 @@ const DeliveryDetails = ({deliveryTextRef, renderToggle, setRenderToggle}) => {
                     const products=cartStore.getState().cart.products;
                     const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/orders/post`,{products,customerInfo},{
                         headers: {
-                          Authorization: `Bearer ${localStorage.getItem('key')}`
+                          Authorization: `Bearer ${localStorage.getItem('key')||null}`
                         }
                       });
                     if(response.data.token){

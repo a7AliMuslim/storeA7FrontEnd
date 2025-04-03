@@ -2,7 +2,7 @@ import React from 'react';
 import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import {add} from '../features/cart/cartSlice.jsx';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import ProductCard from './productCard';
 import { Button, ButtonGroup, Skeleton } from '@mui/material';
@@ -21,8 +21,7 @@ const parseBorderRadius = (radius) => {
     return radius.split(" ").map((val) => parseFloat(val) || 0);
 };
 let lastCanvasBlobCall=1;
-axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
-axios.defaults.headers.get['Authorization'] = `Bearer ${localStorage.getItem('key')}`;
+
 function ProductsContainer({filter}){
     const navigate = useNavigate();
     const location=useLocation();
@@ -69,7 +68,13 @@ function ProductsContainer({filter}){
     }
     const fetchedProductData= async ()=>{
             try{
-                const respons=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products`,{filter,pageNumber,});
+                const respons=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products`,{filter,pageNumber},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('key')||null}`
+                          }
+                    }
+                );
                 setProducts(respons.data.slice);
                 setFilteredProductCount(respons.data.count);
                 

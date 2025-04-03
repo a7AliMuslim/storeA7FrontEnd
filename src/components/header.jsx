@@ -16,7 +16,7 @@ function Header(){
                     <div className='w-4/5'>
                         <Navbar/>
                         {
-                            (location.pathname==='/signup'||location.pathname==='/login'||location.pathname==='/becomeSeller'||location.pathname==='/checkout')?<SearchNavbar classes='invisible'/>:<SearchNavbar/>
+                            (location.pathname==='/signup'||location.pathname==='/login'||location.pathname==='/becomeSeller'||location.pathname==='/checkout')?<SearchNavbar className='invisible'/>:<SearchNavbar/>
                         }
                     </div>
                 </div>

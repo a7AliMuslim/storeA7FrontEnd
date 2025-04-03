@@ -5,8 +5,9 @@ import { TextField, Button, Dialog, DialogActions, DialogContent, DialogContentT
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, indigo, red } from '@mui/material/colors';
 import { useNavigate } from "react-router-dom";
+import {useUserContext} from '../components/userContext.jsx';
 
-axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('key')}`
+
 
 const themeTextfield = createTheme({
   palette: {
@@ -42,6 +43,7 @@ function BecomeSeller(){
     const [userKey, setUserKey]=useState(localStorage.getItem('key')||null);
     const [emailError, setEmailError]=useState(false);
     const [passwordError, setPasswordError]=useState(false);
+    const userObj=useUserContext();
     
     
     const emailChangeHandler=(event)=>{
@@ -76,25 +78,41 @@ function BecomeSeller(){
     
     
     const registerHandler=async ()=>{
-        axios.defaults.headers.post['Authorization'] = `Bearer ${userKey}`
-        const response =await axios.post(`${process.env.REACT_APP_backHost}api/v1/seller/register`).catch(err=>console.log(err));
-        console.log(response);
-        localStorage.setItem('seller',JSON.stringify(response.data));
-        localStorage.removeItem('key');
-        setUserKey(null);
-        navigate('/seller');
+        try{
+            const response =await axios.post(`${process.env.REACT_APP_backHost}api/v1/seller/register`, null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('key')||null}`
+                      }
+                }
+            );
+            userObj.login(response.data.seller);
+            localStorage.setItem('key',response.data.sellerToken);
+            navigate('/seller');
+        }catch(err){
+            console.log(err);
+        }
+        
     }
     const loginHandler=async ()=>{
-        if(!userKey||email==''||password==''||emailError||passwordError){
+        if(!userKey||email===''||password===''||emailError||passwordError){
             return;
         }
-        axios.defaults.headers.post['Authorization'] = `Bearer ${userKey}`
-        const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/seller/login`,{email,password}).catch(err=>console.log(err));
-        console.log(response.data);
-        localStorage.setItem('seller',JSON.stringify(response.data));
-        localStorage.removeItem('key');
-        setUserKey(null);
-        navigate('/seller');
+        try{
+            const response=await axios.post(`${process.env.REACT_APP_backHost}api/v1/seller/login`,{email,password},
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('key')||null}`
+                      }
+                }
+            )
+            userObj.login(response.data.seller);
+            localStorage.setItem('key',response.data.sellerToken);
+            navigate('/seller');
+        }catch(err){
+            console.log(err);
+        }
+        
     }
     useEffect(()=>{
         const appContainerHeight=parseInt(getComputedStyle(document.getElementById('app')).height);
@@ -112,7 +130,7 @@ function BecomeSeller(){
                                 <TextField autoComplete='on' label="Email" name='email' color={emailError?'warning':'primary'} value={email} onChange={emailChangeHandler} onBlur={validateEmailLocal} fullWidth={true} inputProps={{type:'text', className:'focus:ring-[0px]'}} focused={emailError?true:false}></TextField>
                             </div>
                             <div className='w-[80%] mb-8'>
-                                <TextField autoComplete='on' label="password" name='password' color={passwordError?'warning':'primary'} value={password} onChange={passwordChangeHandler} onBlur={validatePasswordLocal} inputProps={{'type':'password'}} fullWidth={true} inputProps={{type:'text', className:'focus:ring-[0px]'}} focused={passwordError?true:false}></TextField>
+                                <TextField autoComplete='on' label="password" name='password' color={passwordError?'warning':'primary'} value={password} onChange={passwordChangeHandler} onBlur={validatePasswordLocal}  fullWidth={true} inputProps={{type:'password', className:'focus:ring-[0px]'}} focused={passwordError?true:false}></TextField>
                             </div>
                         </ThemeProvider>
                         <ThemeProvider theme={themeButton}>

@@ -9,10 +9,16 @@ const userContext=createContext(null);
 
 //component function(also stores user in local storage along with context)
 const UserProvider=({children})=>{
-    const [user,setUser]=useState(localStorage.getItem('user') || null);
+    const [user,setUser]=useState(localStorage.getItem('user') || localStorage.getItem('seller') || null);
     const login=(user)=>{
         setUser(user);
         console.log(user);
+        if(user.type==='seller'||user.type==='approvedSeller'){
+            localStorage.removeItem('user');
+            localStorage.setItem('seller',JSON.stringify(user));
+            return;
+        }
+        localStorage.removeItem('seller');
         localStorage.setItem('user',JSON.stringify(user));
     };
     const logout=()=>{
@@ -21,7 +27,7 @@ const UserProvider=({children})=>{
         localStorage.removeItem('seller');
     };
     const userInStorage=()=>{
-        return JSON.parse(localStorage.getItem('user'));
+        return JSON.parse(localStorage.getItem('user')||localStorage.getItem('seller'));
     }
     return(
         <userContext.Provider value={{user,login,logout,userInStorage}}>

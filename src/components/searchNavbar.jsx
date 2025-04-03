@@ -1,5 +1,5 @@
 //importing react
-import React from 'react';
+import React, { useState } from 'react';
 
 
 //for navigation
@@ -15,18 +15,23 @@ import {useUserContext} from './userContext.jsx';
 import SearchBar from './searchBar.jsx';
 import CartDrawer from './cartDrawer';
 import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded';
+import {cartStore} from '../features/cart/cartStore.jsx';
+import {removeAll} from '../features/cart/cartSlice';
+import {useDispatch} from 'react-redux';
 
 
 //component function
-function SearchNavbar({classes=''}){
-    const userData=useUserContext();
+function SearchNavbar({className=''}){
+    const userObj=useUserContext();
     const location=useLocation();
+    const dispatch=useDispatch();
+    const [rerenderToggle,setRenderToggle]=useState(false);
 
     //handles cartDrawer open state
-    const [cartDrawerOpener, setCartDrawerOpener]=React.useState(false);
+    const [cartDrawerOpener, setCartDrawerOpener]=useState(false);
     
     //setting user
-    const user=userData.userInStorage() || null;
+    const user=userObj.userInStorage() || null;
     
     
     //handles cart drawer
@@ -35,10 +40,13 @@ function SearchNavbar({classes=''}){
     }
     
     const logOutHandler=()=>{
-        userData.logout();
+        cartStore.getState().cart.products.forEach(prod=>dispatch(removeAll(prod)));
+        localStorage.removeItem('key');
+        userObj.logout();
+        setRenderToggle(!rerenderToggle);
     }
     
-    return <div className={`${classes} flex justify-around w-full touch:text-xs`}>
+    return <div className={`${className} flex justify-around w-full touch:text-xs`}>
             <div className='flex basis-4/5 touch:basis-3/5'>
                 <SearchBar className='flex-auto'/>
             </div>
@@ -52,7 +60,7 @@ function SearchNavbar({classes=''}){
                 }
                 <CartDrawer opener={cartDrawerOpener} setOpener={setCartDrawerOpener}></CartDrawer>
                 {
-                    !!user && <div className='flex items-center justify-evenly w-full'><p className='touch:hidden'>Hi {user.userName}</p> <p onClick={logOutHandler} className='cursor-pointer'>log out</p></div>
+                    !!user && <div className='flex items-center justify-evenly w-full'><p className='touch:hidden'>Hi {(user.type==='seller'||user.type==='approvedSeller')?'seller':user.userName}</p> <p onClick={logOutHandler} className='cursor-pointer'>log out</p></div>
                 }
             </nav>
         </div>
