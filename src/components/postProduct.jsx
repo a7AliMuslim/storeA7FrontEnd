@@ -106,11 +106,10 @@ function PostProduct(){
         }
         formData.append('prodBlob', prodBlob, 'prodBlob.json');
         console.log(formData);
-        const sellerToken=await JSON.parse(localStorage.getItem('seller')).sellerToken;
-        axios.defaults.headers.patch['Authorization'] = `Bearer ${sellerToken}`;
         const response= await axios.patch(`${process.env.REACT_APP_backHost}api/v1/products/withImage`, formData, {
             headers:{
-                'Content-Type':'multipart/form-data'
+                'Content-Type':'multipart/form-data',
+                Authorization: `Bearer ${localStorage.getItem('key')||null}`
             }
         }).catch(err=>console.log(err));
         console.log(response);

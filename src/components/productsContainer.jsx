@@ -246,7 +246,7 @@ function ProductsContainer({filter}){
                             <ButtonGroup variant="text" aria-label="Basic button group" className=''>
                                 {
                                     pageButtonList.map(pageButton=>{
-                                        if(pageButton=='...'){
+                                        if(pageButton==='...'){
                                             return <Button disabled className='!text-black !border-black/70 hover:bg-white/70 hover:text-black'>...</Button>
                                         }else if(pageButton==pageNumber){
                                             return <Button disabled className='!text-black !border-black/70 bg-white/70 hover:text-black'>{pageButton}</Button>
