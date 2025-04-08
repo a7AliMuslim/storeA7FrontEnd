@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, memo} from 'react';
 import CatagoryFilter from './catagoryFilter';
 import ColorFilter from './colorFilter';
 import RangeSlider from './rangeSlider';
@@ -36,10 +36,10 @@ function FilterSidbar({setFilter, state, setFilterDrawerOpener=null}){
         <h1 className="text-2xl tracking-tight text-light-text my-2">Filters</h1>
         <RangeSlider filterObj={filterObj}/>
         {
-                state.tag=='catagories'?<CatagoryFilter filterObj={filterObj} subTag={state.subTag}/>:<CatagoryFilter filterObj={filterObj}/>
+                state.tag==='catagories'?<CatagoryFilter filterObj={filterObj} subTag={state.subTag}/>:<CatagoryFilter filterObj={filterObj}/>
         }
         {
-                state.tag=='color'?<ColorFilter filterObj={filterObj} subTag={state.subTag}/>:<ColorFilter filterObj={filterObj}/>
+                state.tag==='color'?<ColorFilter filterObj={filterObj} subTag={state.subTag}/>:<ColorFilter filterObj={filterObj}/>
         }
         <RatingFilter filterObj={filterObj}/>
         <ThemeProvider theme={themeButton}>
@@ -47,4 +47,4 @@ function FilterSidbar({setFilter, state, setFilterDrawerOpener=null}){
         </ThemeProvider>
     </div>)
 }
-export default FilterSidbar;
+export default memo(FilterSidbar);

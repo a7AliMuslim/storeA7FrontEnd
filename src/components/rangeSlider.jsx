@@ -1,5 +1,5 @@
 import {Slider} from '@mui/material';
-import {useState} from 'react';
+import {useState, memo} from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
@@ -35,4 +35,4 @@ function RangeSlider({filterObj}){
         </div>
         )
 }
-export default RangeSlider;
+export default memo(RangeSlider);

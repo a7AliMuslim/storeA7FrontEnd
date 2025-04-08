@@ -14,6 +14,9 @@ export default function ForYouProducts(){
         clickedProduct.product.price=(parseFloat(clickedProduct.product.price)*parseFloat(clickedProduct.discountPercent)/100)+'';
         navigate('/singleProduct',{state:{path:location.pathname,product:clickedProduct.product}});
     }
+    const navigateToProducts=()=>{
+        navigate('/products');
+    }
     const fetchedSaleProductData=async ()=>{
         try{
             const respons=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products/saleOffers`,null,
@@ -23,8 +26,7 @@ export default function ForYouProducts(){
                                       }
                                 }
                             );
-            const cleanedSaleProducts=respons.data.saleProducts.filter(saleProduct=>saleProduct && saleProduct.discountPercent && saleProduct.product)
-            console.log(cleanedSaleProducts)
+            const cleanedSaleProducts=respons.data.saleProducts.filter(saleProduct=>saleProduct && saleProduct.discountPercent && saleProduct.product);
             setSaleProducts(cleanedSaleProducts);
         }catch(err){
             console.log(err);
@@ -35,10 +37,13 @@ export default function ForYouProducts(){
     },[]);
     return<div className='mx-8 my-4 touch:mx-2 touch:my-2'>
             <h1 className='text-3xl subpixel-antialiased font-semibold text-light-text px-8 my-4 touch:text-xl touch:px-[0px] touch:my-2'>For you</h1>
-            <motion.div className='w-full h-full' viewport={{ once: true, amount: 0.3 }}>
+            <motion.div className='w-full h-full flex flex-col' viewport={{ once: true, amount: 0.3 }}>
                 <motion.div className='flex flex-wrap justify-evenly gap-3' initial={{ clipPath: "inset(0% 50% 0% 50%)", opacity:0 }}  whileInView={{ clipPath: "inset(0% 0% 0% 0%)", opacity:1 }} transition={{ duration: 1, ease: "easeOut", delay: 0.5 }} viewport={{ once: true}}>
                     {saleProducts?saleProducts.map((saleProduct)=><ProductCard onClick={cardClickHandler} img={`${saleProduct.product.imageIDs[0]}`} productId={saleProduct.product.id} title={saleProduct.product.title} price={parseFloat(saleProduct.product.price)*parseFloat(saleProduct.discountPercent)/100}/>):Array.from({length:10}, () => (<Skeleton className='m-2 bg-white/50'  variant="rounded"><ProductCard/></Skeleton>))}
                 </motion.div>
+                <div className='w-full flex justify-end'>
+                    <p onClick={navigateToProducts} className='text-nvidia-green underline underline-offset-4 cursor-pointer italic z-10'>All Products...</p>
+                </div>
             </motion.div>
          </div>
 }

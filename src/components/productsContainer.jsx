@@ -227,7 +227,7 @@ function ProductsContainer({filter}){
                 
                 <div className="flex flex-1 items-center justify-between touch:justify-end">
                     <div className='touch:hidden'>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-nvidia-green">
                         Showing <span className="font-medium">{filteredProductSliceRange[0]}</span> to <span className="font-medium">{filteredProductSliceRange[1]}</span> of{' '}
                         <span className="font-medium">{filteredProductCount}</span> results
                       </p>

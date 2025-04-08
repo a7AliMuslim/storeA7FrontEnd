@@ -88,7 +88,7 @@ export default function HoverTab() {
       }
   })
   return (
-    <div className="flex px-4 touch:px-0 z-10">
+    <div className="flex px-4 touch:px-0 z-20">
       <div className="rounded-bl-[5rem] bg-white/30 w-full max-w-md overflow-hidden touch:rounded-md">
         <TabGroup className='flex flex-row' selectedIndex={selectedIndex} manual onMouseLeave={handleMouseLeave}>
           <TabList className="flex flex-col gap-4 touch:flex-row touch:gap-2" id='tabList'>

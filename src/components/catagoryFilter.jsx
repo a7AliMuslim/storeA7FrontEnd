@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, memo} from 'react';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Checkbox , FormGroup, FormControlLabel} from '@mui/material';
 import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
@@ -21,9 +21,9 @@ const theme = createTheme({
 
 
 function CatagoryFilter({filterObj, subTag=''}){
-    const [catagory1Check,setCatagory1Check]=useState(subTag=='catagory1'?true:false);
-    const [catagory2Check,setCatagory2Check]=useState(subTag=='catagory2'?true:false);
-    const [catagory3Check,setCatagory3Check]=useState(subTag=='catagory3'?true:false);
+    const [catagory1Check,setCatagory1Check]=useState(subTag==='catagory1'?true:false);
+    const [catagory2Check,setCatagory2Check]=useState(subTag==='catagory2'?true:false);
+    const [catagory3Check,setCatagory3Check]=useState(subTag==='catagory3'?true:false);
     //fills checked catagories on render and re render
     filterObj.catagory=[];
     if(catagory1Check){
@@ -38,13 +38,13 @@ function CatagoryFilter({filterObj, subTag=''}){
     
     
     const checkHandler=(event)=>{
-        if(event.target.name=='catagory1'){
+        if(event.target.name==='catagory1'){
             setCatagory1Check(!catagory1Check);
         }
-        if(event.target.name=='catagory2'){
+        if(event.target.name==='catagory2'){
             setCatagory2Check(!catagory2Check);
         }
-        if(event.target.name=='catagory3'){
+        if(event.target.name==='catagory3'){
             setCatagory3Check(!catagory3Check);
         }
     }
@@ -55,8 +55,8 @@ function CatagoryFilter({filterObj, subTag=''}){
          
           <DisclosureButton className="py-2 group flex w-full items-center justify-between text-light-text">
               <span>Catagories</span>
-              <PlusIcon className="size-5 fill-black/90 group-data-[hover]:fill-light-gray group-data-[open]:hidden fill-light-text" />
-              <MinusIcon className="size-5 fill-black/70 group-data-[hover]:fill-light-gray [.group:not([data-open])_&]:hidden fill-light-text" />
+              <PlusIcon className="size-5 group-data-[hover]:fill-light-gray group-data-[open]:hidden fill-light-text" />
+              <MinusIcon className="size-5 group-data-[hover]:fill-light-gray [.group:not([data-open])_&]:hidden fill-light-text" />
           </DisclosureButton>
           
           <DisclosurePanel transition className="text-light-text origin-top transition duration-200 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0">
@@ -73,4 +73,4 @@ function CatagoryFilter({filterObj, subTag=''}){
         
     )
 }
-export default CatagoryFilter;
+export default memo(CatagoryFilter);

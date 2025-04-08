@@ -31,23 +31,35 @@ function Products(){
         setFilterDrawerOpener(true);
     }
     useEffect(()=>{
-        if(window.matchMedia('(hover:none) and (pointer:coarse)').matches){
-            iconDivRef.current.style.width=getComputedStyle(document.getElementById('filter-drawer-container')).width;
+        const setWidthOfIconsContainer=()=>{
+            if(window.matchMedia('(hover:none) and (pointer:coarse)').matches){
+                iconDivRef.current.style.width=getComputedStyle(document.getElementById('filter-drawer-container')).width;
+            }
         }
-        document.getElementById('app').classList.add('flex','flex-col');
-    });
+        setWidthOfIconsContainer();
+        window.addEventListener('resize',setWidthOfIconsContainer);
+
+        return () => window.removeEventListener('resize',setWidthOfIconsContainer);
+        
+    },[]);
+    useEffect(()=>{
+        document.body.style.overflow = filterDrawerOpener ? 'hidden' : '';
+    },[filterDrawerOpener]);
+    useEffect(()=>{
+        return ()=>document.body.style.overflow = ''
+    },[])
     const isFilterSet=()=>{
-        if(filter==''){
+        if(filter===''){
             return false;
         }
         if(filter && filter.catagory && filter.color && filter.priceRange){
-            if(filter.catagory.length==0 && filter.color.length==0 && filter.priceRange[0]==0 && filter.priceRange[1]==100000 && !(filter.rating)){
+            if(filter.catagory.length===0 && filter.color.length===0 && filter.priceRange[0]==0 && filter.priceRange[1]==100000 && !(filter.rating)){
                 return false;
             }
         }
         return true;
     }
-    return <div ref={wholeComponentRef} className='grow flex flex-col' onClick={filterDrawerCloseHandler}>
+    return <div ref={wholeComponentRef} className='grow flex flex-col bg-gradient-to-r from-light-dark to-dark-purple-black' onClick={filterDrawerCloseHandler}>
           
            <div ref={iconDivRef} className='hidden justify-between touch:flex z-10'  >
                 <div onClick={filterDrawerOpenHandler} className='flex text-light-text'>{filterIcon}<div className={'size-2 rounded-full bg-red-400 -translate-x-2 translate-y-[0.1rem] '+(isFilterSet()?'':'hidden')}></div></div>
@@ -60,6 +72,9 @@ function Products(){
                 }
                 <ProductsContainer filter={filter}></ProductsContainer>
             </div>
+            {
+                filterDrawerOpener?<div className='fixed inset-0 bg-black/50 w-full h-full'></div>:null
+            }
         </div>
 }
 export default Products;

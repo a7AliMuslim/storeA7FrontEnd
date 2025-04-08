@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, memo} from 'react';
 import { Rating } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -28,7 +28,7 @@ const theme = createTheme({
   },
 });
 
-export default function RatingFilter({filterObj}){
+function RatingFilter({filterObj}){
     const [ratingValue, setRatingValue]=useState(null);
     const [hoverValue, setHoverValue]=useState(null);
     filterObj.rating=ratingValue;
@@ -61,3 +61,5 @@ export default function RatingFilter({filterObj}){
     </div>
     </div>
 }
+
+export default memo(RatingFilter)
