@@ -133,21 +133,26 @@ function SingleProduct(){
         }
     }
     const mouseLeaveMaskHandler=(event)=>{
-        maskRef.current.style.maskImage=maskRef.current.style.maskImage.replace(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)','');
+        if(maskRef && maskRef.current && maskRef.current.style!==null){
+            maskRef.current.style.maskImage=maskRef.current.style.maskImage.replace(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)','');
+        }
     }
     const mouseEnterMaskHandler=(event)=>{
-        if(maskRef.current.style.maskImage.includes(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)')){
+        if(maskRef && maskRef.current && maskRef.current.style!==null){
+            if(maskRef.current.style.maskImage.includes(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)')){
             return;
         }
         maskRef.current.style.maskImage=maskRef.current.style.maskImage+', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)';
+        }
     }
     
     
-    const fetchExtendedProductData=()=>{
-        setSmallImages(product.imageIDs);
-        setIsLoading(false);
-    }
+    
     useEffect(()=>{
+        const fetchExtendedProductData=()=>{
+            setSmallImages(product.imageIDs);
+            setIsLoading(false);
+        }
         if(product){
             fetchExtendedProductData();
         }
@@ -231,7 +236,7 @@ function SingleProduct(){
             document.getElementById('app').removeAttribute('style');
         } 
         
-  },[]);
+  },[navigate, product]);
   const isTouch=window.matchMedia('(hover:none) and (pointer:coarse)').matches
     return <>
     {product?<div ref={prodContainer}  {...(!isTouch && { onMouseMove: mouseMaskHandler })} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow touch:flex-col'>

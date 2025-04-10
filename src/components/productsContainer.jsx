@@ -1,8 +1,8 @@
 import React from 'react';
 import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
-import {add} from '../features/cart/cartSlice.jsx';
-import {useDispatch} from 'react-redux';
+// import {add} from '../features/cart/cartSlice.jsx';
+// import {useDispatch} from 'react-redux';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import ProductCard from './productCard';
 import { Button, ButtonGroup, Skeleton } from '@mui/material';
@@ -36,7 +36,7 @@ function ProductsContainer({filter}){
     const [pageButtonList, setPageButtonList]=useState([]);
     const [filteredProductCount, setFilteredProductCount]=useState(0);
     const [filteredProductSliceRange, setfilteredProductSliceRange]=useState([0,0])
-    const dispatch=useDispatch();
+    // const dispatch=useDispatch();
     const contentRef=useRef(null);
     const maskRef=useRef(null);
     const canvasRef = useRef(null);
@@ -58,15 +58,38 @@ function ProductsContainer({filter}){
         }
         setPageNumber(pageNumber-1);
     }
-    const addToCartHandler=(product)=>{
-        dispatch(add(product));
-    };
+    // const addToCartHandler=(product)=>{
+    //     dispatch(add(product));
+    // };
     const cardClickHandler=(event)=>{
-        const clickedProduct=products.find(prod=>prod.id==event.currentTarget.attributes.productid.value);
+        const clickedProduct=products.find(prod=>prod.id===event.currentTarget.attributes.productid.value);
         document.getElementById('app').removeAttribute('style');
         navigate('/singleProduct',{state:{path:location.pathname,product:clickedProduct}});
     }
-    const fetchedProductData= async ()=>{
+    
+    const mouseMaskHandler=(event)=>{
+        if(masksPositionWithoutMouse.length>0 && prodContainer){
+            const {clientX, clientY}=event;
+            const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
+            maskRef.current.style.maskPosition=masksPositionWithoutMouse+`, ${clientX+window.scrollX-(remInPixels*2)+'px'} ${clientY+window.scrollY-(remInPixels*2)+'px'}`
+        }
+    }
+    const mouseLeaveMaskHandler=(event)=>{
+        if(maskRef && maskRef.current && maskRef.current.style!==null){
+            maskRef.current.style.maskImage=maskRef.current.style.maskImage.replace(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)','');
+        }
+        
+    }
+    const mouseEnterMaskHandler=(event)=>{
+        if(maskRef && maskRef.current && maskRef.current.style!==null){
+            if(maskRef.current.style.maskImage.includes(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)')){
+                return;
+            }
+            maskRef.current.style.maskImage=maskRef.current.style.maskImage+', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)';
+        }
+    }
+    useEffect(()=>{
+        const fetchedProductData= async ()=>{
             try{
                 const respons=await axios.post(`${process.env.REACT_APP_backHost}api/v1/products`,{filter,pageNumber},
                     {
@@ -126,23 +149,6 @@ function ProductsContainer({filter}){
                 console.log(err);
             }
     };
-    const mouseMaskHandler=(event)=>{
-        if(masksPositionWithoutMouse.length>0 && prodContainer){
-            const {clientX, clientY}=event;
-            const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
-            maskRef.current.style.maskPosition=masksPositionWithoutMouse+`, ${clientX+window.scrollX-(remInPixels*2)+'px'} ${clientY+window.scrollY-(remInPixels*2)+'px'}`
-        }
-    }
-    const mouseLeaveMaskHandler=(event)=>{
-        maskRef.current.style.maskImage=maskRef.current.style.maskImage.replace(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)','');
-    }
-    const mouseEnterMaskHandler=(event)=>{
-        if(maskRef.current.style.maskImage.includes(', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)')){
-            return;
-        }
-        maskRef.current.style.maskImage=maskRef.current.style.maskImage+', radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)';
-    }
-    useEffect(()=>{
         fetchedProductData();
     },[filter,pageNumber]);
     
@@ -189,7 +195,7 @@ function ProductsContainer({filter}){
     lastCanvasBlobCall=lastCanvasBlobCall+1
     // Convert canvas to Blob
     canvas.toBlob((blob) => {
-        if (blob && currentCanvasBlobCall===(lastCanvasBlobCall-1)) {
+        if (blob && currentCanvasBlobCall===(lastCanvasBlobCall-1) && maskRef && maskRef.current && maskRef.current.style!==null) {
             document.getElementById('app').removeAttribute('style');
             lastCanvasBlobCall=1
             const objectURL = URL.createObjectURL(blob);
