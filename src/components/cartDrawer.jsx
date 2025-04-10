@@ -48,13 +48,17 @@ function CartDrawer({opener,setOpener}){
             <div className='w-full p-2'>
                 <div className='flex justify-between w-full'>
                     <p className='text-xl text-light-text'>SubTotal</p>
-                    <p className='text-light-text'>Rs.{subTotalAll}</p>
+                    <p className='text-light-text'>Rs.{Math.ceil(subTotalAll)}</p>
                 </div>
-                <p className="text-light-text">doesn't include shipping charges</p>
+                <p className="text-light-text italic text-xs">doesn't include shipping charges</p>
             </div>
             <div className='w-full flex flex-col items-center justify-between p-2'>
                 <ThemeProvider theme={themeButton}>
-                    <Button onClick={goToCheckout} variant="contained" className='w-1/2 h-10'><span>Go to checkout</span></Button>
+                    <Button onClick={goToCheckout} variant="contained" className='w-1/2 h-10'>
+                    {
+                        window.matchMedia('(hover:none) and (pointer:coarse)').matches?<span>checkout</span>:<span>Go to checkout</span>
+                    }
+                    </Button>
                 </ThemeProvider>
                 <p onClick={closeHandler} className='text-nvidia-green text-sx cursor-pointer'>or continue shopping</p>
             </div>

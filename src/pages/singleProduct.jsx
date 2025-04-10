@@ -201,7 +201,7 @@ function SingleProduct(){
                 lastCanvasBlobCall=1
                 const objectURL = URL.createObjectURL(blob);
                 maskRef.current.style.maskImage= `linear-gradient(black, black) ,url(${objectURL}), radial-gradient(circle, black 0%, black 70%, rgba(0, 0, 0, 0) 100%)`;
-                maskRef.current.style.maskPosition=position
+                maskRef.current.style.maskPosition=position+', 150% 150%';
                 maskRef.current.style.maskSize=size;
                 setMasksPositionWithoutMouse(position);
                 maskRef.current.style.height=getComputedStyle(document.getElementById('app')).height;
@@ -232,14 +232,15 @@ function SingleProduct(){
         } 
         
   },[]);
+  const isTouch=window.matchMedia('(hover:none) and (pointer:coarse)').matches
     return <>
-    {product?<div ref={prodContainer} onMouseMove={mouseMaskHandler} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow'>
+    {product?<div ref={prodContainer}  {...(!isTouch && { onMouseMove: mouseMaskHandler })} onMouseLeave={mouseLeaveMaskHandler} onMouseEnter={mouseEnterMaskHandler} className='flex bg-big-multi-gradient animate-bg-pan-left flex-grow touch:flex-col'>
             <canvas ref={canvasRef} className="hidden" />
             <div ref={maskRef}  className="w-full h-full absolute hidden inset-0 z-0"/>
-            <div className='flex-auto w-1/2 pt-2 z-10'>
+            <div className='flex-auto w-1/2 pt-2 z-10 touch:w-full'>
               
                    {
-                        isLoading?<Skeleton className='bg-white/50' variant="rounded"><img src={'no'} alt='oops' className='w-full aspect-square'></img> </Skeleton>:<div className='w-full flex justify-center items-center'><ImageCard img={mainImage} className='rounded-tl-[8rem] rounded-br-[8rem] w-[75%] aspect-square ' applyDynamicShadow={true}/></div>
+                        isLoading?<Skeleton className='bg-white/50' variant="rounded"><img src={'no'} alt='oops' className='w-full aspect-square'></img> </Skeleton>:<div className='w-full flex justify-center items-center'><ImageCard img={mainImage} className='rounded-tl-[8rem] rounded-br-[8rem] w-[75%] aspect-square touch:rounded-tl-[3rem] touch:rounded-br-[3rem] ' applyDynamicShadow={true}/></div>
                     }
                 
                 <div className='flex justify-center gap-2 mt-3'>
@@ -248,7 +249,7 @@ function SingleProduct(){
                     }
                 </div>
             </div>
-            <div ref={contentRef} className='flex-auto w-1/2 p-8 z-10'>
+            <div ref={contentRef} className='flex-auto w-1/2 p-8 z-10 touch:w-full'>
                 <h1 className='text-5xl capitalize text-light-text'>{product.title}</h1>
                 <p className='text-red-500 my-2 text-2xl'>{`Rs.${product.price}`}</p>
                 <Rating
@@ -257,27 +258,27 @@ function SingleProduct(){
                   readOnly
                   emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                 />
-                <p className='line-clamp-4 text-justify my-4 text-light-text h-28'>{product.description}</p>
-                <div name='color' className='w-full my-2 text-light-text'>
+                <p className='line-clamp-34 text-justify my-4 text-light-text min-h-15 '>{product.description}</p>
+                <div name='color' className='w-full mb-2 mt-12 text-light-text'>
                     <p>Color</p>
                     <div name='colorblob' className='flex justify-between'>
                        {
                             product.quantities.length>0?product.quantities.map(quantity=>{
                                 if(quantity.attributesPair.color=='black'){
-                                    return <div onClick={colorChangeHandler} name='black' className='bg-gray-800 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square'/>
+                                    return <div onClick={colorChangeHandler} name='black' className='bg-gray-800 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square touch:w-[14%]'/>
                                 }else if(quantity.attributesPair.color=='white'){
-                                    return <div onClick={colorChangeHandler} name='white' className='bg-white cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square'/>
+                                    return <div onClick={colorChangeHandler} name='white' className='bg-white cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square touch:w-[14%]'/>
                                 }else if(quantity.attributesPair.color=='blue'){
-                                    return <div onClick={colorChangeHandler} name='blue' className='bg-blue-800 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square'/>
+                                    return <div onClick={colorChangeHandler} name='blue' className='bg-blue-800 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square touch:w-[14%]'/>
                                 }else if(quantity.attributesPair.color=='gray'){
-                                    return <div onClick={colorChangeHandler} name='gray' className='bg-gray-300 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square'/>
+                                    return <div onClick={colorChangeHandler} name='gray' className='bg-gray-300 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square touch:w-[14%]'/>
                                 }else{
-                                    return <div onClick={colorChangeHandler} name='no' className='bg-gray-300 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square'/>
+                                    return <div onClick={colorChangeHandler} name='no' className='bg-gray-300 cursor-pointer rounded-full hover:opacity-90 w-[6%] flex-initial aspect-square touch:w-[14%]'/>
                                 }
                             }):null
                         }
                         {
-                            Array.from({length:remainingColorLenght},()=><div className=' rounded-full opacity-0 w-[6%] flex-initial aspect-square'/>)
+                            Array.from({length:remainingColorLenght},()=><div className=' rounded-full opacity-0 w-[6%] flex-initial aspect-square touch:w-[14%]'/>)
                         }
                        
                         
@@ -300,7 +301,7 @@ function SingleProduct(){
                 </div>
                 <div name='button-container' className='flex flex-col gap-2 justify-center items-center mt-10'>
                     <ThemeProvider theme={themeButton}>
-                        <Button onClick={addToCartHandler} variant="contained" className='w-1/3'><span>Add to</span>< ShoppingCartIcon className='size-5 ml-2' /></Button>
+                        <Button onClick={addToCartHandler} variant="contained" className='w-1/3 touch:w-2/3'><span>Add to</span>< ShoppingCartIcon className='size-5 ml-2' /></Button>
                         <p ref={cartRef} className='text-nvidia-green underline underline-offset-4 cursor-pointer animate-[pulse_1s_ease-out_3]' onClick={cartOpenHandler}>Open Cart</p>
                     </ThemeProvider>
                 </div>

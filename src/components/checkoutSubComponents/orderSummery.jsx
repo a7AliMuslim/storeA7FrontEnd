@@ -29,8 +29,8 @@ function OrderSummery({productsListDiv,renderToggle}) {
   return (
     <>
         <p className='text-2xl my-4'>ORDER SUMMERY</p>
-        <div ref={productsListDiv} className='overflow-hidden my-4 custom-scrollbar rounded-tr-[5rem] rounded-bl-[5rem] bg-black/5 backdrop-blur-sm'>
-            <div className='max-h-80 overflow-auto'>   
+        <div ref={productsListDiv} className='overflow-hidden my-4 custom-scrollbar rounded-tr-[5rem] rounded-bl-[5rem] bg-black/5 backdrop-blur-xs touch:rounded-tr-[2rem] touch:rounded-bl-[2rem]'>
+            <div className='h-80 overflow-auto'>   
                 {
                     products?products.map(product=>{
                         subTotalAll=subTotalAll+product.subTotal;

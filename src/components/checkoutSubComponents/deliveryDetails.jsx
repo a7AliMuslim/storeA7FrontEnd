@@ -307,7 +307,7 @@ const DeliveryDetails = ({deliveryTextRef, renderToggle, setRenderToggle}) => {
         },[resetInputs]);
   return (
         <>
-            <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-sm'>
+            <div ref={deliveryTextRef} className='w-full flex flex-col gap-4 rounded-3xl bg-black/5 backdrop-blur-xs'>
                 <div name='contactInfo' className='w-full text-light-text pt-4 px-2'>
                     <p className='text-2xl my-2'>CONTACT INFORMATION</p>
 

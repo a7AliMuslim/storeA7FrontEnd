@@ -158,7 +158,7 @@ const FloatingLabelInput = ({label='Enter Text', status='primary', adornament=nu
     
 
   return (
-    <div ref={textFieldRef} className={`relative w-80 h-fit group inline-block backdrop-blur-sm ${className}`}>
+    <div ref={textFieldRef} className={`relative w-80 h-fit group inline-block backdrop-blur-xs ${className}`}>
         <motion.div ref={animatedBorderRef} className={`absolute inset-0 rounded-tr-lg rounded-bl-lg z-0 group-hover:border-transparent ${appliedStyle.border} ${appliedStyle.borderColor}`+(focused?' !border-transparent':'')}
             initial={{ clipPath: "polygon(0% 0%, 40% 50%, 60% 50%, 0% 0%, 0% 0%)" , opacity:0}}
             animate={{

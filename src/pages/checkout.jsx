@@ -31,12 +31,10 @@ function Checkout(){
     
         
         const borderRadius = window.getComputedStyle(Div).borderRadius;
-        const t=window.getComputedStyle(Div);
-        console.log('width',t.width,'height',t.height);
+        
 
 
         const rect = Div.getBoundingClientRect();
-        console.log('width',rect.width,'height',rect.height);
         
         const width = rect.width;
         const height = rect.height;
@@ -104,15 +102,15 @@ function Checkout(){
         
     },[]);
     return (
-    <div ref={checkoutContainerRef} className='overflow-hidden w-full flex green-gradient-y flex-grow'>
-        {<StarrySky/>}
+    <div ref={checkoutContainerRef} className='overflow-hidden w-full flex green-gradient-y flex-grow touch:flex-col-reverse'>
+        {<StarrySky numOfMeteors={150} meteorDelay={2000} numOfStars={90} starDelay={100}/>}
         <canvas ref={canvasRef} className="hidden inset-0" />
         <div ref={maskRef}  className="w-full h-full grid-lines absolute inset-0 z-0 mask">
         </div>
-        <div id='deliveryDetails' className='w-1/2 p-4 z-10'>
+        <div id='deliveryDetails' className='w-1/2 p-4 z-10 touch:w-full'>
             <DeliveryDetails deliveryTextRef={deliveryTextRef} renderToggle={renderToggle} setRenderToggle={setRenderToggle}/>
         </div>
-        <div id='orderSummery' className='w-1/2 h-full p-4 z-10 text-light-text'>
+        <div id='orderSummery' className='w-1/2 h-full p-4 z-10 text-light-text touch:w-full'>
             <OrderSummery productsListDiv={productsListDiv} renderToggle={renderToggle}/>
         </div>
     </div>

@@ -60,8 +60,8 @@
         
     }
     .bg-big-multi-gradient{
-        background: linear-gradient(to right, #2C2A34 10%, #76B900 40%, #1F1B24 40.1%, #1F1B24 85%, #2c2a2f 99.9%);
-        background-size: 400% 100%;
+        background: linear-gradient(to right, #1F1B24 10%, #76B900 40%, #1F1B24 40.1%, #1F1B24 85%);
+        background-size: 300% 100%;
     }
     .loading-spinner circle {
         opacity: 1;
